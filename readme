@@ -1,3 +1,10 @@
+# updates
+
+The "Paused Task" module doesn't work the way we imagined, when we pause a task it only comes to me (who initiated the pause) and the person responsible for the task that we are currently working on
+
+when we create a task It is added directly to the module "in progress" even though the task is not being processed at that point,
+so it is not "in progress". We need a module called "To Do" where all new tasks should be added and only if If someone takes over the task, it should be moved to the “In Progress” module
+
 # Introduction
 
 CRM Dashboard
