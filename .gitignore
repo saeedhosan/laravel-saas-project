@@ -21,3 +21,4 @@ _ide_helper.php
 !/storage/
 storage/tmp/
 .env
+docker-compose.yml
