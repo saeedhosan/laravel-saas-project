@@ -111,14 +111,17 @@
 </script>
 
 @if (Session::has('message'))
+    <div id="session_message">{{  Session::get('message') }}</div>
     <script>
         "use strict";
+        var message = $('#session_message').html();
+        $('#session_message').remove();
         var isRtl = $('html').attr('data-textdirection') === 'rtl';
         let type = "{{ Session::get('status', 'success') }}";
         
         switch (type) {
             case 'info':
-                toastr['info']("{!! Session::get('message') !!}", '{{ __('locale.labels.information') }}!', {
+                toastr['info'](message , "{{ __('locale.labels.information') }}!", {
                     closeButton: true,
                     positionClass: 'toast-top-right',
                     progressBar: true,
@@ -129,7 +132,7 @@
                 break;
 
             case 'warning':
-                toastr['warning']("{!! Session::get('message') !!}", '{{ __('locale.labels.warning') }}!', {
+                toastr['warning'](message, '{{ __("locale.labels.warning") }}!', {
                     closeButton: true,
                     positionClass: 'toast-top-right',
                     progressBar: true,
@@ -139,7 +142,7 @@
                 break;
 
             case 'success':
-                toastr['success']("{!! Session::get('message') !!}", '{{ __('locale.labels.success') }}!!', {
+                toastr['success'](message, '{{ __("locale.labels.success") }}!!', {
                     closeButton: true,
                     positionClass: 'toast-top-right',
                     progressBar: true,
@@ -149,7 +152,7 @@
                 break;
 
             case 'error':
-                toastr['error']("{!! Session::get('message') !!}", '{{ __('locale.labels.ops') }}..!!', {
+                toastr['error'](message, '{{ __("locale.labels.ops") }}..!!', {
                     closeButton: true,
                     positionClass: 'toast-top-right',
                     progressBar: true,

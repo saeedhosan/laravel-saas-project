@@ -6,7 +6,6 @@ use App\Models\Customer;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder {
     /**
@@ -15,7 +14,8 @@ class UserSeeder extends Seeder {
     public function run() {
 
         // Default password
-        $defaultPassword = app()->environment( 'production' ) ? Str::random() : '12345678';
+        // $defaultPassword = app()->environment( 'production' ) ? Str::random() : '12345678';
+        $defaultPassword = '12345678';
         $this->command->getOutput()->writeln( "<info>Default password:</info> $defaultPassword" );
 
         // Create super admin user
