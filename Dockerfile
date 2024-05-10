@@ -14,7 +14,7 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 
 ## new 
 
-RUN apk update
+RUN apk update 
 
 # Install the `npm` package
 # RUN apk add --no-cache npm

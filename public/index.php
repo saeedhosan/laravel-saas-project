@@ -1,4 +1,3 @@
-<?php
 if (!file_exists(__DIR__ . '/../storage/installed')) {
     if (phpversion() < "8.0.2") {
         echo "ERROR: PHP 8.0.2 or higher is required.<br />";
