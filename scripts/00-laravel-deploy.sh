@@ -4,7 +4,8 @@ composer install --working-dir=/var/www/html
 
 echo "update permissions to storage and bootstrap";
 
-chmod -R 777 "/var/www/html/"
+chmod -R 777 /var/www/html
+chmod -R 777 /var/www/html/
 chmod -R 777 /var/www/html/.
 chmod -R 777 bootstrap/cache/.
 chmod -R 777 storage/framework/sessions/.
