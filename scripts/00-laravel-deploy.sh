@@ -13,3 +13,4 @@ chmod -R 777 /var/www/html
 
 echo "generating application key..."
 php artisan key:generate
+php artisan migrate

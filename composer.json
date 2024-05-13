@@ -36,17 +36,18 @@
     "laravel/socialite": "^5.5",
     "laravel/tinker": "^2.7",
     "laravel/ui": "^3.4.5",
+    "protoqol/prequel": "^1.23",
     "pusher/pusher-php-server": "^7.2"
   },
   "require-dev": {
     "barryvdh/laravel-translation-manager": "^0.6.5",
-    "tanmuhittin/laravel-google-translate": "^2.2",
     "fakerphp/faker": "^1.9.1",
     "laravel/horizon": "^5.9.7",
     "laravel/sail": "^1.0.1",
-    "laravel/telescope": "^4.9",
+    "laravel/telescope": "^5.0",
     "phpunit/phpunit": "^9.5.20",
-    "spatie/laravel-ignition": "^1.2.3"
+    "spatie/laravel-ignition": "^1.2.3",
+    "tanmuhittin/laravel-google-translate": "^2.2"
   },
   "config": {
     "optimize-autoloader": true,
