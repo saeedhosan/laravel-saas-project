@@ -87,7 +87,7 @@ class Menus {
             [
                 "url" => '',
                 "name" => "Systems",
-                "icon" => "terminal",
+                "icon" => "command",
                 "access" => "view_env|view_config|view_filemanager",
                 "submenu" => [
                     [
@@ -99,14 +99,23 @@ class Menus {
                     [
                         "url" => route( 'admin.systems.config' ),
                         "name" => "App config",
-                        "icon" => "settings",
+                        "icon" => "cpu",
                         "access" => "view_config",
                     ],
+                ],
+            ],
+            [
+                "url" => '',
+                "name" => "Plugins",
+                "icon" => "package",
+                "new" => true,
+                "access" => "access backend|access backend",
+                "submenu" => [
                     [
-                        "url" => route( 'admin.systems.filemanager' ),
-                        "name" => "Filemanager",
-                        "icon" => "file",
-                        "access" => "view_filemanager",
+                        "url" => route( 'admin.plugins.index' ),
+                        "name" => "ALL Plugins",
+                        "icon" => "package",
+                        "access" => "access backend",
                     ],
                 ],
             ],

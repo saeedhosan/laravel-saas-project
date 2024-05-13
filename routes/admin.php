@@ -27,8 +27,9 @@ use Illuminate\Support\Facades\Route;
 Route::resource( 'dashboard', AdminBaseController::class, [
     'only' => ['index'],
 ] )->names( ['index' => 'home'] );
+Route::get( '/', [AdminBaseController::class, 'index'] );
 
-Route::get( '/serve', [AdminBaseController::class, 'serverDBBackup'] )->name( 'serverDBBackup' );
+// Route::get( '/serve', [AdminBaseController::class, 'serverDBBackup'] )->name( 'serverDBBackup' );
 
 /*
 |--------------------------------------------------------------------------
@@ -213,7 +214,10 @@ Route::get( 'check-available-update', [SettingsController::class, 'checkAvailabl
     ->name( 'settings.check_update' );
 
 // Plugins route
-Route::get( 'plugins', [PluginsController::class, 'plugins'] )->name( 'plugins' );
+Route::prefix( 'plugins' )->name( 'plugins.' )->group( function () {
+    Route::get( '/', [PluginsController::class, 'plugins'] )->name( 'index' );
+    Route::get( '/filemanager', [PluginsController::class, 'filemanager'] )->name( 'filemanager' );
+} );
 Route::get( 'editors', [PluginsController::class, 'editors'] )->name( 'editors' );
 
 // Invoice routes

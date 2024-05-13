@@ -67,6 +67,9 @@
                             <a href="{{ $menu->url }}" class="d-flex align-items-center">
                                 <i data-feather="{{ $menu->icon }}"></i>
                                 <span class="menu-title text-truncate">{{ $menu->name }}</span>
+                                @isset($menu->new)
+                                <span class="bg-success text-with rounded" style="padding: 0 .5rem; margin-left: 10px;">new</span>
+                                @endisset
                             </a>
                             @if (isset($menu->submenu))
                                 @include('panels/submenu', ['menu' => $menu->submenu])

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class PluginsController extends Controller {
+
     public function plugins() {
         $pageConfigs = [
             'bodyClass' => 'ecommerce-application',
@@ -16,11 +17,12 @@ class PluginsController extends Controller {
             ['name' => __( 'locale.menu.Plugins' )],
         ];
 
-        return view( 'admin.Plugins.index', [
+        return view( 'admin.plugins.index', [
             'pageConfigs' => $pageConfigs,
             'breadcrumbs' => $breadcrumbs,
         ] );
     }
+
     public function editors( Request $request ) {
 
         $content = $request->data ?? 'Hello, Welcome to new editor';
@@ -33,5 +35,16 @@ class PluginsController extends Controller {
             'breadcrumbs' => $breadcrumbs,
             'content' => $content,
         ] );
+    }
+
+    public function filemanager() {
+
+        if ( $this->checks() ) {
+            return redirect()->route( 'admin.settings.general' )->with( [
+                'status' => 'error',
+                'message' => 'Sorry! This option is not available in demo mode',
+            ] );
+        }
+
     }
 }

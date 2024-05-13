@@ -160,3 +160,9 @@ Install composer for php package
 ```sh
 composer install
 ```
+Start the server
+
+```sh
+php artisan serve
+```
+

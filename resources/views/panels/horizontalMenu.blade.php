@@ -54,7 +54,7 @@
                                 target="{{ isset($menu->newTab) ? '_blank' : '_self' }}"
                                 @if (isset($menu->submenu)) {{ 'data-bs-toggle=dropdown' }} @endif>
                                 <i data-feather="{{ $menu->icon }}"></i>
-                                <span>{{ $menu->name }}</span>
+                                <span>{{ $menu->name }}</span>                                
                             </a>
                             @if (isset($menu->submenu))
                                 @include('panels/horizontalSubmenu', [
