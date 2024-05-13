@@ -217,8 +217,8 @@ Route::get( 'check-available-update', [SettingsController::class, 'checkAvailabl
 Route::prefix( 'plugins' )->name( 'plugins.' )->group( function () {
     Route::get( '/', [PluginsController::class, 'plugins'] )->name( 'index' );
     Route::get( '/filemanager', [PluginsController::class, 'filemanager'] )->name( 'filemanager' );
+    Route::get( 'editors', [PluginsController::class, 'editors'] )->name( 'editors' );
 } );
-Route::get( 'editors', [PluginsController::class, 'editors'] )->name( 'editors' );
 
 // Invoice routes
 Route::post( 'invoices/search', [InvoiceController::class, 'search'] )->name( 'invoices.search' );

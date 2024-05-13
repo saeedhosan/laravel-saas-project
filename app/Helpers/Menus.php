@@ -117,6 +117,12 @@ class Menus {
                         "icon" => "package",
                         "access" => "access backend",
                     ],
+                    [
+                        "url" => route( 'admin.plugins.editors' ),
+                        "name" => "Editors",
+                        "icon" => "edit",
+                        "access" => "access backend",
+                    ],
                 ],
             ],
             [
