@@ -137,7 +137,7 @@
                             details += '<div class="chat chat-left">' +
                                 '<div class="chat-avatar">' +
                                 '<span class="avatar box-shadow-1 cursor-pointer">' +
-                                '<img src="{{ asset('images/profile/profile.jpg') }}" alt="avatar" height="36" width="36"/>' +
+                                '<img src="{{ route('user.avatar', Auth::user()->uid) }}" alt="avatar" height="36" width="36"/>' +
                                 '</span>' +
                                 '</div>' +
                                 '<div class="chat-body">' +

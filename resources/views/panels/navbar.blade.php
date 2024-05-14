@@ -54,7 +54,7 @@
 
         {{-- Dark and light option. It will be theme manager option --}}
         @if (config('custom.menu.theme_switch'))
-            <li class="nav-item d-none d-lg-block d-md-block">
+            <li class="nav-item">
                 <a class="nav-link nav-link-style">
                     <i class="ficon" data-feather="{{ $configData['theme'] === 'dark' ? 'sun' : 'moon' }}"></i>
                 </a>
