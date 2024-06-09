@@ -12,57 +12,77 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Mail\SimpleMail;
+use Illuminate\Support\Facades\Mail;
 
-class AdminBaseController extends Controller {
+class AdminBaseController extends Controller
+{
     /**
      * Show admin home.
      *
      * @return Application|Factory|\Illuminate\Contracts\View\View|View
      */
-    public function index() {
+    public function index()
+    {
 
         $breadcrumbs = [
-            ['link' => "/dashboard", 'name' => __( 'locale.menu.Dashboard' )],
+            ['link' => "/dashboard", 'name' => __('locale.menu.Dashboard')],
             ['name' => User::fullname()],
         ];
 
         $revenue = Invoices::CurrentMonth()
-            ->selectRaw( 'EXTRACT(DAY FROM created_at) as day, count(uid) as revenue' )
-            ->groupBy( 'day' )
-            ->pluck( 'revenue', 'day' );
+            ->selectRaw('EXTRACT(DAY FROM created_at) as day, count(uid) as revenue')
+            ->groupBy('day')
+            ->pluck('revenue', 'day');
 
-        $revenue_chart = ( new LarapexChart )->lineChart()
-            ->addData( __( 'locale.labels.revenue' ), $revenue->values()->toArray() )
-            ->setXAxis( $revenue->keys()->toArray() );
+        $revenue_chart = (new LarapexChart)->lineChart()
+            ->addData(__('locale.labels.revenue'), $revenue->values()->toArray())
+            ->setXAxis($revenue->keys()->toArray());
 
         $customers = Customer::thisYear()
-            ->selectRaw( 'EXTRACT(MONTH FROM created_at) as month, count(uid) as customer' )
-            ->groupBy( 'month' )
-            ->orderBy( 'month' )
-            ->pluck( 'customer', 'month' );
+            ->selectRaw('EXTRACT(MONTH FROM created_at) as month, count(uid) as customer')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('customer', 'month');
 
-        $customer_growth = ( new LarapexChart )->barChart()
-            ->addData( __( 'locale.labels.customers_growth' ), $customers->values()->toArray() )
-            ->setXAxis( $customers->keys()->toArray() );
+        $customer_growth = (new LarapexChart)->barChart()
+            ->addData(__('locale.labels.customers_growth'), $customers->values()->toArray())
+            ->setXAxis($customers->keys()->toArray());
 
         $task = (object) [
-            'in_progress' => Todos::where( 'status', 'in_progress' )->count(),
-            'complete' => Todos::where( 'status', 'complete' )->count(),
-            'reviews' => Todos::where( 'status', 'review' )->count(),
+            'in_progress' => Todos::where('status', 'in_progress')->count(),
+            'complete' => Todos::where('status', 'complete')->count(),
+            'reviews' => Todos::where('status', 'review')->count(),
             'all' => Todos::count(),
         ];
 
-        return view( 'admin.dashboard', compact( 'breadcrumbs', 'revenue_chart', 'customer_growth', 'task' ) );
+        return view('admin.dashboard', compact('breadcrumbs', 'revenue_chart', 'customer_growth', 'task'));
     }
 
-    protected function redirectResponse( Request $request, $message, $type = 'success' ) {
-        if ( $request->wantsJson() ) {
-            return response()->json( [
+    public function adminTest(Request $request)
+    {
+
+        Mail::to('appsaeed7@gmail.com')->send(new SimpleMail([
+            'subject' => 'Your email successfully sent to Saeed Hossen',
+            'message' => 'Test mail from laravel',
+            'bodySub' => 'test subject body from laravel',
+        ]));
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Mail sent successfully'
+        ]);
+    }
+
+    protected function redirectResponse(Request $request, $message, $type = 'success')
+    {
+        if ($request->wantsJson()) {
+            return response()->json([
                 'status' => $type,
                 'message' => $message,
-            ] );
+            ]);
         }
 
-        return redirect()->back()->with( "flash_{$type}", $message );
+        return redirect()->back()->with("flash_{$type}", $message);
     }
 }

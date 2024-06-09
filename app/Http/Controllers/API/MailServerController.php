@@ -41,6 +41,7 @@ class MailServerController extends Controller
         return $this->success([]);
     }
 
+
     /**
      * Show the form for creating a new resource.
      *
