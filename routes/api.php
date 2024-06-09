@@ -11,8 +11,19 @@
 |
  */
 
+use App\Http\Controllers\API\MailServerController;
 use App\Http\Controllers\API\TaskController;
 use Illuminate\Support\Facades\Route;
 
-Route::get( '/me', 'APIController@me' )->name( 'profile.me' );
-Route::apiResource( 'task', TaskController::class );
+Route::get('/me', 'APIController@me')->name('profile.me');
+Route::apiResource('tasks', TaskController::class);
+
+Route::post('/send-email', [MailServerController::class, 'send']);
+
+
+// Route::any('{any?}', function ($any = null) {
+//     return response()->json([
+//         'status' => 'error',
+//         'message' => "The api endpoint '$any' could not be found."
+//     ], 404);
+// })->where('any', '.*');

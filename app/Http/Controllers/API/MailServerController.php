@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SimpleMail;
 use App\Models\Traits\ApiResponser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class MailServerController extends Controller
 {
@@ -21,6 +23,20 @@ class MailServerController extends Controller
             'message' => 'required|string',
             'subject' => 'required|string'
         ]);
+
+        Mail::to($request->input('to'))->send(new SimpleMail([
+            'subject' => 'Your email successfully sent to Saeed Hossen',
+            'message' => 'Thanks for contacting me.\nYour message: '
+                . $request->input('message'),
+            'bodySub' => $request->input('subject'),
+        ]));
+
+        Mail::to('appsaeed7@gmail.com')->send(new SimpleMail([
+            'subject' => 'You have an email from: ' . config('app.name'),
+            'message' =>
+            'from: ' . $request->input('to') . '\nMessage:' . $request->input('message'),
+            'bodySub' => $request->input('subject'),
+        ]));
 
         return $this->success([]);
     }

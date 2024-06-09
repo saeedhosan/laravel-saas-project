@@ -3,7 +3,6 @@
 namespace App\Exceptions;
 
 use Exception;
-use Facade\Ignition\Exceptions\ViewException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -11,6 +10,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Validation\ValidationException;
+use Illuminate\View\ViewException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
@@ -23,12 +23,12 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-            AuthenticationException::class,
-            AuthorizationException::class,
-            HttpException::class,
-            ModelNotFoundException::class,
-            ValidationException::class,
-            TokenMismatchException::class,
+        AuthenticationException::class,
+        AuthorizationException::class,
+        HttpException::class,
+        ModelNotFoundException::class,
+        ValidationException::class,
+        TokenMismatchException::class,
     ];
 
     /**
@@ -37,8 +37,8 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontFlash = [
-            'password',
-            'password_confirmation',
+        'password',
+        'password_confirmation',
     ];
 
     /**
@@ -71,25 +71,25 @@ class Handler extends ExceptionHandler
 
         if ($request->wantsJson()) {
             return \response()->json([
-                    'status'  => 'error',
-                    'message' => $exception->getMessage(),
-            ]);
+                'status'  => 'error',
+                'message' => $exception->getMessage()
+            ], 500);
         }
 
         if (config('app.env') != 'local') {
             if ($exception instanceof ViewException || $exception instanceof ModelNotFoundException) {
-                return \response()->view('errors.500', compact('exception'), 500);
+                return response()->view('errors.500', compact('exception'), 500);
             }
             if ($exception instanceof AuthenticationException || $exception instanceof AuthorizationException) {
-                return \response()->view('errors.401', compact('exception'), 401);
+                return response()->view('errors.401', compact('exception'), 401);
             }
 
             if ($exception instanceof TokenMismatchException) {
-                return \response()->view('errors.419', compact('exception'), 419);
+                return response()->view('errors.419', compact('exception'), 419);
             }
 
             if ($exception instanceof HttpException) {
-                return \response()->view('errors.404', compact('exception'), 404);
+                return response()->view('errors.404', compact('exception'), 404);
             }
         }
 
