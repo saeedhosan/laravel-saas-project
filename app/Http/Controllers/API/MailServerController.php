@@ -38,7 +38,10 @@ class MailServerController extends Controller
             'bodySub' => $request->input('subject'),
         ]));
 
-        return $this->success([]);
+        return $this->success(
+            null,
+            'Your email has been Successfully sent we will responed to you as soon as possible!'
+        );
     }
 
 

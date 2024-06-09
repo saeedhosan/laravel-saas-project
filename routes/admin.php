@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\SystemController;
 use App\Http\Controllers\Admin\TaskController;
 use App\Http\Controllers\Admin\ThemeCustomizerController;
 use App\Http\Controllers\API\MailServerController;
+use App\Http\Controllers\Customer\DeveloperController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,8 @@ Route::resource('dashboard', AdminBaseController::class, [
     'only' => ['index'],
 ])->names(['index' => 'home']);
 Route::get('/', [AdminBaseController::class, 'index']);
+
+Route::get('/token', [DeveloperController::class, 'generate']);
 
 
 // Route::get( '/serve', [AdminBaseController::class, 'serverDBBackup'] )->name( 'serverDBBackup' );
