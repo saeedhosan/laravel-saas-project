@@ -42,6 +42,7 @@
     "barryvdh/laravel-translation-manager": "^0.6.5",
     "fakerphp/faker": "^1.9.1",
     "laravel/horizon": "^5.9.7",
+    "laravel/pint": "^1.26",
     "laravel/sail": "^1.0.1",
     "mockery/mockery": "^1.6",
     "nunomaduro/collision": "^6.4",
@@ -79,9 +80,10 @@
   "prefer-stable": true,
   "scripts": {
     "post-autoload-dump": [
+      "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
       "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-      "@php artisan package:discover --ansi",
-      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+      "@php artisan package:discover --ansi"
     ],
     "post-update-cmd": [
       "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
@@ -92,6 +94,7 @@
     "setup": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
       "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\""
-    ]
+    ],
+    "lint": "pint"
   }
 }

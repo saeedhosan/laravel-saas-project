@@ -14,7 +14,6 @@ use App\Repositories\Contracts\RoleRepository;
 use App\Repositories\Contracts\SettingsRepository;
 use App\Repositories\Contracts\TemplatesRepository;
 use App\Repositories\Contracts\TemplateTagsRepository;
-use App\Repositories\Contracts\TodosRepository;
 use App\Repositories\Contracts\UserRepository;
 use App\Repositories\Eloquent\EloquentAccountRepository;
 use App\Repositories\Eloquent\EloquentCountriesRepository;
@@ -25,121 +24,77 @@ use App\Repositories\Eloquent\EloquentRoleRepository;
 use App\Repositories\Eloquent\EloquentSettingsRepository;
 use App\Repositories\Eloquent\EloquentTemplatesRepository;
 use App\Repositories\Eloquent\EloquentTemplateTagsRepository;
-use App\Repositories\Eloquent\EloquentTodosRepository;
 use App\Repositories\Eloquent\EloquentUserRepository;
 use Closure;
 use Illuminate\Cache\NullStore;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
-
+use Illuminate\Support\ServiceProvider;
 
 /**
  * @method where(Closure $param)
  */
 class AppServiceProvider extends ServiceProvider
 {
-        /**
-         * Register any application services.
-         *
-         * @return void
-         */
-        public function register()
-        {
-                $this->app->bind(
-                        UserRepository::class,
-                        EloquentUserRepository::class
-                );
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->app->bind(UserRepository::class, EloquentUserRepository::class);
+        $this->app->bind(AccountRepository::class, EloquentAccountRepository::class);
+        $this->app->bind(RoleRepository::class, EloquentRoleRepository::class);
+        $this->app->bind(CustomerRepository::class, EloquentCustomerRepository::class);
+        $this->app->bind(CurrencyRepository::class, EloquentCurrencyRepository::class);
+        $this->app->bind(SettingsRepository::class, EloquentSettingsRepository::class);
+        $this->app->bind(LanguageRepository::class, EloquentLanguageRepository::class);
+        $this->app->bind(TemplateTagsRepository::class, EloquentTemplateTagsRepository::class);
+        $this->app->bind(TemplatesRepository::class, EloquentTemplatesRepository::class);
+        $this->app->bind(CountriesRepository::class, EloquentCountriesRepository::class);
+    }
 
-                $this->app->bind(
-                        AccountRepository::class,
-                        EloquentAccountRepository::class
-                );
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        Schema::defaultStringLength(191);
 
-                $this->app->bind(
-                        RoleRepository::class,
-                        EloquentRoleRepository::class
-                );
+        Relation::morphMap([
+            'user' => User::class,
+            'customer' => Customer::class,
+            'admin' => Admin::class,
+        ]);
 
-                $this->app->bind(
-                        CustomerRepository::class,
-                        EloquentCustomerRepository::class
-                );
+        Cache::extend('none', function () {
+            return Cache::repository(new NullStore);
+        });
 
-                $this->app->bind(
-                        CurrencyRepository::class,
-                        EloquentCurrencyRepository::class
-                );
+        Builder::macro('whereLike', function ($attributes, string $searchTerm) {
+            $this->where(function (Builder $query) use ($attributes, $searchTerm) {
+                foreach (array_wrap($attributes) as $attribute) {
+                    $query->when(
+                        str_contains($attribute, '.'),
+                        function (Builder $query) use ($attribute, $searchTerm) {
+                            [$relationName, $relationAttribute] = explode('.', $attribute);
+                            $query->orWhereHas($relationName, function (Builder $query) use ($relationAttribute, $searchTerm) {
+                                $query->where($relationAttribute, 'LIKE', "%{$searchTerm}%");
+                            });
+                        },
+                        function (Builder $query) use ($attribute, $searchTerm) {
+                            $query->orWhere($attribute, 'LIKE', "%{$searchTerm}%");
+                        }
+                    );
+                }
+            });
 
-                $this->app->bind(
-                        SettingsRepository::class,
-                        EloquentSettingsRepository::class
-                );
-
-                $this->app->bind(
-                        LanguageRepository::class,
-                        EloquentLanguageRepository::class
-                );
-
-
-                $this->app->bind(
-                        TemplateTagsRepository::class,
-                        EloquentTemplateTagsRepository::class
-                );
-
-                $this->app->bind(
-                        TemplatesRepository::class,
-                        EloquentTemplatesRepository::class
-                );
-
-                $this->app->bind(
-                        CountriesRepository::class,
-                        EloquentCountriesRepository::class
-                );
-        }
-
-        /**
-         * Bootstrap any application services.
-         *
-         * @return void
-         */
-        public function boot()
-        {
-                Schema::defaultStringLength(191);
-
-                Relation::morphMap([
-                        'user'     => User::class,
-                        'customer' => Customer::class,
-                        'admin'    => Admin::class,
-                ]);
-
-                Cache::extend('none', function () {
-                        return Cache::repository(new NullStore());
-                });
-
-                Builder::macro('whereLike', function ($attributes, string $searchTerm) {
-                        $this->where(function (Builder $query) use ($attributes, $searchTerm) {
-                                foreach (array_wrap($attributes) as $attribute) {
-                                        $query->when(
-                                                str_contains($attribute, '.'),
-                                                function (Builder $query) use ($attribute, $searchTerm) {
-                                                        [$relationName, $relationAttribute] = explode('.', $attribute);
-
-                                                        $query->orWhereHas($relationName, function (Builder $query) use ($relationAttribute, $searchTerm) {
-                                                                $query->where($relationAttribute, 'LIKE', "%{$searchTerm}%");
-                                                        });
-                                                },
-                                                function (Builder $query) use ($attribute, $searchTerm) {
-                                                        $query->orWhere($attribute, 'LIKE', "%{$searchTerm}%");
-                                                }
-                                        );
-                                }
-                        });
-
-                        return $this;
-                });
-        }
+            return $this;
+        });
+    }
 }

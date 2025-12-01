@@ -7,11 +7,10 @@ return [
      | -----------------------------------------------------------------
      */
 
-        'secret'       => env('NOCAPTCHA_SECRET', 'no-captcha-secret'),
-        'sitekey'      => env('NOCAPTCHA_SITEKEY', 'no-captcha-sitekey'),
-        'login'        => env('NOCAPTCHA_IN_LOGIN', 'no-captcha-login'),
-        'registration' => env('NOCAPTCHA_IN_REGISTRATION', 'no-captcha-registration'),
-
+    'secret' => env('NOCAPTCHA_SECRET', 'no-captcha-secret'),
+    'sitekey' => env('NOCAPTCHA_SITEKEY', 'no-captcha-sitekey'),
+    'login' => env('NOCAPTCHA_IN_LOGIN', 'no-captcha-login'),
+    'registration' => env('NOCAPTCHA_IN_REGISTRATION', 'no-captcha-registration'),
 
     /* -----------------------------------------------------------------
      |  Version
@@ -19,22 +18,22 @@ return [
      |  Supported: v3, v2
      */
 
-        'version' => 'v3',
+    'version' => 'v3',
 
     /* -----------------------------------------------------------------
      |  Localization
      | -----------------------------------------------------------------
      */
 
-        'lang' => config('app.locale'),
+    'lang' => config('app.locale'),
 
     /* -----------------------------------------------------------------
      |  Skip IPs
      | -----------------------------------------------------------------
      */
 
-        'skip-ips' => [
-            // 127.0.0.1
-        ],
+    'skip-ips' => [
+        // 127.0.0.1
+    ],
 
 ];

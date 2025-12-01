@@ -13,7 +13,7 @@ return [
     |
      */
 
-    'name' => env( 'APP_NAME', 'app SMS' ),
+    'name' => env('APP_NAME', 'app SMS'),
 
     /*
     |--------------------------------------------------------------------------
@@ -26,7 +26,7 @@ return [
     |
      */
 
-    'title' => env( 'APP_TITLE', 'Bulk SMS Application For Marketing' ),
+    'title' => env('APP_TITLE', 'Bulk SMS Application For Marketing'),
 
     /*
     |--------------------------------------------------------------------------
@@ -37,7 +37,7 @@ return [
     |
      */
 
-    'keyword' => env( 'APP_KEYWORD', 'CRM, appsaeed, laravel, framework' ),
+    'keyword' => env('APP_KEYWORD', 'CRM, appsaeed, laravel, framework'),
 
     /*
     |--------------------------------------------------------------------------
@@ -47,7 +47,7 @@ return [
     | This is the logo of your application.
     |
      */
-    'logo' => env( 'APP_LOGO', '' ),
+    'logo' => env('APP_LOGO', ''),
 
     /*
     |--------------------------------------------------------------------------
@@ -57,7 +57,7 @@ return [
     | This is the favicon of your application.
     |
      */
-    'favicon' => env( 'APP_FAVICON', '' ),
+    'favicon' => env('APP_FAVICON', ''),
 
     /*
     |--------------------------------------------------------------------------
@@ -67,7 +67,7 @@ return [
     | This is the footer text of your application.
     |
      */
-    'footer_text' => env( 'APP_FOOTER_TEXT', 'Copyright &copy; CRM - 2020' ),
+    'footer_text' => env('APP_FOOTER_TEXT', 'Copyright &copy; CRM - 2020'),
 
     /*
     |--------------------------------------------------------------------------
@@ -77,7 +77,7 @@ return [
     | This is the custom script of your application.
     |
      */
-    'custom_script' => env( 'APP_CUSTOM_SCRIPT', '' ),
+    'custom_script' => env('APP_CUSTOM_SCRIPT', ''),
 
     /*
     |--------------------------------------------------------------------------
@@ -90,7 +90,7 @@ return [
     |
      */
 
-    'env' => env( 'APP_ENV', 'production' ),
+    'env' => env('APP_ENV', 'production'),
 
     /*
     |--------------------------------------------------------------------------
@@ -103,7 +103,7 @@ return [
     |
      */
 
-    'stage' => env( 'APP_STAGE', 'Live' ),
+    'stage' => env('APP_STAGE', 'Live'),
 
     /*
     |--------------------------------------------------------------------------
@@ -116,7 +116,7 @@ return [
     |
      */
 
-    'debug' => env( 'APP_DEBUG', false ),
+    'debug' => env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -129,24 +129,9 @@ return [
     |
      */
 
-    'url' => env( 'APP_URL', 'http://localhost' ),
+    'url' => env('APP_URL', 'http://localhost'),
 
-    'asset_url' => env( 'ASSET_URL', '' ),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Application Timezone
-    |--------------------------------------------------------------------------
-    |
-    | Here you may specify the default timezone for your application, which
-    | will be used by the PHP date and date-time functions. We have gone
-    | ahead and set this to a sensible default for you out of the box.
-    |
-     */
-
-    'timezone' => env( 'APP_TIMEZONE', 'UTC' ),
-
-    'date_format' => env( 'APP_DATE_FORMAT', 'jS M y' ),
+    'asset_url' => env('ASSET_URL', ''),
 
     /*
     |--------------------------------------------------------------------------
@@ -159,7 +144,22 @@ return [
     |
      */
 
-    'version' => env( 'APP_VERSION', '3.1.0' ),
+    'timezone' => env('APP_TIMEZONE', 'UTC'),
+
+    'date_format' => env('APP_DATE_FORMAT', 'jS M y'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Timezone
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the default timezone for your application, which
+    | will be used by the PHP date and date-time functions. We have gone
+    | ahead and set this to a sensible default for you out of the box.
+    |
+     */
+
+    'version' => env('APP_VERSION', '3.1.0'),
 
     /*
     |--------------------------------------------------------------------------
@@ -172,9 +172,9 @@ return [
     |
      */
 
-    'locale' => env( 'APP_LOCALE', 'en' ),
+    'locale' => env('APP_LOCALE', 'en'),
 
-    'locale_direction' => env( 'APP_DIRECTION', 'ltr' ),
+    'locale_direction' => env('APP_DIRECTION', 'ltr'),
     /*
     |--------------------------------------------------------------------------
     | Application Fallback Locale
@@ -186,7 +186,7 @@ return [
     |
      */
 
-    'fallback_locale' => env( 'APP_FALLBACK_LOCALE', 'en' ),
+    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 
     /*
     |--------------------------------------------------------------------------
@@ -212,7 +212,7 @@ return [
     |
      */
 
-    'key' => env( 'APP_KEY' ),
+    'key' => env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
 
@@ -222,7 +222,7 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'country' => env( 'APP_COUNTRY', 'Bangladesh' ),
+    'country' => env('APP_COUNTRY', 'Bangladesh'),
 
     /*
     |--------------------------------------------------------------------------
@@ -230,7 +230,7 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'admin_path' => env( 'ADMIN_PATH', 'admin' ),
+    'admin_path' => env('ADMIN_PATH', 'admin'),
 
     /*
     |--------------------------------------------------------------------------
@@ -238,11 +238,11 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'editor_name' => env( 'EDITOR_NAME' ),
+    'editor_name' => env('EDITOR_NAME'),
 
-    'editor_site_url' => env( 'EDITOR_SITE_URL' ),
+    'editor_site_url' => env('EDITOR_SITE_URL'),
 
-    'editor_alert_mail' => env( 'EDITOR_ALERT_MAIL' ),
+    'editor_alert_mail' => env('EDITOR_ALERT_MAIL'),
 
     /*
     |--------------------------------------------------------------------------
@@ -250,7 +250,7 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'gtm_user_id' => env( 'GTM_USER_ID' ),
+    'gtm_user_id' => env('GTM_USER_ID'),
 
     /*
     |--------------------------------------------------------------------------
@@ -258,7 +258,7 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'url_force_https' => env( 'URL_FORCE_HTTPS', false ),
+    'url_force_https' => env('URL_FORCE_HTTPS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -266,7 +266,7 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'read_only' => env( 'READ_ONLY', false ),
+    'read_only' => env('READ_ONLY', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -274,7 +274,7 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'purchase_key' => env( 'PURCHASE_CODE', '' ),
+    'purchase_key' => env('PURCHASE_CODE', ''),
 
     /*
     |--------------------------------------------------------------------------
@@ -282,7 +282,7 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'two_factor' => env( 'TWO_FACTOR', false ),
+    'two_factor' => env('TWO_FACTOR', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -290,7 +290,7 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'two_factor_send_by' => env( 'AUTH_CODE_SEND_BY', 'email' ),
+    'two_factor_send_by' => env('AUTH_CODE_SEND_BY', 'email'),
 
     /*
     |--------------------------------------------------------------------------
@@ -298,7 +298,7 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'super_admin_email' => env( 'SUPER_ADMIN_EMAIL', 'appsaeed7@gmail.com' ),
+    'super_admin_email' => env('SUPER_ADMIN_EMAIL', 'appsaeed7@gmail.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -306,7 +306,7 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'api_rate_limit' => env( 'API_RATE_LIMIT', '1000' ),
+    'api_rate_limit' => env('API_RATE_LIMIT', '1000'),
 
     /*
     |--------------------------------------------------------------------------
@@ -314,7 +314,7 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'theme_layout_type' => env( 'THEME_LAYOUT_TYPE', 'vertical' ),
+    'theme_layout_type' => env('THEME_LAYOUT_TYPE', 'vertical'),
 
     /*
     |--------------------------------------------------------------------------

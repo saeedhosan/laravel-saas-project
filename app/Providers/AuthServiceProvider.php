@@ -17,13 +17,14 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        User::class => UserPolicy::class
+        User::class => UserPolicy::class,
     ];
 
     /**
      * Register any authentication / authorization services.
      *
      * @return void
+     *
      * @throws BindingResolutionException
      */
     public function boot()

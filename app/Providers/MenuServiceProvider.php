@@ -22,9 +22,9 @@ class MenuServiceProvider extends ServiceProvider {
      * @return void
      */
     public function boot() {
-        $verticalMenuData = json_decode( json_encode( Helper::menuData() ) );
+        // $verticalMenuData = json_decode( json_encode( Helper::menuData() ) );
 
         // Share all menuData to all the views
-        View::share( 'menuData', [$verticalMenuData, $verticalMenuData] );
+        // View::share( 'menuData', [$verticalMenuData, $verticalMenuData] );
     }
 }

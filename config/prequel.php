@@ -15,7 +15,6 @@ return [
 
     'enabled' => env('PREQUEL_ENABLED', true),
 
-
     /*
     |--------------------------------------------------------------------------
     | Prequel Locale : string
@@ -27,7 +26,6 @@ return [
 
     'locale' => env('APP_LOCALE', 'en'),
 
-
     /*
     |--------------------------------------------------------------------------
     | Prequel Path
@@ -38,8 +36,7 @@ return [
     |
     */
 
-    'path'    => 'prequel',
-
+    'path' => 'prequel',
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +49,6 @@ return [
     |
     */
     'baseUrl' => null,
-
 
     /*
     |--------------------------------------------------------------------------
@@ -80,13 +76,12 @@ return [
     */
 
     'suffixes' => [
-        'model'      => 'Models\\',
-        'seeder'     => 'Seeder',
-        'factory'    => 'Factory',
+        'model' => 'Models\\',
+        'seeder' => 'Seeder',
+        'factory' => 'Factory',
         'controller' => 'Controller',
-        'resource'   => 'Resource',
+        'resource' => 'Resource',
     ],
-
 
     /*
     |--------------------------------------------------------------------------
@@ -99,14 +94,13 @@ return [
 
     'database' => [
         'connection' => env('DB_CONNECTION', 'mysql'),
-        'host'       => env('DB_HOST', '127.0.0.1'),
-        'port'       => env('DB_PORT', '3306'),
-        'database'   => env('DB_DATABASE', 'homestead'),
-        'username'   => env('DB_USERNAME', 'homestead'),
-        'password'   => env('DB_PASSWORD', 'secret'),
-        'socket'     => env('DB_SOCKET', ''),
+        'host' => env('DB_HOST', '127.0.0.1'),
+        'port' => env('DB_PORT', '3306'),
+        'database' => env('DB_DATABASE', 'homestead'),
+        'username' => env('DB_USERNAME', 'homestead'),
+        'password' => env('DB_PASSWORD', 'secret'),
+        'socket' => env('DB_SOCKET', ''),
     ],
-
 
     /*
     |--------------------------------------------------------------------------
@@ -129,7 +123,6 @@ return [
         // 'mysql'               => ['*'],
     ],
 
-
     /*
     |--------------------------------------------------------------------------
     | Prequel pagination per page : integer
@@ -141,7 +134,6 @@ return [
     */
 
     'pagination' => 100,
-
 
     /*
     |--------------------------------------------------------------------------

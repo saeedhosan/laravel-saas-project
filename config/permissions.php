@@ -34,59 +34,59 @@ return [
         'category' => 'Customer',
     ],
 
-    //chat
+    // chat
     'view_chat' => [
-        "display_name" => 'read',
-        "category" => "chat",
-        "default" => true,
+        'display_name' => 'read',
+        'category' => 'chat',
+        'default' => true,
     ],
     'create_chat' => [
-        "display_name" => 'create',
-        "category" => "chat",
-        "default" => true,
+        'display_name' => 'create',
+        'category' => 'chat',
+        'default' => true,
     ],
     'update_chat' => [
-        "display_name" => 'update',
-        "category" => "chat",
-        "default" => true,
+        'display_name' => 'update',
+        'category' => 'chat',
+        'default' => true,
     ],
 
     'delete_chat' => [
-        "display_name" => 'delete',
-        "category" => "chat",
-        "default" => true,
+        'display_name' => 'delete',
+        'category' => 'chat',
+        'default' => true,
     ],
 
-    //todos
-    "view_todos" => [
-        "display_name" => 'read',
-        "category" => "Todos",
-        "default" => true,
+    // todos
+    'view_todos' => [
+        'display_name' => 'read',
+        'category' => 'Todos',
+        'default' => true,
     ],
-    "create_todos" => [
-        "display_name" => 'create',
-        "category" => "Todos",
-        "default" => true,
+    'create_todos' => [
+        'display_name' => 'create',
+        'category' => 'Todos',
+        'default' => true,
     ],
-    "update_todos" => [
-        "display_name" => 'update',
-        "category" => "Todos",
-        "default" => true,
-    ],
-
-    "delete_todos" => [
-        "display_name" => 'delete',
-        "category" => "Todos",
-        "default" => true,
+    'update_todos' => [
+        'display_name' => 'update',
+        'category' => 'Todos',
+        'default' => true,
     ],
 
-    "can_assign_todos" => [
-        "display_name" => 'Can assign',
-        "category" => "Todos",
-        "default" => true,
+    'delete_todos' => [
+        'display_name' => 'delete',
+        'category' => 'Todos',
+        'default' => true,
     ],
 
-    //currencies
+    'can_assign_todos' => [
+        'display_name' => 'Can assign',
+        'category' => 'Todos',
+        'default' => true,
+    ],
+
+    // currencies
     'manage currencies' => [
         'display_name' => 'read',
         'category' => 'Currencies',
@@ -146,7 +146,7 @@ return [
         'category' => 'Admin Roles',
     ],
 
-    //language module
+    // language module
 
     'view languages' => [
         'display_name' => 'read',
@@ -235,7 +235,7 @@ return [
         'category' => 'Settings',
     ],
 
-    //systems
+    // systems
     'view_env' => [
         'display_name' => 'view environment',
         'category' => 'Systems',

@@ -2,7 +2,7 @@
 
 return [
 
-        /*
+    /*
     |--------------------------------------------------------------------------
     | Server Requirements
     |--------------------------------------------------------------------------
@@ -12,32 +12,32 @@ return [
     | by looping through the array and run "extension_loaded" on it.
     |
     */
-        'core'                   => [
-                'minPhpVersion' => '8.0.2',
+    'core' => [
+        'minPhpVersion' => '8.0.2',
+    ],
+    'final' => [
+        'key' => true,
+        'publish' => false,
+    ],
+    'requirements' => [
+        'php' => [
+            'openssl',
+            'pdo',
+            'bcmath',
+            'ctype',
+            'fileinfo',
+            'mbstring',
+            'tokenizer',
+            'xml',
+            'JSON',
+            'cURL',
         ],
-        'final'                  => [
-                'key'     => true,
-                'publish' => false,
+        'apache' => [
+            'mod_rewrite',
         ],
-        'requirements'           => [
-                'php'    => [
-                        'openssl',
-                        'pdo',
-                        'bcmath',
-                        'ctype',
-                        'fileinfo',
-                        'mbstring',
-                        'tokenizer',
-                        'xml',
-                        'JSON',
-                        'cURL',
-                ],
-                'apache' => [
-                        'mod_rewrite',
-                ],
-        ],
+    ],
 
-        /*
+    /*
     |--------------------------------------------------------------------------
     | Folders Permissions
     |--------------------------------------------------------------------------
@@ -46,13 +46,13 @@ return [
     | requires more permissions just add them to the array list bellow.
     |
     */
-        'permissions'            => [
-                'storage/framework/' => '775',
-                'storage/logs/'      => '775',
-                'bootstrap/cache/'   => '775',
-        ],
+    'permissions' => [
+        'storage/framework/' => '775',
+        'storage/logs/' => '775',
+        'bootstrap/cache/' => '775',
+    ],
 
-        /*
+    /*
     |--------------------------------------------------------------------------
     | Environment Form Wizard Validation Rules & Messages
     |--------------------------------------------------------------------------
@@ -61,23 +61,23 @@ return [
     | https://laravel.com/docs/5.4/validation#available-validation-rules
     |
     */
-        'environment'            => [
-                'form' => [
-                        'rules' => [
-                                'app_name'            => 'required|string',
-                                'app_url'             => 'required|url',
-                                'database_connection' => 'required|string',
-                                'database_host'       => 'required|string',
-                                'database_port'       => 'required|numeric',
-                                'database_name'       => 'required|string',
-                                'database_username'   => 'required|string',
-                                'database_password'   => 'nullable|string',
-                                'https_enable'        => 'required|string',
-                        ],
-                ],
+    'environment' => [
+        'form' => [
+            'rules' => [
+                'app_name' => 'required|string',
+                'app_url' => 'required|url',
+                'database_connection' => 'required|string',
+                'database_host' => 'required|string',
+                'database_port' => 'required|numeric',
+                'database_name' => 'required|string',
+                'database_username' => 'required|string',
+                'database_password' => 'nullable|string',
+                'https_enable' => 'required|string',
+            ],
         ],
+    ],
 
-        /*
+    /*
     |--------------------------------------------------------------------------
     | Installed Middleware Options
     |--------------------------------------------------------------------------
@@ -85,22 +85,22 @@ return [
     | canInstall middleware located in `canInstall.php`.
     |
     */
-        'installed'              => [
-                'redirectOptions' => [
-                        'route' => [
-                                'name' => 'welcome',
-                                'data' => [],
-                        ],
-                        'abort' => [
-                                'type' => '404',
-                        ],
-                        'dump'  => [
-                                'data' => 'Dumping a not found message.',
-                        ],
-                ],
+    'installed' => [
+        'redirectOptions' => [
+            'route' => [
+                'name' => 'welcome',
+                'data' => [],
+            ],
+            'abort' => [
+                'type' => '404',
+            ],
+            'dump' => [
+                'data' => 'Dumping a not found message.',
+            ],
         ],
+    ],
 
-        /*
+    /*
     |--------------------------------------------------------------------------
     | Selected Installed Middleware Option
     |--------------------------------------------------------------------------
@@ -110,9 +110,9 @@ return [
     | route, abort, dump, 404, default, ''
     |
     */
-        'installedAlreadyAction' => '',
+    'installedAlreadyAction' => '',
 
-        /*
+    /*
     |--------------------------------------------------------------------------
     | Updater Enabled
     |--------------------------------------------------------------------------
@@ -121,6 +121,6 @@ return [
     | Boolean value
     |
     */
-        'updaterEnabled'         => 'true',
+    'updaterEnabled' => 'true',
 
 ];
