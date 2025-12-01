@@ -110,11 +110,6 @@ class AppServiceProvider extends ServiceProvider
         {
                 Schema::defaultStringLength(191);
 
-                // Force SSL if isSecure does not detect HTTPS
-                if (config('app.url_force_https')) {
-                        URL::forceScheme('https');
-                }
-
                 Relation::morphMap([
                         'user'     => User::class,
                         'customer' => Customer::class,

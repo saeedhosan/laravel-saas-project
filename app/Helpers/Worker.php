@@ -11,7 +11,6 @@ use Carbon\Carbon;
  * Helper Worker
  * @author appsaeed7@gmail.com
  * @copyright 2023
- * @author_url link - https://appsaeed.github.io
  */
 class Worker {
     /**
