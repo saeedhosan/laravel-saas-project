@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -39,8 +40,10 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string active_portal
  * @property string email_verified_at
  */
-class User extends Authenticatable implements MustVerifyEmail {
-    use HasApiTokens, Notifiable;
+class User extends Authenticatable implements MustVerifyEmail
+{
+
+    use HasApiTokens, Notifiable, HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -109,8 +112,9 @@ class User extends Authenticatable implements MustVerifyEmail {
      *
      * @return object
      */
-    public static function findByUid( $uid ) {
-        return self::where( 'uid', $uid )->first();
+    public static function findByUid($uid)
+    {
+        return self::where('uid', $uid)->first();
     }
 
     /**
@@ -118,71 +122,81 @@ class User extends Authenticatable implements MustVerifyEmail {
      *
      * @return string
      */
-    public function getRouteKeyName(): string {
+    public function getRouteKeyName(): string
+    {
         return 'uid';
     }
 
-    public function customer(): HasOne {
-        return $this->hasOne( Customer::class );
+    public function customer(): HasOne
+    {
+        return $this->hasOne(Customer::class);
     }
 
-    public function admin(): HasOne {
-        return $this->hasOne( Admin::class );
+    public function admin(): HasOne
+    {
+        return $this->hasOne(Admin::class);
     }
 
-    public function systemJobs(): HasMany {
-        return $this->hasMany( SystemJob::class )->orderBy( 'created_at', 'desc' );
+    public function systemJobs(): HasMany
+    {
+        return $this->hasMany(SystemJob::class)->orderBy('created_at', 'desc');
     }
 
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
 
         // Create uid when creating list.
-        static::creating( function ( $item ) {
+        static::creating(function ($item) {
 
             $item->uid = Str::uuid();
 
-            if ( config( 'app.two_factor' ) ) {
+            if (config('app.two_factor')) {
                 $item->two_factor_backup_code = self::generateTwoFactorBackUpCode();
             }
-        } );
+        });
     }
 
     /**
      * Check if user has admin account.
      */
-    public function isAdmin(): bool {
+    public function isAdmin(): bool
+    {
         return 1 == $this->is_admin;
     }
 
     /**
      * Check if user has admin account.
      */
-    public function isCustomer(): bool {
+    public function isCustomer(): bool
+    {
         return 1 == $this->is_customer;
     }
 
     /*
      *  Display User Name
      */
-    public function displayName(): string {
+    public function displayName(): string
+    {
         return $this->first_name . ' ' . $this->last_name;
     }
 
     /**
      * generate two factor code
      */
-    public function generateTwoFactorCode() {
+    public function generateTwoFactorCode()
+    {
         $this->timestamps = false;
-        $this->two_factor_code = rand( 100000, 999999 );
-        $this->two_factor_expires_at = now()->addMinutes( 10 );
+        $this->two_factor_code = rand(100000, 999999);
+        $this->two_factor_expires_at = now()->addMinutes(10);
         $this->save();
     }
 
     /**
      * Reset two factor code
      */
-    public function resetTwoFactorCode() {
+    public function resetTwoFactorCode()
+    {
         $this->timestamps = false;
         $this->two_factor_code = null;
         $this->two_factor_expires_at = null;
@@ -194,13 +208,14 @@ class User extends Authenticatable implements MustVerifyEmail {
      *
      * @return false|string
      */
-    public static function generateTwoFactorBackUpCode() {
+    public static function generateTwoFactorBackUpCode()
+    {
         $backUpCode = [];
-        for ( $i = 0; $i < 8; $i++ ) {
-            $backUpCode[] = rand( 100000, 999999 );
+        for ($i = 0; $i < 8; $i++) {
+            $backUpCode[] = rand(100000, 999999);
         }
 
-        return json_encode( $backUpCode );
+        return json_encode($backUpCode);
     }
 
     /**
@@ -209,26 +224,27 @@ class User extends Authenticatable implements MustVerifyEmail {
      * @return string
      * @var void
      */
-    public function uploadImage( $file ): string {
+    public function uploadImage($file): string
+    {
         $path = 'app/profile/';
-        $upload_path = storage_path( $path );
+        $upload_path = storage_path($path);
 
-        if ( !file_exists( $upload_path ) ) {
-            mkdir( $upload_path, 0777, true );
+        if (!file_exists($upload_path)) {
+            mkdir($upload_path, 0777, true);
         }
 
         $filename = 'avatar-' . $this->id . '.' . $file->getClientOriginalExtension();
 
         // save to server
-        $file->move( $upload_path, $filename );
+        $file->move($upload_path, $filename);
 
         // create thumbnails
-        $img = Image::make( $upload_path . $filename );
+        $img = Image::make($upload_path . $filename);
 
-        $img->fit( 120, 120, function ( $c ) {
+        $img->fit(120, 120, function ($c) {
             $c->aspectRatio();
             $c->upsize();
-        } )->save( $upload_path . $filename . '.thumb.jpg' );
+        })->save($upload_path . $filename . '.thumb.jpg');
 
         return $path . $filename;
     }
@@ -239,9 +255,10 @@ class User extends Authenticatable implements MustVerifyEmail {
      * @return string
      * @var string
      */
-    public function imagePath(): string {
-        if ( !empty( $this->image ) && !empty( $this->id ) ) {
-            return storage_path( $this->image ) . '.thumb.jpg';
+    public function imagePath(): string
+    {
+        if (!empty($this->image) && !empty($this->id)) {
+            return storage_path($this->image) . '.thumb.jpg';
         } else {
             return '';
         }
@@ -252,27 +269,31 @@ class User extends Authenticatable implements MustVerifyEmail {
      *
      * @var string
      */
-    public function removeImage() {
-        if ( !empty( $this->image ) && !empty( $this->id ) ) {
-            $path = storage_path( $this->image );
-            if ( is_file( $path ) ) {
-                unlink( $path );
+    public function removeImage()
+    {
+        if (!empty($this->image) && !empty($this->id)) {
+            $path = storage_path($this->image);
+            if (is_file($path)) {
+                unlink($path);
             }
-            if ( is_file( $path . '.thumb.jpg' ) ) {
-                unlink( $path . '.thumb.jpg' );
+            if (is_file($path . '.thumb.jpg')) {
+                unlink($path . '.thumb.jpg');
             }
         }
     }
 
-    public function getCanEditAttribute(): bool {
+    public function getCanEditAttribute(): bool
+    {
         return 1 === auth()->id();
     }
 
-    public function getCanDeleteAttribute(): bool {
-        return $this->id !== auth()->id() && ( Gate::check( 'delete customer' ) );
+    public function getCanDeleteAttribute(): bool
+    {
+        return $this->id !== auth()->id() && (Gate::check('delete customer'));
     }
 
-    public function getIsSuperAdminAttribute(): bool {
+    public function getIsSuperAdminAttribute(): bool
+    {
         return 1 === $this->id;
     }
 
@@ -281,8 +302,9 @@ class User extends Authenticatable implements MustVerifyEmail {
      *
      * @return BelongsToMany
      */
-    public function roles(): BelongsToMany {
-        return $this->belongsToMany( Role::class );
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
     }
 
     /**
@@ -290,26 +312,28 @@ class User extends Authenticatable implements MustVerifyEmail {
      *
      * @return bool
      */
-    public function hasRole( $name ): bool {
-        return $this->roles->contains( 'name', $name );
+    public function hasRole($name): bool
+    {
+        return $this->roles->contains('name', $name);
     }
 
     /**
      * @return Collection
      */
 
-    public function getPermissions(): Collection {
+    public function getPermissions(): Collection
+    {
         $permissions = [];
 
-        foreach ( $this->roles as $role ) {
-            foreach ( $role->permissions as $permission ) {
-                if ( !in_array( $permission, $permissions, true ) ) {
+        foreach ($this->roles as $role) {
+            foreach ($role->permissions as $permission) {
+                if (!in_array($permission, $permissions, true)) {
                     $permissions[] = $permission;
                 }
             }
         }
 
-        return collect( $permissions );
+        return collect($permissions);
     }
 
     /**
@@ -317,21 +341,23 @@ class User extends Authenticatable implements MustVerifyEmail {
      * @param bool $withoutAuth
      * @return \App\Models\User
      */
-    public static function allcustomers( $withoutAuth = false ) {
-        if ( $withoutAuth ) {
-            return self::where( 'active_portal', 'customer' )->get();
+    public static function allcustomers($withoutAuth = false)
+    {
+        if ($withoutAuth) {
+            return self::where('active_portal', 'customer')->get();
         }
-        return self::where( 'active_portal', 'customer' )
-            ->where( 'id', '!=', auth()->user()->id )->get();
+        return self::where('active_portal', 'customer')
+            ->where('id', '!=', auth()->user()->id)->get();
     }
     /**
      * get user full name
      * @param string $user_id
      * @return string
      */
-    public static function fullname( $user_id = null ) {
-        if ( $user_id && self::find( $user_id ) ) {
-            $user = self::find( $user_id );
+    public static function fullname($user_id = null)
+    {
+        if ($user_id && self::find($user_id)) {
+            $user = self::find($user_id);
             return $user->first_name . ' ' . $user->last_name;
         }
         return Auth::user()->first_name . ' ' . Auth::user()->last_name;
@@ -341,9 +367,10 @@ class User extends Authenticatable implements MustVerifyEmail {
      * @param string $user_id
      * @return string
      */
-    public static function getEmail( $user_id = null ) {
-        if ( $user_id && self::find( $user_id ) ) {
-            return self::find( $user_id )->email;
+    public static function getEmail($user_id = null)
+    {
+        if ($user_id && self::find($user_id)) {
+            return self::find($user_id)->email;
         }
         return '';
     }
@@ -352,9 +379,10 @@ class User extends Authenticatable implements MustVerifyEmail {
      * @param string $user_id
      * @return string
      */
-    public static function getImage( $user_id = null ) {
-        if ( $user_id && self::find( $user_id ) ) {
-            return self::find( $user_id )->email;
+    public static function getImage($user_id = null)
+    {
+        if ($user_id && self::find($user_id)) {
+            return self::find($user_id)->email;
         }
         return '';
     }
@@ -362,11 +390,12 @@ class User extends Authenticatable implements MustVerifyEmail {
     /**
      *
      */
-    public static function getAvatar( $user_id = null ) {
-        return route( 'user.avatar', self::find( $user_id )->uid );
-        if ( $user_id ) {
+    public static function getAvatar($user_id = null)
+    {
+        return route('user.avatar', self::find($user_id)->uid);
+        if ($user_id) {
         } else {
-            return route( 'user.avatar', auth()->user()->uid );
+            return route('user.avatar', auth()->user()->uid);
         }
     }
 }
