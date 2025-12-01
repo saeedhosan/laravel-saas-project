@@ -43,7 +43,8 @@
     "fakerphp/faker": "^1.9.1",
     "laravel/horizon": "^5.9.7",
     "laravel/sail": "^1.0.1",
-    "phpunit/phpunit": "^9.5.20",
+    "nunomaduro/collision": "^6.4",
+    "phpunit/phpunit": "^9.5",
     "spatie/laravel-ignition": "^1.2.3",
     "tanmuhittin/laravel-google-translate": "^2.2"
   },
