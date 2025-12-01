@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\Testcontroller;
 use Arcanedev\Html\Elements\File;
 use Database\Seeders\Countries;
 use Illuminate\Mail\Markdown;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,7 +23,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/test', [Testcontroller::class, 'index']);
 
-
 Route::get('/clear', function () {
 
     Artisan::call('cache:clear');
@@ -31,7 +31,7 @@ Route::get('/clear', function () {
     Artisan::call('view:clear');
     Artisan::call('optimize:clear');
 
-    return "Cleared!";
+    return 'Cleared!';
 });
 
 Route::get('/readme', function () {
@@ -40,12 +40,12 @@ Route::get('/readme', function () {
 
 Route::get('/', function () {
 
-    //redirect for install when application mode is new
-    if (config('app.stage') == 'new') {
+    // redirect for install when application mode is new
+    if (config('app.stage') === 'new') {
         return redirect('install');
     }
 
-    //redirect for update
+    // redirect for update
     // if (config('app.stage') == 'Live' && config('app.version') == '2.8') {
     //     return redirect('update');
     // }
@@ -57,10 +57,10 @@ Route::get('/', function () {
 Route::get('lang/{locale}', [LanguageController::class, 'swap']);
 Route::any('languages', [LanguageController::class, 'languages'])->name('languages');
 
-if (config('app.stage') == 'local') {
+if (config('app.stage') === 'local') {
 
     Route::get('update-file', function () {
-        $app_path = base_path() . '/bootstrap/cache/';
+        $app_path = base_path().'/bootstrap/cache/';
         if (File::isDirectory($app_path)) {
             File::cleanDirectory($app_path);
         }

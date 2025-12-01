@@ -2,34 +2,35 @@
 
 namespace App\Library;
 
-
-class PayUMoney {
-
-protected $params = [];
-protected $_url;
-protected $environment = 'sandbox';
-
-
-function __construct($environment)
+class PayUMoney
 {
-    $this->environment = $environment;
-    $this->param('service_provider', 'payu_paisa');
-}
+    protected $params = [];
 
-public function param($param, $value)
-{
-    $this->params["$param"] = $value;
-}
+    protected $_url;
 
-public function gw_submit() {
+    protected $environment = 'sandbox';
 
-if ($this->environment == 'sandbox') {
-    $this->_url = 'https://sandboxsecure.payu.in/_payment';
-} else {
-    $this->_url = 'https://secure.payu.in/_payment';
-}
+    public function __construct($environment)
+    {
+        $this->environment = $environment;
+        $this->param('service_provider', 'payu_paisa');
+    }
 
-?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+    public function param($param, $value)
+    {
+        $this->params["$param"] = $value;
+    }
+
+    public function gw_submit()
+    {
+
+        if ($this->environment === 'sandbox') {
+            $this->_url = 'https://sandboxsecure.payu.in/_payment';
+        } else {
+            $this->_url = 'https://secure.payu.in/_payment';
+        }
+
+        ?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -100,12 +101,12 @@ if ($this->environment == 'sandbox') {
 </div>
 <form name="gw" action="<?php echo $this->_url; ?>" method="POST">
     <?php
-    foreach ($this->params as $name => $value) {
-        echo "<input type=\"hidden\" name=\"$name\" value=\"$value\"/>\n";
-    }
-    ?>
+            foreach ($this->params as $name => $value) {
+                echo "<input type=\"hidden\" name=\"$name\" value=\"$value\"/>\n";
+            }
+        ?>
 </form>
 </body>
 </html>
 <?php }
-}
+    }

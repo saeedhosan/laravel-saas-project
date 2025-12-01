@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Middleware;
 
 use App\Http\Middleware\TwoFactor;
@@ -18,8 +20,8 @@ class TwoFactorTest extends TestCase
         parent::setUp();
 
         // Fake routes for redirect()
-        Route::name('login')->get('/login', fn() => 'login');
-        Route::name('verify.index')->get('/verify', fn() => 'verify');
+        Route::name('login')->get('/login', fn () => 'login');
+        Route::name('verify.index')->get('/verify', fn () => 'verify');
     }
 
     /** @test */
@@ -28,9 +30,9 @@ class TwoFactorTest extends TestCase
         Config::set('app.two_factor', false);
 
         $middleware = new TwoFactor();
-        $request = Request::create('/dashboard', 'GET');
+        $request    = Request::create('/dashboard', 'GET');
 
-        $next = fn() => 'OK';
+        $next = fn () => 'OK';
 
         $result = $middleware->handle($request, $next);
 
@@ -46,33 +48,31 @@ class TwoFactorTest extends TestCase
         Auth::shouldReceive('user')->andReturn(null);   // ← ADD THIS
 
         $middleware = new TwoFactor();
-        $request = Request::create('/dashboard', 'GET');
+        $request    = Request::create('/dashboard', 'GET');
 
-        $next = fn() => 'OK';
+        $next = fn () => 'OK';
 
         $result = $middleware->handle($request, $next);
 
         $this->assertEquals('OK', $result);
     }
 
-
-
     /** @test */
     public function it_allows_request_when_2fa_not_enabled_for_user()
     {
         Config::set('app.two_factor', true);
 
-        $user = Mockery::mock(User::class)->makePartial();
-        $user->two_factor = false;
+        $user                  = Mockery::mock(User::class)->makePartial();
+        $user->two_factor      = false;
         $user->two_factor_code = null;
 
         Auth::shouldReceive('check')->andReturn(true);
         Auth::shouldReceive('user')->andReturn($user);
 
         $middleware = new TwoFactor();
-        $request = Request::create('/dashboard', 'GET');
+        $request    = Request::create('/dashboard', 'GET');
 
-        $next = fn() => 'OK';
+        $next = fn () => 'OK';
 
         $this->assertEquals('OK', $middleware->handle($request, $next));
     }
@@ -82,9 +82,9 @@ class TwoFactorTest extends TestCase
     {
         Config::set('app.two_factor', true);
 
-        $user = Mockery::mock(User::class)->makePartial();
-        $user->two_factor = true;
-        $user->two_factor_code = '1234';
+        $user                        = Mockery::mock(User::class)->makePartial();
+        $user->two_factor            = true;
+        $user->two_factor_code       = '1234';
         $user->two_factor_expires_at = now()->subMinutes(1);
 
         $user->shouldReceive('resetTwoFactorCode')->once();
@@ -94,9 +94,9 @@ class TwoFactorTest extends TestCase
         Auth::shouldReceive('logout')->once();
 
         $middleware = new TwoFactor();
-        $request = Request::create('/dashboard', 'GET');
+        $request    = Request::create('/dashboard', 'GET');
 
-        $response = $middleware->handle($request, fn() => null);
+        $response = $middleware->handle($request, fn () => null);
 
         $this->assertTrue($response->isRedirect(route('login')));
         $this->assertEquals('info', session('status'));
@@ -107,18 +107,18 @@ class TwoFactorTest extends TestCase
     {
         Config::set('app.two_factor', true);
 
-        $user = Mockery::mock(User::class)->makePartial();
-        $user->two_factor = true;
-        $user->two_factor_code = '1234';
+        $user                        = Mockery::mock(User::class)->makePartial();
+        $user->two_factor            = true;
+        $user->two_factor_code       = '1234';
         $user->two_factor_expires_at = now()->addMinutes(5);
 
         Auth::shouldReceive('check')->andReturn(true);
         Auth::shouldReceive('user')->andReturn($user);
 
         $middleware = new TwoFactor();
-        $request = Request::create('/dashboard', 'GET');
+        $request    = Request::create('/dashboard', 'GET');
 
-        $response = $middleware->handle($request, fn() => null);
+        $response = $middleware->handle($request, fn () => null);
 
         $this->assertTrue($response->isRedirect(route('verify.index')));
     }
@@ -128,18 +128,18 @@ class TwoFactorTest extends TestCase
     {
         Config::set('app.two_factor', true);
 
-        $user = Mockery::mock(User::class)->makePartial();
-        $user->two_factor = true;
-        $user->two_factor_code = '1234';
+        $user                        = Mockery::mock(User::class)->makePartial();
+        $user->two_factor            = true;
+        $user->two_factor_code       = '1234';
         $user->two_factor_expires_at = now()->addMinutes(5);
 
         Auth::shouldReceive('check')->andReturn(true);
         Auth::shouldReceive('user')->andReturn($user);
 
         $middleware = new TwoFactor();
-        $request = Request::create('/verify', 'GET');
+        $request    = Request::create('/verify', 'GET');
 
-        $next = fn() => 'OK';
+        $next = fn () => 'OK';
 
         $result = $middleware->handle($request, $next);
 

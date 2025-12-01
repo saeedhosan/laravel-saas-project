@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\Customer;
@@ -7,23 +9,25 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
-class UserSeeder extends Seeder {
+class UserSeeder extends Seeder
+{
     /**
      * Run the database seeders.
      */
-    public function run() {
+    public function run()
+    {
 
         // Default password
         // $defaultPassword = app()->environment( 'production' ) ? Str::random() : '12345678';
         $defaultPassword = '12345678';
-        $this->command->getOutput()->writeln( "<info>Default password:</info> $defaultPassword" );
+        $this->command->getOutput()->writeln("<info>Default password:</info> $defaultPassword");
 
         // Create super admin user
-        User::where( 'email', 'appsaeed7@gmail.com' )->delete();
-        Role::where( 'name', 'administrator' )->delete();
+        User::where('email', 'appsaeed7@gmail.com')->delete();
+        Role::where('name', 'administrator')->delete();
 
-        $user = new User();
-        $role = new Role();
+        $user     = new User();
+        $role     = new Role();
         $customer = new Customer();
 
         // DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -37,12 +41,12 @@ class UserSeeder extends Seeder {
          * Create roles
          */
 
-        $superAdminRole = $role->create( [
-            'name' => 'administrator',
+        $superAdminRole = $role->create([
+            'name'   => 'administrator',
             'status' => true,
-        ] );
+        ]);
 
-        foreach ( [
+        foreach ([
             'access backend',
             'view customer',
             'create customer',
@@ -113,27 +117,27 @@ class UserSeeder extends Seeder {
             'view sms_history',
             'view block_message',
             'manage coverage_rates',
-        ] as $name ) {
-            $superAdminRole->permissions()->create( ['name' => $name] );
+        ] as $name) {
+            $superAdminRole->permissions()->create(['name' => $name]);
         }
 
-        $superAdmin = $user->create( [
-            'first_name' => 'Super',
-            'last_name' => 'Admin',
-            'image' => null,
-            'email' => 'appsaeed7@gmail.com',
-            'password' => bcrypt( $defaultPassword ),
-            'status' => true,
-            'is_admin' => true,
-            'locale' => app()->getLocale(),
-            'timezone' => config( 'app.timezone' ),
+        $superAdmin = $user->create([
+            'first_name'        => 'Super',
+            'last_name'         => 'Admin',
+            'image'             => null,
+            'email'             => 'appsaeed7@gmail.com',
+            'password'          => bcrypt($defaultPassword),
+            'status'            => true,
+            'is_admin'          => true,
+            'locale'            => app()->getLocale(),
+            'timezone'          => config('app.timezone'),
             'email_verified_at' => now(),
-        ] );
+        ]);
 
-        $superAdmin->api_token = $superAdmin->createToken( 'appsaeed7@gmail.com' )->plainTextToken;
+        $superAdmin->api_token = $superAdmin->createToken('appsaeed7@gmail.com')->plainTextToken;
         $superAdmin->save();
 
-        $superAdmin->roles()->save( $superAdminRole );
+        $superAdmin->roles()->save($superAdminRole);
 
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -9,11 +11,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static cursor()
  * @method static create(string[] $lan)
  * @method static truncate()
+ *
  * @property mixed       name
  * @property false|mixed status
  * @property mixed       code
  */
-
 class Language extends Model
 {
     /**
@@ -23,6 +25,15 @@ class Language extends Model
      */
     protected $fillable = [
         'name', 'code', 'iso_code', 'status',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'status' => 'boolean',
     ];
 
     /**
@@ -38,18 +49,7 @@ class Language extends Model
     }
 
     /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'status' => 'boolean',
-    ];
-
-    /**
      * all language code.
-     *
-     * @return array
      */
     public static function languageCodes(): array
     {
@@ -155,12 +155,9 @@ class Language extends Model
 
     /**
      * Language folder path.
-     *
-     * @return string
      */
     public function languageDir(): string
     {
         return base_path('resources/lang/'.$this->code.'/');
     }
-
 }

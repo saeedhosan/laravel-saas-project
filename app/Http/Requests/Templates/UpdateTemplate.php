@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Templates;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -10,8 +12,6 @@ class UpdateTemplate extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -20,8 +20,6 @@ class UpdateTemplate extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -31,11 +29,11 @@ class UpdateTemplate extends FormRequest
         $name    = $this->name;
 
         return [
-                'name'    => ['required',
-                        Rule::unique('templates')->where(function ($query) use ($user_id, $name) {
-                            return $query->where('user_id', $user_id)->where('name', $name);
-                        })->ignore($id)],
-                'message' => 'required',
+            'name' => ['required',
+                Rule::unique('templates')->where(function ($query) use ($user_id, $name) {
+                    return $query->where('user_id', $user_id)->where('name', $name);
+                })->ignore($id)],
+            'message' => 'required',
         ];
     }
 
@@ -47,7 +45,7 @@ class UpdateTemplate extends FormRequest
     public function messages(): array
     {
         return [
-                'name.unique' => __('locale.templates.template_available', ['template' => $this->name]),
+            'name.unique' => __('locale.templates.template_available', ['template' => $this->name]),
         ];
     }
 }

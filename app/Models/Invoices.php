@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Carbon\Carbon;
@@ -18,24 +20,27 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Invoices extends Model
 {
-
     /**
      * Invoice status
      */
+    public const STATUS_PAID = 'paid';
 
-    const STATUS_PAID = 'paid';
-    const STATUS_CANCELLED = 'cancelled';
-    const STATUS_UNPAID = 'unpaid';
-    const STATUS_PENDING = 'pending';
+    public const STATUS_CANCELLED = 'cancelled';
+
+    public const STATUS_UNPAID = 'unpaid';
+
+    public const STATUS_PENDING = 'pending';
 
     /**
      * Invoice types
      */
+    public const TYPE_SENDERID = 'senderid';
 
-    const TYPE_SENDERID = 'senderid';
-    const TYPE_KEYWORD = 'keyword';
-    const TYPE_SUBSCRIPTION = 'subscription';
-    const TYPE_NUMBERS = 'number';
+    public const TYPE_KEYWORD = 'keyword';
+
+    public const TYPE_SUBSCRIPTION = 'subscription';
+
+    public const TYPE_NUMBERS = 'number';
 
     /**
      * fillable value
@@ -43,19 +48,18 @@ class Invoices extends Model
      * @var string[]
      */
     protected $fillable = [
-            'uid',
-            'user_id',
-            'currency_id',
-            'payment_method',
-            'amount',
-            'type',
-            'description',
-            'transaction_id',
-            'status',
-            'created_at',
-            'updated_at',
+        'uid',
+        'user_id',
+        'currency_id',
+        'payment_method',
+        'amount',
+        'type',
+        'description',
+        'transaction_id',
+        'status',
+        'created_at',
+        'updated_at',
     ];
-
 
     /**
      * Bootstrap any application services.
@@ -75,24 +79,16 @@ class Invoices extends Model
         });
     }
 
-
     /**
      * get user
-     *
-     * @return BelongsTo
-     *
      */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-
     /**
      * Currency
-     *
-     * @return BelongsTo
-     *
      */
     public function currency(): BelongsTo
     {
@@ -101,9 +97,6 @@ class Invoices extends Model
 
     /**
      * Payment method
-     *
-     * @return BelongsTo
-     *
      */
     public function paymentMethod(): BelongsTo
     {
@@ -112,8 +105,6 @@ class Invoices extends Model
 
     /**
      * get status
-     *
-     * @return string
      */
     public function getStatus(): string
     {
@@ -122,18 +113,14 @@ class Invoices extends Model
 
     public function scopeCurrentMonth($query)
     {
-        return $query->where('created_at', ">=", Carbon::now()->firstOfMonth());
+        return $query->where('created_at', '>=', Carbon::now()->firstOfMonth());
     }
-
 
     /**
      * get route key by uid
-     *
-     * @return string
      */
     public function getRouteKeyName(): string
     {
         return 'uid';
     }
-
 }

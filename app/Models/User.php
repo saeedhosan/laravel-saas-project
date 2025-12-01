@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -26,6 +28,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @method truncate()
  * @method displayName()
  * @method create(array $array)
+ *
  * @property bool is_admin
  * @property string first_name
  * @property string last_name
@@ -42,8 +45,7 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-
-    use HasApiTokens, Notifiable, HasFactory;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -99,16 +101,15 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $casts = [
-        'is_admin' => 'boolean',
+        'is_admin'    => 'boolean',
         'is_customer' => 'boolean',
-        'status' => 'boolean',
-        'two_factor' => 'boolean',
+        'status'      => 'boolean',
+        'two_factor'  => 'boolean',
     ];
 
     /**
      * Find item by uid.
      *
-     * @param $uid
      *
      * @return object
      */
@@ -117,10 +118,110 @@ class User extends Authenticatable implements MustVerifyEmail
         return self::where('uid', $uid)->first();
     }
 
+    public static function boot()
+    {
+        parent::boot();
+
+        // Create uid when creating list.
+        static::creating(function ($item) {
+
+            $item->uid = Str::uuid();
+
+            if (config('app.two_factor')) {
+                $item->two_factor_backup_code = self::generateTwoFactorBackUpCode();
+            }
+        });
+    }
+
+    /**
+     * generate two factor backup code
+     *
+     * @return false|string
+     */
+    public static function generateTwoFactorBackUpCode()
+    {
+        $backUpCode = [];
+        for ($i = 0; $i < 8; $i++) {
+            $backUpCode[] = rand(100000, 999999);
+        }
+
+        return json_encode($backUpCode);
+    }
+
+    /**
+     * get customer for todos
+     *
+     * @param  bool  $withoutAuth
+     * @return User
+     */
+    public static function allcustomers($withoutAuth = false)
+    {
+        if ($withoutAuth) {
+            return self::where('active_portal', 'customer')->get();
+        }
+
+        return self::where('active_portal', 'customer')
+            ->where('id', '!=', auth()->user()->id)->get();
+    }
+
+    /**
+     * get user full name
+     *
+     * @param  string  $user_id
+     * @return string
+     */
+    public static function fullname($user_id = null)
+    {
+        if ($user_id && self::find($user_id)) {
+            $user = self::find($user_id);
+
+            return $user->first_name.' '.$user->last_name;
+        }
+
+        return Auth::user()->first_name.' '.Auth::user()->last_name;
+    }
+
+    /**
+     *  get Email
+     *
+     * @param  string  $user_id
+     * @return string
+     */
+    public static function getEmail($user_id = null)
+    {
+        if ($user_id && self::find($user_id)) {
+            return self::find($user_id)->email;
+        }
+
+        return '';
+    }
+
+    /**
+     *  get Email
+     *
+     * @param  string  $user_id
+     * @return string
+     */
+    public static function getImage($user_id = null)
+    {
+        if ($user_id && self::find($user_id)) {
+            return self::find($user_id)->email;
+        }
+
+        return '';
+    }
+
+    public static function getAvatar($user_id = null)
+    {
+        return route('user.avatar', self::find($user_id)->uid);
+        if ($user_id) {
+        } else {
+            return route('user.avatar', auth()->user()->uid);
+        }
+    }
+
     /**
      * get route key by uid
-     *
-     * @return string
      */
     public function getRouteKeyName(): string
     {
@@ -142,27 +243,12 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(SystemJob::class)->orderBy('created_at', 'desc');
     }
 
-    public static function boot()
-    {
-        parent::boot();
-
-        // Create uid when creating list.
-        static::creating(function ($item) {
-
-            $item->uid = Str::uuid();
-
-            if (config('app.two_factor')) {
-                $item->two_factor_backup_code = self::generateTwoFactorBackUpCode();
-            }
-        });
-    }
-
     /**
      * Check if user has admin account.
      */
     public function isAdmin(): bool
     {
-        return 1 == $this->is_admin;
+        return $this->is_admin === 1;
     }
 
     /**
@@ -170,7 +256,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isCustomer(): bool
     {
-        return 1 == $this->is_customer;
+        return $this->is_customer === 1;
     }
 
     /*
@@ -178,7 +264,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function displayName(): string
     {
-        return $this->first_name . ' ' . $this->last_name;
+        return $this->first_name.' '.$this->last_name;
     }
 
     /**
@@ -186,8 +272,8 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function generateTwoFactorCode()
     {
-        $this->timestamps = false;
-        $this->two_factor_code = rand(100000, 999999);
+        $this->timestamps            = false;
+        $this->two_factor_code       = rand(100000, 999999);
         $this->two_factor_expires_at = now()->addMinutes(10);
         $this->save();
     }
@@ -197,71 +283,55 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function resetTwoFactorCode()
     {
-        $this->timestamps = false;
-        $this->two_factor_code = null;
+        $this->timestamps            = false;
+        $this->two_factor_code       = null;
         $this->two_factor_expires_at = null;
         $this->save();
     }
 
     /**
-     * generate two factor backup code
-     *
-     * @return false|string
-     */
-    public static function generateTwoFactorBackUpCode()
-    {
-        $backUpCode = [];
-        for ($i = 0; $i < 8; $i++) {
-            $backUpCode[] = rand(100000, 999999);
-        }
-
-        return json_encode($backUpCode);
-    }
-
-    /**
      * Upload and resize avatar.
      *
-     * @return string
      * @var void
      */
     public function uploadImage($file): string
     {
-        $path = 'app/profile/';
+        $path        = 'app/profile/';
         $upload_path = storage_path($path);
 
-        if (!file_exists($upload_path)) {
+        if (! file_exists($upload_path)) {
             mkdir($upload_path, 0777, true);
         }
 
-        $filename = 'avatar-' . $this->id . '.' . $file->getClientOriginalExtension();
+        $filename = 'avatar-'.$this->id.'.'.$file->getClientOriginalExtension();
 
         // save to server
         $file->move($upload_path, $filename);
 
         // create thumbnails
-        $img = Image::make($upload_path . $filename);
+        $img = Image::make($upload_path.$filename);
 
         $img->fit(120, 120, function ($c) {
             $c->aspectRatio();
             $c->upsize();
-        })->save($upload_path . $filename . '.thumb.jpg');
+        })->save($upload_path.$filename.'.thumb.jpg');
 
-        return $path . $filename;
+        return $path.$filename;
     }
 
     /**
      * Get image thumb path.
      *
-     * @return string
      * @var string
      */
     public function imagePath(): string
     {
-        if (!empty($this->image) && !empty($this->id)) {
-            return storage_path($this->image) . '.thumb.jpg';
-        } else {
-            return '';
+        if (! empty($this->image) && ! empty($this->id)) {
+            return storage_path($this->image).'.thumb.jpg';
         }
+
+        return '';
+
     }
 
     /**
@@ -271,20 +341,20 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function removeImage()
     {
-        if (!empty($this->image) && !empty($this->id)) {
+        if (! empty($this->image) && ! empty($this->id)) {
             $path = storage_path($this->image);
             if (is_file($path)) {
                 unlink($path);
             }
-            if (is_file($path . '.thumb.jpg')) {
-                unlink($path . '.thumb.jpg');
+            if (is_file($path.'.thumb.jpg')) {
+                unlink($path.'.thumb.jpg');
             }
         }
     }
 
     public function getCanEditAttribute(): bool
     {
-        return 1 === auth()->id();
+        return auth()->id() === 1;
     }
 
     public function getCanDeleteAttribute(): bool
@@ -294,32 +364,21 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getIsSuperAdminAttribute(): bool
     {
-        return 1 === $this->id;
+        return $this->id === 1;
     }
 
     /**
      * Many-to-Many relations with Role.
-     *
-     * @return BelongsToMany
      */
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
     }
 
-    /**
-     * @param $name
-     *
-     * @return bool
-     */
     public function hasRole($name): bool
     {
         return $this->roles->contains('name', $name);
     }
-
-    /**
-     * @return Collection
-     */
 
     public function getPermissions(): Collection
     {
@@ -327,75 +386,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
         foreach ($this->roles as $role) {
             foreach ($role->permissions as $permission) {
-                if (!in_array($permission, $permissions, true)) {
+                if (! in_array($permission, $permissions, true)) {
                     $permissions[] = $permission;
                 }
             }
         }
 
         return collect($permissions);
-    }
-
-    /**
-     * get customer for todos
-     * @param bool $withoutAuth
-     * @return \App\Models\User
-     */
-    public static function allcustomers($withoutAuth = false)
-    {
-        if ($withoutAuth) {
-            return self::where('active_portal', 'customer')->get();
-        }
-        return self::where('active_portal', 'customer')
-            ->where('id', '!=', auth()->user()->id)->get();
-    }
-    /**
-     * get user full name
-     * @param string $user_id
-     * @return string
-     */
-    public static function fullname($user_id = null)
-    {
-        if ($user_id && self::find($user_id)) {
-            $user = self::find($user_id);
-            return $user->first_name . ' ' . $user->last_name;
-        }
-        return Auth::user()->first_name . ' ' . Auth::user()->last_name;
-    }
-    /**
-     *  get Email
-     * @param string $user_id
-     * @return string
-     */
-    public static function getEmail($user_id = null)
-    {
-        if ($user_id && self::find($user_id)) {
-            return self::find($user_id)->email;
-        }
-        return '';
-    }
-    /**
-     *  get Email
-     * @param string $user_id
-     * @return string
-     */
-    public static function getImage($user_id = null)
-    {
-        if ($user_id && self::find($user_id)) {
-            return self::find($user_id)->email;
-        }
-        return '';
-    }
-
-    /**
-     *
-     */
-    public static function getAvatar($user_id = null)
-    {
-        return route('user.avatar', self::find($user_id)->uid);
-        if ($user_id) {
-        } else {
-            return route('user.avatar', auth()->user()->uid);
-        }
     }
 }

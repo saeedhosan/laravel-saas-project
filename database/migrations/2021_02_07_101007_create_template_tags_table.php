@@ -1,25 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTemplateTagsTable extends Migration {
+class CreateTemplateTagsTable extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
-        Schema::create( 'template_tags', function ( Blueprint $table ) {
+    public function up()
+    {
+        Schema::create('template_tags', function (Blueprint $table) {
             $table->id();
-            $table->text( 'uid' );
-            $table->string( 'name' );
-            $table->string( 'tag' );
-            $table->string( 'type' )->default( 'text' );
-            $table->boolean( 'required' )->default( false );
+            $table->text('uid');
+            $table->string('name');
+            $table->string('tag');
+            $table->string('type')->default('text');
+            $table->boolean('required')->default(false);
             $table->timestamps();
-        } );
+        });
     }
 
     /**
@@ -27,7 +31,8 @@ class CreateTemplateTagsTable extends Migration {
      *
      * @return void
      */
-    public function down() {
-        Schema::dropIfExists( 'template_tags' );
+    public function down()
+    {
+        Schema::dropIfExists('template_tags');
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Currency;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -8,8 +10,6 @@ class UpdateCurrencyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -18,8 +18,6 @@ class UpdateCurrencyRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -27,7 +25,7 @@ class UpdateCurrencyRequest extends FormRequest
 
         return [
             'name'   => 'required',
-            'code'   => 'required|alpha|size:3|unique:currencies,code,' . $currency->id,
+            'code'   => 'required|alpha|size:3|unique:currencies,code,'.$currency->id,
             'format' => 'required',
         ];
     }

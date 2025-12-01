@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
@@ -8,9 +11,6 @@ class ExcelRule implements Rule
 {
     private $file;
 
-    /**
-     * @param  UploadedFile  $file
-     */
     public function __construct(UploadedFile $file)
     {
         $this->file = $file;
@@ -19,14 +19,12 @@ class ExcelRule implements Rule
     /**
      * @param  string  $attribute
      * @param  mixed  $value
-     *
-     * @return bool
      */
     public function passes($attribute, $value): bool
     {
-        $extension = strtolower($this->file->getClientOriginalExtension());
+        $extension = mb_strtolower($this->file->getClientOriginalExtension());
 
-        return in_array($extension, ['csv', 'xls', 'xlsx']);
+        return in_array($extension, ['csv', 'xls', 'xlsx'], true);
     }
 
     public function message(): string

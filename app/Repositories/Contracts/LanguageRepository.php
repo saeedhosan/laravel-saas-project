@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories\Contracts;
 
 /* *
@@ -10,35 +12,24 @@ use App\Models\Language;
 
 interface LanguageRepository extends BaseRepository
 {
-
     /**
-     * @param  array  $input
-     *
      * @return mixed
      */
     public function store(array $input);
 
     /**
-     * @param  Language  $language
-     * @param  array  $input
-     *
      * @return mixed
      */
     public function update(Language $language, array $input);
 
     /**
-     * @param  Language  $language
-     *
      * @return mixed
      */
-
     public function destroy(Language $language);
-
 
     /**
      * download language
      *
-     * @param  Language  $language
      *
      * @return mixed
      */
@@ -47,8 +38,6 @@ interface LanguageRepository extends BaseRepository
     /**
      * upload language
      *
-     * @param  array  $input
-     * @param  Language  $language
      *
      * @return mixed
      */

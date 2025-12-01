@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories\Eloquent;
 
 use App\Exceptions\GeneralException;
@@ -14,8 +16,6 @@ class EloquentTemplateTagsRepository extends EloquentBaseRepository implements T
 {
     /**
      * EloquentTemplateTagsRepository constructor.
-     *
-     * @param  TemplateTags  $tags
      */
     public function __construct(TemplateTags $tags)
     {
@@ -23,8 +23,6 @@ class EloquentTemplateTagsRepository extends EloquentBaseRepository implements T
     }
 
     /**
-     * @param  array  $input
-     *
      * @return TemplateTags |mixed
      *
      * @throws GeneralException
@@ -33,13 +31,13 @@ class EloquentTemplateTagsRepository extends EloquentBaseRepository implements T
     {
         /** @var TemplateTags $tags */
         $tags = $this->make(Arr::only($input, [
-                'name',
-                'tag',
-                'type',
-                'required',
+            'name',
+            'tag',
+            'type',
+            'required',
         ]));
 
-        if ( ! $this->save($tags)) {
+        if (! $this->save($tags)) {
             throw new GeneralException(__('locale.exceptions.something_went_wrong'));
         }
 
@@ -48,31 +46,12 @@ class EloquentTemplateTagsRepository extends EloquentBaseRepository implements T
     }
 
     /**
-     * @param  TemplateTags  $tags
-     *
-     * @return bool
-     */
-    private function save(TemplateTags $tags): bool
-    {
-        if ( ! $tags->save()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param  TemplateTags  $tags
-     * @param  array  $input
-     *
-     * @return TemplateTags
      * @throws Exception|Throwable
-     *
      * @throws Exception
      */
     public function update(TemplateTags $tags, array $input): TemplateTags
     {
-        if ( ! $tags->update($input)) {
+        if (! $tags->update($input)) {
             throw new GeneralException(__('locale.exceptions.something_went_wrong'));
         }
 
@@ -80,15 +59,11 @@ class EloquentTemplateTagsRepository extends EloquentBaseRepository implements T
     }
 
     /**
-     * @param  TemplateTags  $tags
-     *
-     * @return bool|null
      * @throws Exception|Throwable
-     *
      */
     public function destroy(TemplateTags $tags): ?bool
     {
-        if ( ! $tags->delete()) {
+        if (! $tags->delete()) {
             throw new GeneralException(__('locale.exceptions.something_went_wrong'));
         }
 
@@ -96,11 +71,9 @@ class EloquentTemplateTagsRepository extends EloquentBaseRepository implements T
     }
 
     /**
-     * @param  array  $ids
-     *
      * @return mixed
-     * @throws Exception|Throwable
      *
+     * @throws Exception|Throwable
      */
     public function batchDestroy(array $ids): bool
     {
@@ -117,17 +90,15 @@ class EloquentTemplateTagsRepository extends EloquentBaseRepository implements T
     }
 
     /**
-     * @param  array  $ids
-     *
      * @return mixed
-     * @throws Exception|Throwable
      *
+     * @throws Exception|Throwable
      */
     public function batchRequired(array $ids): bool
     {
         DB::transaction(function () use ($ids) {
             if ($this->query()->whereIn('uid', $ids)
-                    ->update(['required' => true])
+                ->update(['required' => true])
             ) {
                 return true;
             }
@@ -139,17 +110,15 @@ class EloquentTemplateTagsRepository extends EloquentBaseRepository implements T
     }
 
     /**
-     * @param  array  $ids
-     *
      * @return mixed
-     * @throws Exception|Throwable
      *
+     * @throws Exception|Throwable
      */
     public function batchOptional(array $ids): bool
     {
         DB::transaction(function () use ($ids) {
             if ($this->query()->whereIn('uid', $ids)
-                    ->update(['required' => false])
+                ->update(['required' => false])
             ) {
                 return true;
             }
@@ -160,4 +129,12 @@ class EloquentTemplateTagsRepository extends EloquentBaseRepository implements T
         return true;
     }
 
+    private function save(TemplateTags $tags): bool
+    {
+        if (! $tags->save()) {
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -13,44 +15,45 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class InvoiceController extends Controller {
-
+class InvoiceController extends Controller
+{
     /**
      * view invoices
      *
      * @return Application|Factory|View
+     *
      * @throws AuthorizationException
      */
-    public function index() {
-        $this->authorize( 'view invoices' );
+    public function index()
+    {
+        $this->authorize('view invoices');
 
         $breadcrumbs = [
-            ['link' => url( config( 'app.admin_path' ) . "/dashboard" ), 'name' => __( 'locale.menu.Dashboard' )],
-            ['link' => url( config( 'app.admin_path' ) . "/dashboard" ), 'name' => __( 'locale.menu.Reports' )],
-            ['name' => __( 'locale.menu.All Invoices' )],
+            ['link' => url(config('app.admin_path').'/dashboard'), 'name' => __('locale.menu.Dashboard')],
+            ['link' => url(config('app.admin_path').'/dashboard'), 'name' => __('locale.menu.Reports')],
+            ['name' => __('locale.menu.All Invoices')],
         ];
 
-        return view( 'admin.Invoices.index', compact( 'breadcrumbs' ) );
+        return view('admin.Invoices.index', compact('breadcrumbs'));
     }
 
     /**
-     * @param  Request  $request
-     *
      * @return void
      */
-    public function search( Request $request ) {
+    public function search(Request $request)
+    {
 
         $columns = [
-            0 => 'responsive_id',
-            1 => 'uid',
-            2 => 'uid',
-            3 => 'created_at',
-            4 => 'id',
-            5 => 'type',
-            6 => 'description',
-            7 => 'amount',
-            8 => 'status',
-            9 => 'user_id',
+            0  => 'responsive_id',
+            1  => 'uid',
+            2  => 'uid',
+            3  => 'created_at',
+            4  => 'id',
+            5  => 'type',
+            6  => 'description',
+            7  => 'amount',
+            8  => 'status',
+            9  => 'user_id',
             10 => 'actions',
         ];
 
@@ -58,53 +61,53 @@ class InvoiceController extends Controller {
 
         $totalFiltered = $totalData;
 
-        $limit = $request->input( 'length' );
-        $start = $request->input( 'start' );
-        $order = $columns[$request->input( 'order.0.column' )];
-        $dir = $request->input( 'order.0.dir' );
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        $order = $columns[$request->input('order.0.column')];
+        $dir   = $request->input('order.0.dir');
 
-        if ( empty( $request->input( 'search.value' ) ) ) {
-            $invoices = Invoices::offset( $start )
-                ->limit( $limit )
-                ->orderBy( $order, $dir )
+        if (empty($request->input('search.value'))) {
+            $invoices = Invoices::offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir)
                 ->get();
         } else {
-            $search = $request->input( 'search.value' );
+            $search = $request->input('search.value');
 
-            $invoices = Invoices::whereLike( ['uid', 'type', 'created_at', 'description', 'amount', 'status', 'user.first_name', 'user.last_name'], $search )
-                ->offset( $start )
-                ->limit( $limit )
-                ->orderBy( $order, $dir )
+            $invoices = Invoices::whereLike(['uid', 'type', 'created_at', 'description', 'amount', 'status', 'user.first_name', 'user.last_name'], $search)
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir)
                 ->get();
 
-            $totalFiltered = Invoices::whereLike( ['uid', 'type', 'created_at', 'description', 'amount', 'status', 'user.first_name', 'user.last_name'], $search )->count();
+            $totalFiltered = Invoices::whereLike(['uid', 'type', 'created_at', 'description', 'amount', 'status', 'user.first_name', 'user.last_name'], $search)->count();
 
         }
 
         $data = [];
-        if ( !empty( $invoices ) ) {
-            foreach ( $invoices as $invoice ) {
+        if (! empty($invoices)) {
+            foreach ($invoices as $invoice) {
 
-                $show = route( 'admin.invoices.view', $invoice->uid );
+                $show = route('admin.invoices.view', $invoice->uid);
 
-                $customer_profile = route( 'admin.customers.show', $invoice->user->uid );
-                $customer_name = $invoice->user->displayName();
-                $user_id = "<a href='$customer_profile' class='text-primary mr-1'>$customer_name</a>";
-                $invoice_number = "<a href='$show' class='text-primary fw-bold'>#$invoice->id</a>";
+                $customer_profile = route('admin.customers.show', $invoice->user->uid);
+                $customer_name    = $invoice->user->displayName();
+                $user_id          = "<a href='$customer_profile' class='text-primary mr-1'>$customer_name</a>";
+                $invoice_number   = "<a href='$show' class='text-primary fw-bold'>#$invoice->id</a>";
 
                 $nestedData['responsive_id'] = '';
-                $nestedData['uid'] = $invoice->uid;
-                $nestedData['id'] = $invoice_number;
-                $nestedData['user_id'] = $user_id;
-                $nestedData['avatar'] = route( 'admin.customers.avatar', $invoice->user->uid );
-                $nestedData['email'] = $invoice->user->email;
-                $nestedData['created_at'] = Tool::customerDateTime( $invoice->created_at );
-                $nestedData['type'] = strtoupper( $invoice->type );
-                $nestedData['description'] = str_limit( $invoice->description, 35 );
-                $nestedData['amount'] = Tool::format_price( $invoice->amount, $invoice->currency->format );
-                $nestedData['status'] = $invoice->getStatus();
-                $nestedData['edit'] = $show;
-                $nestedData['delete'] = $invoice->uid;
+                $nestedData['uid']           = $invoice->uid;
+                $nestedData['id']            = $invoice_number;
+                $nestedData['user_id']       = $user_id;
+                $nestedData['avatar']        = route('admin.customers.avatar', $invoice->user->uid);
+                $nestedData['email']         = $invoice->user->email;
+                $nestedData['created_at']    = Tool::customerDateTime($invoice->created_at);
+                $nestedData['type']          = mb_strtoupper($invoice->type);
+                $nestedData['description']   = str_limit($invoice->description, 35);
+                $nestedData['amount']        = Tool::format_price($invoice->amount, $invoice->currency->format);
+                $nestedData['status']        = $invoice->getStatus();
+                $nestedData['edit']          = $show;
+                $nestedData['delete']        = $invoice->uid;
 
                 $data[] = $nestedData;
 
@@ -112,89 +115,86 @@ class InvoiceController extends Controller {
         }
 
         $json_data = [
-            "draw" => intval( $request->input( 'draw' ) ),
-            "recordsTotal" => intval( $totalData ),
-            "recordsFiltered" => intval( $totalFiltered ),
-            "data" => $data,
+            'draw'            => (int) ($request->input('draw')),
+            'recordsTotal'    => (int) $totalData,
+            'recordsFiltered' => (int) $totalFiltered,
+            'data'            => $data,
         ];
 
-        echo json_encode( $json_data );
+        echo json_encode($json_data);
         exit();
 
     }
 
-    public function view( Invoices $invoice ) {
+    public function view(Invoices $invoice)
+    {
 
         $breadcrumbs = [
-            ['link' => url( config( 'app.admin_path' ) . "/dashboard" ), 'name' => __( 'locale.menu.Dashboard' )],
-            ['link' => url( config( 'app.admin_path' ) . "/invoices" ), 'name' => __( 'locale.menu.All Invoices' )],
-            ['name' => __( 'locale.labels.invoice' )],
+            ['link' => url(config('app.admin_path').'/dashboard'), 'name' => __('locale.menu.Dashboard')],
+            ['link' => url(config('app.admin_path').'/invoices'), 'name' => __('locale.menu.All Invoices')],
+            ['name' => __('locale.labels.invoice')],
         ];
 
-        return view( 'admin.Invoices.view', compact( 'breadcrumbs', 'invoice' ) );
+        return view('admin.Invoices.view', compact('breadcrumbs', 'invoice'));
     }
 
-    public function print( Invoices $invoice ) {
+    public function print(Invoices $invoice)
+    {
 
         $pageConfigs = ['pageHeader' => false];
 
-        return view( 'admin.Invoices.print', compact( 'invoice', 'pageConfigs' ) );
+        return view('admin.Invoices.print', compact('invoice', 'pageConfigs'));
     }
 
     /**
-     * @param  Invoices  $invoice
-     *
-     * @return JsonResponse
      * @throws Exception
      */
-    public function destroy( Invoices $invoice ): JsonResponse {
-        if ( $this->checks() ) {
-            return response()->json( [
-                'status' => 'error',
+    public function destroy(Invoices $invoice): JsonResponse
+    {
+        if ($this->checks()) {
+            return response()->json([
+                'status'  => 'error',
                 'message' => 'Sorry! This option is not available in demo mode',
-            ] );
+            ]);
         }
 
-        if ( !$invoice->delete() ) {
-            return response()->json( [
-                'status' => 'error',
-                'message' => __( 'locale.exceptions.something_went_wrong' ),
-            ] );
+        if (! $invoice->delete()) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => __('locale.exceptions.something_went_wrong'),
+            ]);
         }
 
-        return response()->json( [
-            'status' => 'success',
+        return response()->json([
+            'status'  => 'success',
             'message' => 'Invoice was deleted successfully.',
-        ] );
+        ]);
 
     }
 
     /**
      * batch actions
-     *
-     * @param  Request  $request
-     *
-     * @return JsonResponse
      */
-    public function batchAction( Request $request ): JsonResponse {
-        if ( $this->checks() ) {
-            return response()->json( [
-                'status' => 'error',
+    public function batchAction(Request $request): JsonResponse
+    {
+        if ($this->checks()) {
+            return response()->json([
+                'status'  => 'error',
                 'message' => 'Sorry! This option is not available in demo mode',
-            ] );
+            ]);
         }
-        $ids = $request->get( 'ids' );
+        $ids = $request->get('ids');
 
-        if ( Invoices::whereIn( 'uid', $ids )->delete() ) {
-            return response()->json( [
-                'status' => 'success',
-                'message' => __( 'locale.subscription.invoices_deleted' ),
-            ] );
+        if (Invoices::whereIn('uid', $ids)->delete()) {
+            return response()->json([
+                'status'  => 'success',
+                'message' => __('locale.subscription.invoices_deleted'),
+            ]);
         }
 
-        return response()->json( [
-            'status' => 'error',
-            'message' => __( 'locale.exceptions.something_went_wrong' ),
-        ] );
+        return response()->json([
+            'status'  => 'error',
+            'message' => __('locale.exceptions.something_went_wrong'),
+        ]);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Rules;
 
 use App\Models\Keywords;
@@ -7,8 +9,8 @@ use Illuminate\Contracts\Validation\Rule;
 
 class UniqueKeyword implements Rule
 {
-
     protected $keyword;
+
     protected $user_id;
 
     /**
@@ -27,8 +29,6 @@ class UniqueKeyword implements Rule
      *
      * @param  string  $attribute
      * @param  mixed  $value
-     *
-     * @return bool
      */
     public function passes($attribute, $value): bool
     {
@@ -42,8 +42,6 @@ class UniqueKeyword implements Rule
 
     /**
      * Get the validation error message.
-     *
-     * @return string
      */
     public function message(): string
     {

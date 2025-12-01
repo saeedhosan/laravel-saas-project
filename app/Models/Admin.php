@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +11,7 @@ use Illuminate\Notifications\Notifiable;
  * @property mixed first_name
  * @property mixed last_name
  * @property mixed name
+ *
  * @method static where(string $string, string $uid)
  */
 class Admin extends Model
@@ -28,6 +31,10 @@ class Admin extends Model
         'admin_role',
     ];
 
+    public function __toString(): string
+    {
+        return $this->name;
+    }
 
     /**
      * Bootstrap any application services.
@@ -47,21 +54,8 @@ class Admin extends Model
         });
     }
 
-
-    /**
-     * @return string
-     */
     public function displayName(): string
     {
-        return $this->first_name . ' ' . $this->last_name;
+        return $this->first_name.' '.$this->last_name;
     }
-
-    /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->name;
-    }
-
 }

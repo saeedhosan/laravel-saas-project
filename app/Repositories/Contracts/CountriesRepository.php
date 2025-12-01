@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories\Contracts;
 
 /* *
@@ -10,20 +12,13 @@ use App\Models\Country;
 
 interface CountriesRepository extends BaseRepository
 {
-
     /**
-     * @param  array  $input
-     *
      * @return mixed
      */
     public function store(array $input);
 
     /**
-     * @param  Country  $country
-     *
      * @return mixed
      */
-
     public function destroy(Country $country);
-
 }

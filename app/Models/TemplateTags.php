@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -18,13 +20,11 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TemplateTags extends Model
 {
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-
     protected $fillable = [
         'name',
         'tag',
@@ -32,6 +32,10 @@ class TemplateTags extends Model
         'required',
     ];
 
+    public function __toString(): string
+    {
+        return $this->name;
+    }
 
     /**
      * Bootstrap any application services.
@@ -49,6 +53,24 @@ class TemplateTags extends Model
             }
             $item->uid = $uid;
         });
+    }
+
+    /**
+     * Find item by uid.
+     */
+    public static function findByUid($uid): object
+    {
+        return self::where('uid', $uid)->first();
+    }
+
+    /**
+     * get all plans
+     *
+     * @return mixed
+     */
+    public static function getAll()
+    {
+        return self::select('*');
     }
 
     /**
@@ -71,46 +93,10 @@ class TemplateTags extends Model
     }
 
     /**
-     * Find item by uid.
-     *
-     * @param $uid
-     *
-     * @return object
-     */
-    public static function findByUid($uid): object
-    {
-        return self::where('uid', $uid)->first();
-    }
-
-
-    /**
-     * get all plans
-     *
-     * @return mixed
-     */
-
-    public static function getAll()
-    {
-        return self::select('*');
-    }
-
-
-    /**
      * get route key by uid
-     *
-     * @return string
      */
     public function getRouteKeyName(): string
     {
         return 'uid';
-    }
-
-
-    /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->name;
     }
 }

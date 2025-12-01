@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Helpers;
 
 use Exception;
@@ -28,14 +30,13 @@ class DatabaseManager
     /**
      * Run the migration and call the seeder.
      *
-     * @param  BufferedOutput  $outputLog
      *
      * @return array
      */
     private function migrate(BufferedOutput $outputLog)
     {
         try {
-            Artisan::call('migrate:fresh', ['--force'=> true], $outputLog);
+            Artisan::call('migrate:fresh', ['--force' => true], $outputLog);
         } catch (Exception $e) {
             return $this->response($e->getMessage(), 'error', $outputLog);
         }
@@ -46,7 +47,6 @@ class DatabaseManager
     /**
      * Seed the database.
      *
-     * @param  BufferedOutput  $outputLog
      *
      * @return array
      */
@@ -64,25 +64,21 @@ class DatabaseManager
     /**
      * Return a formatted error messages.
      *
-     * @param string $message
-     * @param string $status
-     * @param  BufferedOutput $outputLog
-     *
+     * @param  string  $message
+     * @param  string  $status
      * @return array
      */
     private function response($message, $status, BufferedOutput $outputLog)
     {
         return [
-            'status' => $status,
-            'message' => $message,
+            'status'      => $status,
+            'message'     => $message,
             'dbOutputLog' => $outputLog->fetch(),
         ];
     }
 
     /**
      * Check database type. If SQLite, then create the database file.
-     *
-     * @param BufferedOutput $outputLog
      */
     private function sqlite(BufferedOutput $outputLog)
     {

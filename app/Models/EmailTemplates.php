@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @method static where(string $string, $uid)
  * @method static truncate()
+ *
  * @property mixed name
  */
 class EmailTemplates extends Model
@@ -17,28 +20,28 @@ class EmailTemplates extends Model
      * @var array
      */
     protected $fillable = [
-            'name', 'slug', 'subject', 'content', 'status',
+        'name', 'slug', 'subject', 'content', 'status',
     ];
 
     /**
      * @var array
      */
     protected $casts = [
-            'status' => 'boolean',
+        'status' => 'boolean',
     ];
+
+    public function __toString(): string
+    {
+        return $this->name;
+    }
 
     /**
      * Find item by uid.
-     *
-     * @param $uid
-     *
-     * @return object
      */
     public static function findByUid($uid): object
     {
         return self::where('uid', $uid)->first();
     }
-
 
     /**
      * Bootstrap any application services.
@@ -88,7 +91,6 @@ class EmailTemplates extends Model
                 $tags['password']      = 'required';
                 break;
 
-
             case 'forgot_password':
                 $tags['app_name']             = 'optional';
                 $tags['first_name']           = 'optional';
@@ -130,37 +132,37 @@ class EmailTemplates extends Model
                 $tags['number_url'] = 'required';
                 break;
 
-//            case 'ticket_customer':
-//                $tags['app_name']       = 'optional';
-//                $tags['first_name']     = 'optional';
-//                $tags['last_name']      = 'optional';
-//                $tags['ticket_url']     = 'required';
-//                $tags['ticket_id']      = 'optional';
-//                $tags['ticket_subject'] = 'optional';
-//                $tags['message']        = 'optional';
-//                $tags['create_by']      = 'optional';
-//                break;
-//
-//            case 'reply_ticket':
-//                $tags['app_name']       = 'optional';
-//                $tags['first_name']     = 'optional';
-//                $tags['last_name']      = 'optional';
-//                $tags['ticket_url']     = 'required';
-//                $tags['ticket_id']      = 'required';
-//                $tags['ticket_subject'] = 'optional';
-//                $tags['message']        = 'optional';
-//                $tags['reply_by']       = 'optional';
-//                break;
-//
-//            case 'ticket_admin':
-//                $tags['app_name']        = 'optional';
-//                $tags['department_name'] = 'optional';
-//                $tags['ticket_url']      = 'required';
-//                $tags['ticket_id']       = 'required';
-//                $tags['ticket_subject']  = 'optional';
-//                $tags['message']         = 'optional';
-//                $tags['create_by']       = 'optional';
-//                break;
+                //            case 'ticket_customer':
+                //                $tags['app_name']       = 'optional';
+                //                $tags['first_name']     = 'optional';
+                //                $tags['last_name']      = 'optional';
+                //                $tags['ticket_url']     = 'required';
+                //                $tags['ticket_id']      = 'optional';
+                //                $tags['ticket_subject'] = 'optional';
+                //                $tags['message']        = 'optional';
+                //                $tags['create_by']      = 'optional';
+                //                break;
+                //
+                //            case 'reply_ticket':
+                //                $tags['app_name']       = 'optional';
+                //                $tags['first_name']     = 'optional';
+                //                $tags['last_name']      = 'optional';
+                //                $tags['ticket_url']     = 'required';
+                //                $tags['ticket_id']      = 'required';
+                //                $tags['ticket_subject'] = 'optional';
+                //                $tags['message']        = 'optional';
+                //                $tags['reply_by']       = 'optional';
+                //                break;
+                //
+                //            case 'ticket_admin':
+                //                $tags['app_name']        = 'optional';
+                //                $tags['department_name'] = 'optional';
+                //                $tags['ticket_url']      = 'required';
+                //                $tags['ticket_id']       = 'required';
+                //                $tags['ticket_subject']  = 'optional';
+                //                $tags['message']         = 'optional';
+                //                $tags['create_by']       = 'optional';
+                //                break;
         }
 
         return $tags;
@@ -168,21 +170,9 @@ class EmailTemplates extends Model
 
     /**
      * get route key by uid
-     *
-     * @return string
      */
     public function getRouteKeyName(): string
     {
         return 'uid';
     }
-
-    /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->name;
-    }
-
-
 }

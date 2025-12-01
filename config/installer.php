@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -16,7 +18,7 @@ return [
         'minPhpVersion' => '8.0.2',
     ],
     'final' => [
-        'key' => true,
+        'key'     => true,
         'publish' => false,
     ],
     'requirements' => [
@@ -48,8 +50,8 @@ return [
     */
     'permissions' => [
         'storage/framework/' => '775',
-        'storage/logs/' => '775',
-        'bootstrap/cache/' => '775',
+        'storage/logs/'      => '775',
+        'bootstrap/cache/'   => '775',
     ],
 
     /*
@@ -64,15 +66,15 @@ return [
     'environment' => [
         'form' => [
             'rules' => [
-                'app_name' => 'required|string',
-                'app_url' => 'required|url',
+                'app_name'            => 'required|string',
+                'app_url'             => 'required|url',
                 'database_connection' => 'required|string',
-                'database_host' => 'required|string',
-                'database_port' => 'required|numeric',
-                'database_name' => 'required|string',
-                'database_username' => 'required|string',
-                'database_password' => 'nullable|string',
-                'https_enable' => 'required|string',
+                'database_host'       => 'required|string',
+                'database_port'       => 'required|numeric',
+                'database_name'       => 'required|string',
+                'database_username'   => 'required|string',
+                'database_password'   => 'nullable|string',
+                'https_enable'        => 'required|string',
             ],
         ],
     ],

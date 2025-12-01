@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mail;
 
 use App\Http\Controllers\HelperController;
@@ -10,6 +12,7 @@ use Illuminate\Queue\SerializesModels;
 class sendToUser extends Mailable
 {
     use Queueable, SerializesModels;
+
     protected $extension;
 
     /**
@@ -31,20 +34,20 @@ class sendToUser extends Mailable
     {
         $base64 = new HelperController();
 
-        $url    = $base64->base64url_encode(json_encode([
-            'expire'            => time() + 3600,
-            'user_id'           => auth()->user()->id,
-            'user_uid'          => auth()->user()->uid,
-            'exten_id'          => $this->extension->id,
-            'exten_uid'         => $this->extension->uid,
+        $url = $base64->base64url_encode(json_encode([
+            'expire'    => time() + 3600,
+            'user_id'   => auth()->user()->id,
+            'user_uid'  => auth()->user()->uid,
+            'exten_id'  => $this->extension->id,
+            'exten_uid' => $this->extension->uid,
         ]));
 
         return $this->from(auth()->user()->email, 'Invite Agent')
             ->subject('Add new agent')
             ->markdown('emails.customer.inviteAgent', [
-                'user'      => auth()->user(),
-                'data'      => $this->extension,
-                'url'       => url('/add-agent') . '/' . $url
+                'user' => auth()->user(),
+                'data' => $this->extension,
+                'url'  => url('/add-agent').'/'.$url,
             ]);
     }
 }

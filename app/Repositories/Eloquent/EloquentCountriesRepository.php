@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories\Eloquent;
 
 use App\Exceptions\GeneralException;
@@ -13,8 +15,6 @@ class EloquentCountriesRepository extends EloquentBaseRepository implements Coun
 {
     /**
      * EloquentCountriesRepository constructor.
-     *
-     * @param  Country  $country
      */
     public function __construct(Country $country)
     {
@@ -22,8 +22,6 @@ class EloquentCountriesRepository extends EloquentBaseRepository implements Coun
     }
 
     /**
-     * @param  array  $input
-     *
      * @return Country|mixed
      *
      * @throws GeneralException
@@ -31,11 +29,10 @@ class EloquentCountriesRepository extends EloquentBaseRepository implements Coun
     public function store(array $input): Country
     {
 
-
         $country = $this->make(Arr::only($input, ['name', 'country_code', 'iso_code', 'status']));
 
         /** @var TYPE_NAME $country */
-        if (!$this->save($country)) {
+        if (! $this->save($country)) {
             throw new GeneralException(__('locale.exceptions.something_went_wrong'));
         }
 
@@ -43,31 +40,23 @@ class EloquentCountriesRepository extends EloquentBaseRepository implements Coun
     }
 
     /**
-     * @param  Country  $country
+     * @return bool|null
      *
-     * @return bool
+     * @throws Exception|Throwable
      */
-    private function save(Country $country): bool
+    public function destroy(Country $country)
     {
-        if (!$country->save()) {
-            return false;
+        if (! $country->delete()) {
+            throw new GeneralException(__('locale.exceptions.something_went_wrong'));
         }
 
         return true;
     }
 
-
-    /**
-     * @param  Country  $country
-     *
-     * @return bool|null
-     * @throws Exception|Throwable
-     *
-     */
-    public function destroy(Country $country)
+    private function save(Country $country): bool
     {
-        if (!$country->delete()) {
-            throw new GeneralException(__('locale.exceptions.something_went_wrong'));
+        if (! $country->save()) {
+            return false;
         }
 
         return true;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Helpers;
 
 use Exception;
@@ -23,7 +25,7 @@ class EnvironmentManager
      */
     public function __construct()
     {
-        $this->envPath = base_path('.env');
+        $this->envPath        = base_path('.env');
         $this->envExamplePath = base_path('.env.example');
     }
 
@@ -68,7 +70,6 @@ class EnvironmentManager
     /**
      * Save the edited content to the .env file.
      *
-     * @param Request $input
      * @return string
      */
     public function saveFileClassic(Request $input)
@@ -87,15 +88,13 @@ class EnvironmentManager
     /**
      * Save the form content to the .env file.
      *
-     * @param Request $request
      * @return string
      */
     public function saveFileWizard(Request $request)
     {
         $results = trans('installer_messages.environment.success');
 
-        $envFileData =
-        'APP_NAME=\''.$request->app_name."'\n".
+        $envFileData = 'APP_NAME=\''.$request->app_name."'\n".
         'APP_ENV='.$request->environment."\n".
         'APP_KEY='.'base64:'.base64_encode(Str::random(32))."\n".
         'APP_DEBUG='.$request->app_debug."\n".

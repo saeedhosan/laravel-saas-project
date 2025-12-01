@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\Customer;
@@ -9,98 +11,104 @@ use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
-class CreateUsersSeeder extends Seeder {
+class CreateUsersSeeder extends Seeder
+{
     /**
      * Run the database seeders.
      */
-    public function run() {
+    public function run()
+    {
 
         // $this->createAdmins();
         $this->createUsers();
     }
 
-    public function createAdmins() {
+    public function createAdmins()
+    {
         echo "Super Admin email: \n";
-        $email = fgets( fopen( "php://stdin", "r" ) );
-        $this->createSuperAdmin( trim( $email ) );
+        $email = fgets(fopen('php://stdin', 'r'));
+        $this->createSuperAdmin(trim($email));
     }
 
-    public function createUsers() {
+    public function createUsers()
+    {
         echo "How many user would you like to create?\n";
-        $line = fgets( fopen( "php://stdin", "r" ) );
-        $length = intval( $line );
+        $line   = fgets(fopen('php://stdin', 'r'));
+        $length = (int) $line;
 
         $faker = \Faker\Factory::create();
 
-        for ( $i = 0; $i < $length; $i++ ) {
+        for ($i = 0; $i < $length; $i++) {
 
-            $this->createUser( $faker->email(), $faker->name() );
+            $this->createUser($faker->email(), $faker->name());
         }
     }
 
-    public function createUser( string $email, string $name ) {
+    public function createUser(string $email, string $name)
+    {
         $is_admin = false;
         // Default password
-        $password = app()->environment( 'production' ) ? Str::random() : '123456';
+        $password = app()->environment('production') ? Str::random() : '123456';
 
-        $user = new User();
+        $user     = new User();
         $customer = new Customer();
 
-        $createUser = $user->create( [
-            'first_name' => $name,
-            'last_name' => '',
-            'email' => $email,
-            'password' => bcrypt( $password ),
-            'timezone' => config( 'app.timezone' ),
-            'locale' => config( 'app.locale' ),
-            'active_portal' => $is_admin ? 'admin' : 'customer',
-            'is_customer' => !$is_admin,
-            'is_admin' => $is_admin,
+        $createUser = $user->create([
+            'first_name'        => $name,
+            'last_name'         => '',
+            'email'             => $email,
+            'password'          => bcrypt($password),
+            'timezone'          => config('app.timezone'),
+            'locale'            => config('app.locale'),
+            'active_portal'     => $is_admin ? 'admin' : 'customer',
+            'is_customer'       => ! $is_admin,
+            'is_admin'          => $is_admin,
             'email_verified_at' => Carbon::now(),
-        ] );
+        ]);
 
-        if ( !$createUser->save() ) {
+        if (! $createUser->save()) {
             return false;
         }
 
-        $createCustomer = $customer->create( [
-            'user_id' => $createUser->id,
-            'phone' => '012345678890',
-            'notifications' => json_encode( [
-                'login' => 'no',
-                'tickets' => 'yes',
-                'sender_id' => 'yes',
-                'keyword' => 'yes',
+        $createCustomer = $customer->create([
+            'user_id'       => $createUser->id,
+            'phone'         => '012345678890',
+            'notifications' => json_encode([
+                'login'        => 'no',
+                'tickets'      => 'yes',
+                'sender_id'    => 'yes',
+                'keyword'      => 'yes',
                 'subscription' => 'yes',
-                'promotion' => 'yes',
-                'profile' => 'yes',
-            ] ),
-        ] );
+                'promotion'    => 'yes',
+                'profile'      => 'yes',
+            ]),
+        ]);
 
-        if ( !$createCustomer->save() ) {
+        if (! $createCustomer->save()) {
             return false;
         }
 
-        $permissions = json_decode( $createUser->customer->permissions, true );
-        $createUser->api_token = $createUser->createToken( $email, $permissions )->plainTextToken;
+        $permissions           = json_decode($createUser->customer->permissions, true);
+        $createUser->api_token = $createUser->createToken($email, $permissions)->plainTextToken;
         $createUser->save();
 
-        $this->command->getOutput()->writeln( "<info>User name: </info> $name" );
-        $this->command->getOutput()->writeln( "<info>User email: </info> $email" );
-        $this->command->getOutput()->writeln( "<info>User password: </info> $password" );
-        $this->command->getOutput()->writeln( "" );
+        $this->command->getOutput()->writeln("<info>User name: </info> $name");
+        $this->command->getOutput()->writeln("<info>User email: </info> $email");
+        $this->command->getOutput()->writeln("<info>User password: </info> $password");
+        $this->command->getOutput()->writeln('');
     }
 
     /**
      * create super admin
      */
-    public function createSuperAdmin( string $email ) {
+    public function createSuperAdmin(string $email)
+    {
         // Default password
-        $password = app()->environment( 'production' ) ? Str::random() : $email;
+        $password = app()->environment('production') ? Str::random() : $email;
 
         // Create super admin user
-        $user = new User();
-        $role = new Role();
+        $user     = new User();
+        $role     = new Role();
         $customer = new Customer();
 
         // DB::statement( 'SET FOREIGN_KEY_CHECKS=0;' );
@@ -114,12 +122,12 @@ class CreateUsersSeeder extends Seeder {
          * Create roles
          */
 
-        $superAdminRole = $role->create( [
-            'name' => 'administrator',
+        $superAdminRole = $role->create([
+            'name'   => 'administrator',
             'status' => true,
-        ] );
+        ]);
 
-        foreach ( [
+        foreach ([
             'access backend',
             'view customer',
             'create customer',
@@ -190,29 +198,29 @@ class CreateUsersSeeder extends Seeder {
             'view sms_history',
             'view block_message',
             'manage coverage_rates',
-        ] as $name ) {
-            $superAdminRole->permissions()->create( ['name' => $name] );
+        ] as $name) {
+            $superAdminRole->permissions()->create(['name' => $name]);
         }
 
-        $superAdmin = $user->create( [
-            'first_name' => 'Super',
-            'last_name' => 'Admin',
-            'image' => null,
-            'email' => $email,
-            'password' => bcrypt( $password ),
-            'status' => true,
-            'is_admin' => true,
-            'locale' => app()->getLocale(),
-            'timezone' => config( 'app.timezone' ),
+        $superAdmin = $user->create([
+            'first_name'        => 'Super',
+            'last_name'         => 'Admin',
+            'image'             => null,
+            'email'             => $email,
+            'password'          => bcrypt($password),
+            'status'            => true,
+            'is_admin'          => true,
+            'locale'            => app()->getLocale(),
+            'timezone'          => config('app.timezone'),
             'email_verified_at' => now(),
-        ] );
+        ]);
 
-        $superAdmin->api_token = $superAdmin->createToken( $email )->plainTextToken;
+        $superAdmin->api_token = $superAdmin->createToken($email)->plainTextToken;
         $superAdmin->save();
 
-        $superAdmin->roles()->save( $superAdminRole );
+        $superAdmin->roles()->save($superAdminRole);
 
-        $this->command->getOutput()->writeln( "<info>Admin email: </info> $email" );
-        $this->command->getOutput()->writeln( "<info>password: </info> $password \n" );
+        $this->command->getOutput()->writeln("<info>Admin email: </info> $email");
+        $this->command->getOutput()->writeln("<info>password: </info> $password \n");
     }
 }

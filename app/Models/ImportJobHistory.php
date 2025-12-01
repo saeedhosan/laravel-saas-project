@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -10,31 +12,35 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ImportJobHistory extends Model
 {
+    public const STATUS_PROCESSING = 'processing';
 
-    const STATUS_PROCESSING = 'processing';
-    const STATUS_FINISHED = 'finished';
-    const STATUS_FAILED = 'failed';
-    const STATUS_CANCELLED = 'cancelled';
+    public const STATUS_FINISHED = 'finished';
+
+    public const STATUS_FAILED = 'failed';
+
+    public const STATUS_CANCELLED = 'cancelled';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-
     protected $fillable = [
-            'name',
-            'type',
-            'status',
-            'options',
-            'import_id',
-            'batch_id',
+        'name',
+        'type',
+        'status',
+        'options',
+        'import_id',
+        'batch_id',
     ];
+
+    public function __toString(): string
+    {
+        return $this->name;
+    }
 
     /**
      * is processing
-     *
-     * @return string
      */
     public function isProcessing(): string
     {
@@ -43,8 +49,6 @@ class ImportJobHistory extends Model
 
     /**
      * is finished
-     *
-     * @return string
      */
     public function isFinished(): string
     {
@@ -53,8 +57,6 @@ class ImportJobHistory extends Model
 
     /**
      * is failed
-     *
-     * @return string
      */
     public function isFailed(): string
     {
@@ -63,8 +65,6 @@ class ImportJobHistory extends Model
 
     /**
      * is cancelled
-     *
-     * @return string
      */
     public function isCancelled(): string
     {
@@ -74,7 +74,6 @@ class ImportJobHistory extends Model
     /**
      * get single option
      *
-     * @param $name
      *
      * @return mixed|string
      */
@@ -83,48 +82,33 @@ class ImportJobHistory extends Model
         return $this->getOptions()[$name];
     }
 
-
     /**
      * Get options.
-     *
-     * @return array
      */
     public function getOptions(): array
     {
         if (empty($this->options)) {
             return [];
-        } else {
-            return json_decode($this->options, true);
         }
+
+        return json_decode($this->options, true);
+
     }
 
     /**
      * get status
-     *
-     * @return string
      */
-
     public function getStatus(): string
     {
         $status = $this->status;
 
-        if ($status == self::STATUS_FAILED || $status == self::STATUS_CANCELLED) {
+        if ($status === self::STATUS_FAILED || $status === self::STATUS_CANCELLED) {
             return '<div class="badge bg-danger text-uppercase me-1 mb-1"><span>'.__('locale.labels.'.$status).'</span></div>';
         }
-        if ($status == self::STATUS_PROCESSING) {
+        if ($status === self::STATUS_PROCESSING) {
             return '<div class="badge bg-primary text-uppercase me-1 mb-1"><span>'.__('locale.labels.processing').'</span></div>';
         }
 
         return '<div class="badge bg-success text-uppercase me-1 mb-1"><span>'.__('locale.labels.finished').'</span></div>';
     }
-
-    /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->name;
-    }
-
-
 }

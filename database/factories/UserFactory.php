@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Models\User;
@@ -14,34 +16,34 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'first_name'            => $this->faker->firstName,
-            'last_name'             => $this->faker->lastName,
-            'email'                 => $this->faker->unique()->safeEmail(),
-            'email_verified_at'     => now(),
+            'first_name'        => $this->faker->firstName,
+            'last_name'         => $this->faker->lastName,
+            'email'             => $this->faker->unique()->safeEmail(),
+            'email_verified_at' => now(),
 
-            'password'              => Hash::make('123456'),
-            'remember_token'        => Str::random(10),
+            'password'       => Hash::make('123456'),
+            'remember_token' => Str::random(10),
 
-            'api_token'             => Str::random(60),
+            'api_token' => Str::random(60),
 
-            'image'                 => null, // or fake avatar
-            'status'                => true,
-            'is_admin'              => false,
-            'is_customer'           => true,
+            'image'       => null, // or fake avatar
+            'status'      => true,
+            'is_admin'    => false,
+            'is_customer' => true,
 
-            'active_portal'         => 'customer',
+            'active_portal' => 'customer',
 
-            'two_factor'            => false,
-            'two_factor_code'       => null,
-            'two_factor_expires_at' => null,
-            'two_factor_backup_code'=> null,
+            'two_factor'             => false,
+            'two_factor_code'        => null,
+            'two_factor_expires_at'  => null,
+            'two_factor_backup_code' => null,
 
-            'locale'                => 'en',
-            'sms_unit'              => 0,
-            'timezone'              => 'UTC',
+            'locale'   => 'en',
+            'sms_unit' => 0,
+            'timezone' => 'UTC',
 
-            'provider'              => null,
-            'provider_id'           => null,
+            'provider'    => null,
+            'provider_id' => null,
         ];
     }
 
@@ -51,8 +53,8 @@ class UserFactory extends Factory
     public function admin(): static
     {
         return $this->state([
-            'is_admin'   => true,
-            'is_customer'=> false,
+            'is_admin'      => true,
+            'is_customer'   => false,
             'active_portal' => 'admin',
         ]);
     }
@@ -63,7 +65,7 @@ class UserFactory extends Factory
     public function customer(): static
     {
         return $this->state([
-            'is_customer'=> true,
+            'is_customer'   => true,
             'active_portal' => 'customer',
         ]);
     }

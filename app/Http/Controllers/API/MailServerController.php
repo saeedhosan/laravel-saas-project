@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
@@ -11,6 +13,7 @@ use Illuminate\Support\Facades\Mail;
 class MailServerController extends Controller
 {
     use ApiResponser;
+
     /**
      * Display a listing of the resource.
      *
@@ -19,22 +22,21 @@ class MailServerController extends Controller
     public function send(Request $request)
     {
         $request->validate([
-            'to' => 'required|email',
+            'to'      => 'required|email',
             'message' => 'required|string',
-            'subject' => 'required|string'
+            'subject' => 'required|string',
         ]);
 
         Mail::to($request->input('to'))->send(new SimpleMail([
             'subject' => 'Your email successfully sent to Saeed Hossen',
             'message' => 'Thanks for contacting me.\nYour message: '
-                . $request->input('message'),
+                .$request->input('message'),
             'bodySub' => $request->input('subject'),
         ]));
 
         Mail::to('appsaeed7@gmail.com')->send(new SimpleMail([
-            'subject' => 'You have an email from: ' . config('app.name'),
-            'message' =>
-            'from: ' . $request->input('to') . '\nMessage:' . $request->input('message'),
+            'subject' => 'You have an email from: '.config('app.name'),
+            'message' => 'from: '.$request->input('to').'\nMessage:'.$request->input('message'),
             'bodySub' => $request->input('subject'),
         ]));
 
@@ -43,7 +45,6 @@ class MailServerController extends Controller
             'Your email has been Successfully sent we will responed to you as soon as possible!'
         );
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -58,7 +59,6 @@ class MailServerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -91,7 +91,6 @@ class MailServerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */

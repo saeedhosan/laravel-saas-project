@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Events;
 
 use App\Models\ChatBox;
@@ -16,8 +18,6 @@ class MessageSent
 
     /**
      * user that sent the message
-     *
-     * @var
      */
     public $user;
 

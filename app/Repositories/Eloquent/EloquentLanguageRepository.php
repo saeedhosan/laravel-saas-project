@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories\Eloquent;
 
 use App\Exceptions\GeneralException;
@@ -16,8 +18,6 @@ class EloquentLanguageRepository extends EloquentBaseRepository implements Langu
 {
     /**
      * EloquentLanguageRepository constructor.
-     *
-     * @param  Language  $language
      */
     public function __construct(Language $language)
     {
@@ -25,8 +25,6 @@ class EloquentLanguageRepository extends EloquentBaseRepository implements Langu
     }
 
     /**
-     * @param  array  $input
-     *
      * @return Language|mixed
      *
      * @throws GeneralException
@@ -34,19 +32,18 @@ class EloquentLanguageRepository extends EloquentBaseRepository implements Langu
     public function store(array $input): Language
     {
         /** @var Language $language */
-
-        $lang_index       = array_search($input['language'], array_column(Language::languageCodes(), 'code'));
+        $lang_index       = array_search($input['language'], array_column(Language::languageCodes(), 'code'), true);
         $lang             = Language::languageCodes()[$lang_index];
-        $lang['iso_code'] = strtolower($input['country']);
+        $lang['iso_code'] = mb_strtolower($input['country']);
         $lang['status']   = $input['status'];
 
-        if ( ! is_dir(base_path('resources/lang/'.$lang['code']))) {
-            File::copyDirectory(base_path("resources/lang/en"), base_path("resources/lang/").$lang['code']);
+        if (! is_dir(base_path('resources/lang/'.$lang['code']))) {
+            File::copyDirectory(base_path('resources/lang/en'), base_path('resources/lang/').$lang['code']);
         }
 
         $language = $this->make(Arr::only($lang, ['name', 'code', 'iso_code', 'status']));
 
-        if ( ! $this->save($language)) {
+        if (! $this->save($language)) {
             throw new GeneralException(__('locale.exceptions.something_went_wrong'));
         }
 
@@ -54,19 +51,18 @@ class EloquentLanguageRepository extends EloquentBaseRepository implements Langu
 
     }
 
-
     /**
      * download language file
      *
-     * @param  Language  $language
      *
      * @return mixed|string
+     *
      * @throws Exception
      */
     public function download(Language $language): string
     {
-        $files = glob($language->languageDir()."*");
-        $zip   = storage_path("tmp/language-".$language->code.".zip");
+        $files = glob($language->languageDir().'*');
+        $zip   = storage_path('tmp/language-'.$language->code.'.zip');
         Madzipper::make($zip)->add($files)->close();
 
         return $zip;
@@ -75,10 +71,9 @@ class EloquentLanguageRepository extends EloquentBaseRepository implements Langu
     /**
      * upload language files
      *
-     * @param  array  $input
-     * @param  Language  $language
      *
      * @return bool|mixed
+     *
      * @throws GeneralException
      */
     public function upload(array $input, Language $language): bool
@@ -111,31 +106,12 @@ class EloquentLanguageRepository extends EloquentBaseRepository implements Langu
     }
 
     /**
-     * @param  Language  $language
-     *
-     * @return bool
-     */
-    private function save(Language $language): bool
-    {
-        if ( ! $language->save()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param  Language  $language
-     * @param  array  $input
-     *
-     * @return Language
      * @throws Exception|Throwable
-     *
      * @throws Exception
      */
     public function update(Language $language, array $input): Language
     {
-        if ( ! $language->update($input)) {
+        if (! $language->update($input)) {
             throw new GeneralException(__('locale.exceptions.something_went_wrong'));
         }
 
@@ -143,16 +119,23 @@ class EloquentLanguageRepository extends EloquentBaseRepository implements Langu
     }
 
     /**
-     * @param  Language  $language
-     *
      * @return bool|null
-     * @throws Exception|Throwable
      *
+     * @throws Exception|Throwable
      */
     public function destroy(Language $language)
     {
-        if ( ! $language->delete()) {
+        if (! $language->delete()) {
             throw new GeneralException(__('locale.exceptions.something_went_wrong'));
+        }
+
+        return true;
+    }
+
+    private function save(Language $language): bool
+    {
+        if (! $language->save()) {
+            return false;
         }
 
         return true;

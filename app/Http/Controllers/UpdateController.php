@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Helpers\DatabaseManager;
@@ -15,120 +17,115 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-class UpdateController extends Controller {
+class UpdateController extends Controller
+{
     use MigrationsHelper;
 
     /**
      * @var RequirementsChecker
      */
     protected $requirements;
+
     protected $EnvironmentManager;
+
     protected $databaseManager;
 
-    /**
-     * @param  RequirementsChecker  $checker
-     * @param  EnvironmentManager  $environmentManager
-     * @param  DatabaseManager  $databaseManager
-     */
-    public function __construct( RequirementsChecker $checker, EnvironmentManager $environmentManager, DatabaseManager $databaseManager ) {
-        $this->requirements = $checker;
+    public function __construct(RequirementsChecker $checker, EnvironmentManager $environmentManager, DatabaseManager $databaseManager)
+    {
+        $this->requirements       = $checker;
         $this->EnvironmentManager = $environmentManager;
-        $this->databaseManager = $databaseManager;
+        $this->databaseManager    = $databaseManager;
     }
 
-    public function welcome() {
+    public function welcome()
+    {
 
-        if ( $this->checks() ) {
-            return redirect()->back()->with( [
-                'status' => 'error',
+        if ($this->checks()) {
+            return redirect()->back()->with([
+                'status'  => 'error',
                 'message' => 'Sorry!! This feature is not available in demo mode',
-            ] );
+            ]);
         }
 
-        if ( config( 'app.version' ) == '1.1.0' ) {
-            return redirect()->back()->with( [
-                'status' => 'success',
+        if (config('app.version') === '1.1.0') {
+            return redirect()->back()->with([
+                'status'  => 'success',
                 'message' => 'You are already in latest version',
-            ] );
+            ]);
         }
 
         $phpSupportInfo = $this->requirements->checkPHPversion(
-            config( 'installer.core.minPhpVersion' )
+            config('installer.core.minPhpVersion')
         );
         $requirements = $this->requirements->check(
-            config( 'installer.requirements' )
+            config('installer.requirements')
         );
 
         $pageConfigs = [
-            'bodyClass' => "bg-full-screen-image",
+            'bodyClass' => 'bg-full-screen-image',
             'blankPage' => true,
         ];
 
         $getPermissions = new PermissionsChecker();
 
         $permissions = $getPermissions->check(
-            config( 'installer.permissions' )
+            config('installer.permissions')
         );
 
-        return view( 'Installer.update.welcome', compact( 'requirements', 'phpSupportInfo', 'pageConfigs', 'permissions' ) );
+        return view('Installer.update.welcome', compact('requirements', 'phpSupportInfo', 'pageConfigs', 'permissions'));
     }
 
-    /**
-     * @param  Request  $request
-     * @param  BufferedOutput  $outputLog
-     *
-     * @return RedirectResponse
-     */
-    public function verifyProduct( Request $request, BufferedOutput $outputLog ): RedirectResponse {
+    public function verifyProduct(Request $request, BufferedOutput $outputLog): RedirectResponse
+    {
 
-        $purchase_code = rand( 10, 9999 );
-        $domain_name = config( 'app.url' );
-        $input = trim( $domain_name, '/' );
-        $urlParts = parse_url( $input );
-        $domain_name = preg_replace( '/^www\./', '', $urlParts['host'] );
+        $purchase_code = rand(10, 9999);
+        $domain_name   = config('app.url');
+        $input         = trim($domain_name, '/');
+        $urlParts      = parse_url($input);
+        $domain_name   = preg_replace('/^www\./', '', $urlParts['host']);
 
         $post_data = [
             'purchase_code' => $purchase_code,
-            'domain' => $domain_name,
+            'domain'        => $domain_name,
         ];
 
-        $data = json_encode( ['status' => 'success', 'data' => $post_data] );
+        $data = json_encode(['status' => 'success', 'data' => $post_data]);
 
-        $get_data = json_decode( $data, true );
+        $get_data = json_decode($data, true);
 
-        if ( is_array( $get_data ) && array_key_exists( 'status', $get_data ) ) {
-            if ( $get_data['status'] == 'success' ) {
+        if (is_array($get_data) && array_key_exists('status', $get_data)) {
+            if ($get_data['status'] === 'success') {
 
                 try {
 
-                    Artisan::call( 'optimize:clear' );
-                    Artisan::call( 'migrate', ['--force' => true], $outputLog );
-                    Tool::versionSeeder( config( 'app.version' ) );
+                    Artisan::call('optimize:clear');
+                    Artisan::call('migrate', ['--force' => true], $outputLog);
+                    Tool::versionSeeder(config('app.version'));
 
-                    AppConfig::setEnv( 'APP_VERSION', '1.1.0' );
+                    AppConfig::setEnv('APP_VERSION', '1.1.0');
 
-                    return redirect()->route( 'login' )->with( [
-                        'status' => 'success',
+                    return redirect()->route('login')->with([
+                        'status'  => 'success',
                         'message' => 'You have successfully updated your application.',
-                    ] );
-                } catch ( Exception $e ) {
+                    ]);
+                } catch (Exception $e) {
 
-                    return redirect()->route( 'Updater::welcome' )->with( [
-                        'status' => 'error',
+                    return redirect()->route('Updater::welcome')->with([
+                        'status'  => 'error',
                         'message' => $e->getMessage(),
-                    ] );
+                    ]);
                 }
             }
 
-            return redirect()->route( 'Updater::welcome' )->with( [
+            return redirect()->route('Updater::welcome')->with([
                 'message' => $get_data['msg'],
-                'status' => 'error',
-            ] );
+                'status'  => 'error',
+            ]);
         }
 
-        return redirect()->route( 'Updater::welcome' )->with( [
+        return redirect()->route('Updater::welcome')->with([
             'message' => 'Invalid request',
-            'status' => 'error',
-        ] );
+            'status'  => 'error',
+        ]);
     }
 }

@@ -1,74 +1,76 @@
 <?php
-if ( !file_exists( __DIR__ . '/../storage/installed' ) ) {
-    if ( phpversion() < "8.0.2" ) {
-        echo "ERROR: PHP 8.0.2 or higher is required.<br />";
-        exit( 0 );
+
+declare(strict_types=1);
+if (! file_exists(__DIR__.'/../storage/installed')) {
+    if (phpversion() < '8.0.2') {
+        echo 'ERROR: PHP 8.0.2 or higher is required.<br />';
+        exit(0);
     }
 
-    if ( !extension_loaded( 'mysqli' ) ) {
-        echo "ERROR: The requested PHP mysqli extension is missing from your system.<br />";
-        exit( 0 );
+    if (! extension_loaded('mysqli')) {
+        echo 'ERROR: The requested PHP mysqli extension is missing from your system.<br />';
+        exit(0);
     }
 
-    if ( !extension_loaded( 'pdo' ) ) {
-        echo "ERROR: The requested PHP pdo extension is missing from your system.<br />";
-        exit( 0 );
+    if (! extension_loaded('pdo')) {
+        echo 'ERROR: The requested PHP pdo extension is missing from your system.<br />';
+        exit(0);
     }
 
-    if ( !extension_loaded( 'curl' ) ) {
-        echo "ERROR: The requested PHP curl extension is missing from your system.<br />";
-        exit( 0 );
+    if (! extension_loaded('curl')) {
+        echo 'ERROR: The requested PHP curl extension is missing from your system.<br />';
+        exit(0);
     }
 
-    if ( !extension_loaded( 'openssl' ) ) {
-        echo "ERROR: The requested PHP openssl extension is missing from your system.<br />";
-        exit( 0 );
+    if (! extension_loaded('openssl')) {
+        echo 'ERROR: The requested PHP openssl extension is missing from your system.<br />';
+        exit(0);
     }
 
-    if ( !extension_loaded( 'iconv' ) && !function_exists( 'iconv' ) ) {
-        echo "ERROR: The requested PHP iconv extension is missing from your system.<br />";
-        exit( 0 );
+    if (! extension_loaded('iconv') && ! function_exists('iconv')) {
+        echo 'ERROR: The requested PHP iconv extension is missing from your system.<br />';
+        exit(0);
     }
 
-    if ( !extension_loaded( 'mbstring' ) ) {
-        echo "ERROR: The requested PHP Mbstring extension is missing from your system.<br />";
-        exit( 0 );
+    if (! extension_loaded('mbstring')) {
+        echo 'ERROR: The requested PHP Mbstring extension is missing from your system.<br />';
+        exit(0);
     }
 
-    if ( !extension_loaded( 'gd' ) ) {
-        echo "ERROR: The requested PHP gd extension is missing from your system.<br />";
-        exit( 0 );
+    if (! extension_loaded('gd')) {
+        echo 'ERROR: The requested PHP gd extension is missing from your system.<br />';
+        exit(0);
     }
 
-    if ( !extension_loaded( 'zip' ) ) {
-        echo "ERROR: The requested PHP zip extension is missing from your system.<br />";
-        exit( 0 );
+    if (! extension_loaded('zip')) {
+        echo 'ERROR: The requested PHP zip extension is missing from your system.<br />';
+        exit(0);
     }
 
-    $url_f_open = ini_get( 'allow_url_fopen' );
-    if ( $url_f_open != "1" && $url_f_open != 'On' ) {
-        echo "ERROR: Please enable the <strong>allow_url_fopen</strong> setting to continue.<br />";
-        exit( 0 );
+    $url_f_open = ini_get('allow_url_fopen');
+    if ($url_f_open !== '1' && $url_f_open !== 'On') {
+        echo 'ERROR: Please enable the <strong>allow_url_fopen</strong> setting to continue.<br />';
+        exit(0);
     }
 
-    if ( !empty( ini_get( 'open_basedir' ) ) ) {
-        echo "ERROR: Please disable the <strong>open_basedir</strong> setting to continue.<br />";
-        exit( 0 );
+    if (! empty(ini_get('open_basedir'))) {
+        echo 'ERROR: Please disable the <strong>open_basedir</strong> setting to continue.<br />';
+        exit(0);
     }
 
-    if ( !function_exists( 'proc_open' ) ) {
-        echo "ERROR: Please enable <strong>proc_open</strong> php function setting to continue.<br />";
-        exit( 0 );
+    if (! function_exists('proc_open')) {
+        echo 'ERROR: Please enable <strong>proc_open</strong> php function setting to continue.<br />';
+        exit(0);
     }
 
-    if ( !function_exists( 'curl_version' ) ) {
-        echo "ERROR: Please enable <strong>Curl</strong> php function setting to continue.<br />";
-        exit( 0 );
+    if (! function_exists('curl_version')) {
+        echo 'ERROR: Please enable <strong>Curl</strong> php function setting to continue.<br />';
+        exit(0);
     }
 
-    if ( !function_exists( 'base64_decode' ) ) {
-        echo "ERROR: Please enable <strong>base64_decode</strong> php function setting to continue.<br />";
-        exit( 0 );
+    if (! function_exists('base64_decode')) {
+        echo 'ERROR: Please enable <strong>base64_decode</strong> php function setting to continue.<br />';
+        exit(0);
     }
     // if (!function_exists('imagick')) {
     //     echo "ERROR: Please enable <strong>imagick</strong> php function setting to continue.<br />";
@@ -78,11 +80,9 @@ if ( !file_exists( __DIR__ . '/../storage/installed' ) ) {
 /**
  * Laravel - A PHP Framework For Web Artisans
  *
- * @package  Laravel
  * @author   Taylor Otwell <taylor@laravel.com>
  */
-
-define( 'LARAVEL_START', microtime( true ) );
+define('LARAVEL_START', microtime(true));
 
 /*
 |--------------------------------------------------------------------------
@@ -96,7 +96,7 @@ define( 'LARAVEL_START', microtime( true ) );
 |
  */
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -110,7 +110,7 @@ require __DIR__ . '/../vendor/autoload.php';
 |
  */
 
-$app = require_once __DIR__ . '/../bootstrap/app.php';
+$app = require_once __DIR__.'/../bootstrap/app.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -124,21 +124,21 @@ $app = require_once __DIR__ . '/../bootstrap/app.php';
 |
  */
 
-$app->bind( 'path.public', function () {
+$app->bind('path.public', function () {
     return __DIR__;
-} );
+});
 
-$kernel = $app->make( Illuminate\Contracts\Http\Kernel::class );
+$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
 try {
 
     $response = $kernel->handle(
         $request = Illuminate\Http\Request::capture()
     );
-} catch ( Exception $ex ) {
+} catch (Exception $ex) {
     return $ex->getMessage();
 }
 
 $response->send();
 
-$kernel->terminate( $request, $response );
+$kernel->terminate($request, $response);

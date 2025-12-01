@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Library;
 
 use App\Models\AppConfig;
@@ -20,11 +22,9 @@ use SimpleXMLElement;
  */
 class Tool
 {
-
     /**
      * Get all time zone.
      *
-     * @return array
      * @var array
      */
     public static function allTimeZones(): array
@@ -35,8 +35,8 @@ class Tool
         foreach (timezone_identifiers_list() as $key => $zone) {
             date_default_timezone_set($zone);
             $zones_array[$key]['zone']  = $zone;
-            $zones_array[$key]['text']  = '(GMT' . date('P', $timestamp) . ') ' . $zones_array[$key]['zone'];
-            $zones_array[$key]['order'] = str_replace('-', '1', str_replace('+', '2', date('P', $timestamp))) . $zone;
+            $zones_array[$key]['text']  = '(GMT'.date('P', $timestamp).') '.$zones_array[$key]['zone'];
+            $zones_array[$key]['order'] = str_replace('-', '1', str_replace('+', '2', date('P', $timestamp))).$zone;
         }
 
         // sort by offset
@@ -50,7 +50,6 @@ class Tool
     /**
      * Get options array for select box.
      *
-     * @return array
      * @var array
      */
     public static function getTimezoneSelectOptions(): array
@@ -67,7 +66,6 @@ class Tool
     /**
      * Format display datetime.
      *
-     * @param $datetime
      *
      * @return mixed
      */
@@ -80,6 +78,7 @@ class Tool
      * Format display datetime.
      *
      * @return mixed
+     *
      * @var string
      */
     public static function dateTime($datetime)
@@ -94,17 +93,18 @@ class Tool
      * Format display datetime.
      *
      * @return mixed
+     *
      * @var string
      */
     public static function customerDateTime($datetime)
     {
         $timezone = is_object(Auth::user()) ? Auth::user()->timezone : '';
         $result   = $datetime;
-        if (!empty($timezone)) {
+        if (! empty($timezone)) {
             $result = $result->timezone($timezone);
         }
 
-        $format = config('app.date_format') . ', g:i A';
+        $format = config('app.date_format').', g:i A';
 
         return $result->format($format);
     }
@@ -113,6 +113,7 @@ class Tool
      * Format display datetime.
      *
      * @return mixed
+     *
      * @var string
      */
     public static function dateTimeFromString($time_string)
@@ -120,15 +121,12 @@ class Tool
         return self::dateTime(Carbon::parse($time_string));
     }
 
-
     /**
      * Human time format.
      *
-     * @param $time
      *
      * @return mixed
      */
-
     public static function formatHumanTime($time)
     {
         return $time->diffForHumans();
@@ -136,19 +134,14 @@ class Tool
 
     /**
      * Change singular to plural.
-     *
-     * @param $phrase
-     * @param $value
-     *
-     * @return string
      */
     public static function getPluralParse($phrase, $value): string
     {
         $plural = '';
         if ($value > 1) {
-            for ($i = 0; $i < strlen($phrase); ++$i) {
-                if ($i == strlen($phrase) - 1) {
-                    $plural .= ($phrase[$i] == 'y' && $phrase != 'day') ? 'ies' : (($phrase[$i] == 's' || $phrase[$i] == 'x' || $phrase[$i] == 'z' || $phrase[$i] == 'ch' || $phrase[$i] == 'sh') ? $phrase[$i] . 'es' : $phrase[$i] . 's');
+            for ($i = 0; $i < mb_strlen($phrase); $i++) {
+                if ($i === mb_strlen($phrase) - 1) {
+                    $plural .= ($phrase[$i] === 'y' && $phrase !== 'day') ? 'ies' : (($phrase[$i] === 's' || $phrase[$i] === 'x' || $phrase[$i] === 'z' || $phrase[$i] === 'ch' || $phrase[$i] === 'sh') ? $phrase[$i].'es' : $phrase[$i].'s');
                 } else {
                     $plural .= $phrase[$i];
                 }
@@ -164,20 +157,16 @@ class Tool
      * Get file/folder permissions.
      *
      * @param  string
-     *
-     * @return string
      */
     public static function getPerms($path): string
     {
-        return substr(sprintf('%o', fileperms($path)), -4);
+        return mb_substr(sprintf('%o', fileperms($path)), -4);
     }
 
     /**
      * Get system time conversion.
      *
      * @param  string
-     *
-     * @return Carbon
      */
     public static function systemTime($time): Carbon
     {
@@ -189,12 +178,10 @@ class Tool
      *
      * @param  string
      * @param  null  $timezone
-     *
-     * @return Carbon
      */
     public static function systemTimeFromString($string, $timezone = null): Carbon
     {
-        if ($timezone == null) {
+        if ($timezone === null) {
             $timezone = self::currentTimezone();
         }
 
@@ -203,19 +190,16 @@ class Tool
         return self::systemTime($time);
     }
 
-
     /**
      * Get max upload file.
      *
      * @param  string
-     *
-     * @return string
      */
     public static function maxFileUploadInBytes(): string
     {
-        //select maximum upload size
+        // select maximum upload size
         $max_upload = self::returnBytes(ini_get('upload_max_filesize'));
-        //select post limit
+        // select post limit
         $max_post = self::returnBytes(ini_get('post_max_size'));
 
         // return the smallest of them, this defines the real limit
@@ -226,8 +210,6 @@ class Tool
      * Day of week select options.
      *
      * @param  string
-     *
-     * @return array
      */
     public static function dayOfWeekSelectOptions(): array
     {
@@ -246,8 +228,6 @@ class Tool
      * Day of week arrays.
      *
      * @param  string
-     *
-     * @return array
      */
     public static function weekdaysArray(): array
     {
@@ -263,8 +243,6 @@ class Tool
      * Month select options.
      *
      * @param  string
-     *
-     * @return array
      */
     public static function monthSelectOptions(): array
     {
@@ -288,8 +266,6 @@ class Tool
      * Month array.
      *
      * @param  string
-     *
-     * @return array
      */
     public static function monthsArray(): array
     {
@@ -305,8 +281,6 @@ class Tool
      * Week select options.
      *
      * @param  string
-     *
-     * @return array
      */
     public static function weekSelectOptions(): array
     {
@@ -323,8 +297,6 @@ class Tool
      * Week array.
      *
      * @param  string
-     *
-     * @return array
      */
     public static function weeksArray(): array
     {
@@ -340,13 +312,11 @@ class Tool
      * Month select options.
      *
      * @param  string
-     *
-     * @return array
      */
     public static function dayOfMonthSelectOptions(): array
     {
         $arr = [];
-        for ($i = 1; $i < 32; ++$i) {
+        for ($i = 1; $i < 32; $i++) {
             $arr[] = ['value' => $i, 'text' => $i];
         }
 
@@ -356,37 +326,34 @@ class Tool
     /**
      * Get day string from timestamp.
      *
-     * @param $timestamp
      *
      * @return mixed
      */
     public static function dayStringFromTimestamp($timestamp)
     {
-        if (isset($timestamp) && $timestamp != '0000-00-00 00:00:00') {
+        if (isset($timestamp) && $timestamp !== '0000-00-00 00:00:00') {
             // @todo: hard day format code: 'Y-m-d'
-            $result = Tool::dateTime($timestamp)->format('Y-m-d');
+            $result = self::dateTime($timestamp)->format('Y-m-d');
         } else {
-            $result = Tool::dateTime(Carbon::now())->format('Y-m-d');
+            $result = self::dateTime(Carbon::now())->format('Y-m-d');
         }
 
         return $result;
     }
 
-
     /**
      * Get time string from timestamp.
      *
-     * @param $timestamp
      *
      * @return mixed
      */
     public static function timeStringFromTimestamp($timestamp)
     {
-        if (isset($timestamp) && $timestamp != '0000-00-00 00:00:00') {
+        if (isset($timestamp) && $timestamp !== '0000-00-00 00:00:00') {
             // @todo: hard day format code: 'H:i'
-            $result = Tool::dateTime($timestamp)->format('H:i');
+            $result = self::dateTime($timestamp)->format('H:i');
         } else {
-            $result = Tool::dateTime(Carbon::now())->format('H:i');
+            $result = self::dateTime(Carbon::now())->format('H:i');
         }
 
         return $result;
@@ -394,10 +361,6 @@ class Tool
 
     /**
      * Convert numbers array to weekdays array.
-     *
-     * @param $numbers
-     *
-     * @return array
      */
     public static function numberArrayToWeekdaysArray($numbers): array
     {
@@ -410,15 +373,9 @@ class Tool
         return $weekdays;
     }
 
-
     /**
      * Convert numbers array to weeks array.
-     *
-     * @param $numbers
-     *
-     * @return array
      */
-
     public static function numberArrayToWeeksArray($numbers): array
     {
         $weeks_texts = self::weeksArray();
@@ -432,10 +389,6 @@ class Tool
 
     /**
      * Convert numbers array to months array.
-     *
-     * @param $numbers
-     *
-     * @return array
      */
     public static function numberArrayToMonthsArray($numbers): array
     {
@@ -448,15 +401,9 @@ class Tool
         return $months;
     }
 
-
     /**
      * Get day names from array of numbers.
-     *
-     * @param $numbers
-     *
-     * @return array
      */
-
     public static function getDayNamesFromArrayOfNumber($numbers): array
     {
         $names = [];
@@ -464,9 +411,9 @@ class Tool
         $ends = ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'];
         foreach ($numbers as $number) {
             if (($number % 100) >= 11 && ($number % 100) <= 13) {
-                $names[] = $number . 'th';
+                $names[] = $number.'th';
             } else {
-                $names[] = $number . $ends[$number % 10];
+                $names[] = $number.$ends[$number % 10];
             }
         }
 
@@ -475,8 +422,6 @@ class Tool
 
     /**
      * Quota time unit options.
-     *
-     * @return array
      */
     public static function timeUnitOptions(): array
     {
@@ -492,10 +437,6 @@ class Tool
 
     /**
      * Get php paths select options.
-     *
-     * @param $paths
-     *
-     * @return array
      */
     public static function phpPathsSelectOptions($paths): array
     {
@@ -518,17 +459,12 @@ class Tool
 
     /**
      *  Number select options.
-     *
-     * @param  int  $min
-     * @param  int  $max
-     *
-     * @return array
      */
     public static function numberSelectOptions(int $min = 1, int $max = 100): array
     {
         $options = [];
 
-        for ($i = $min; $i <= $max; ++$i) {
+        for ($i = $min; $i <= $max; $i++) {
             $options[] = ['value' => $i, 'text' => $i];
         }
 
@@ -537,11 +473,6 @@ class Tool
 
     /**
      * Format price.
-     *
-     * @param        $price
-     * @param  string  $format
-     *
-     * @return string
      */
     public static function format_price($price, string $format = '{PRICE}'): string
     {
@@ -552,47 +483,42 @@ class Tool
      * Format price.
      *
      * @param  string
-     *
-     * @return string
      */
     public static function format_number($number): string
     {
-        if (is_numeric($number) && floor($number) != $number) {
+        if (is_numeric($number) && floor($number) !== $number) {
             return number_format($number, 2, __('locale.labels.dec_point'), __('locale.labels.thousands_sep'));
-        } elseif (is_numeric($number)) {
-            return number_format($number, 0, __('locale.labels.dec_point'), __('locale.labels.thousands_sep'));
-        } else {
-            return $number;
         }
+        if (is_numeric($number)) {
+            return number_format($number, 0, __('locale.labels.dec_point'), __('locale.labels.thousands_sep'));
+        }
+
+        return $number;
+
     }
 
     /**
      * Format display date.
      *
-     * @return string
      * @var string
      */
     public static function formatTime($datetime): string
     {
-        return !isset($datetime) ? '' : self::dateTime($datetime)->format('h:i A');
+        return ! isset($datetime) ? '' : self::dateTime($datetime)->format('h:i A');
     }
 
     /**
      * Format display date.
      *
-     * @return string
      * @var string
      */
     public static function formatDate($datetime): string
     {
-        return !isset($datetime) ? '' : self::dateTime($datetime)->format('M d, Y');
+        return ! isset($datetime) ? '' : self::dateTime($datetime)->format('M d, Y');
     }
-
 
     /**
      * Get current timezone.
-     *
-     * @return string
      */
     public static function currentTimezone(): string
     {
@@ -607,10 +533,6 @@ class Tool
 
     /**
      *  Get Directory Size.
-     *
-     * @param $path
-     *
-     * @return int
      */
     public static function getDirectorySize($path): int
     {
@@ -625,15 +547,12 @@ class Tool
         return $bytestotal;
     }
 
-
     /**
      * Get All File Types
      *
-     * @param $filename
      *
      * @return mixed|string
      */
-
     public static function getFileType($filename): string
     {
         $mime_types = [
@@ -663,62 +582,63 @@ class Tool
             'svgz' => 'image/svg+xml',
 
             // archives
-            'zip'  => 'application/zip',
-            'rar'  => 'application/x-rar-compressed',
-            'exe'  => 'application/x-msdownload',
-            'msi'  => 'application/x-msdownload',
-            'cab'  => 'application/vnd.ms-cab-compressed',
+            'zip' => 'application/zip',
+            'rar' => 'application/x-rar-compressed',
+            'exe' => 'application/x-msdownload',
+            'msi' => 'application/x-msdownload',
+            'cab' => 'application/vnd.ms-cab-compressed',
 
             // audio/video
-            'mp3'  => 'audio/mpeg',
-            'qt'   => 'video/quicktime',
-            'mov'  => 'video/quicktime',
+            'mp3' => 'audio/mpeg',
+            'qt'  => 'video/quicktime',
+            'mov' => 'video/quicktime',
 
             // adobe
-            'pdf'  => 'application/pdf',
-            'psd'  => 'image/vnd.adobe.photoshop',
-            'ai'   => 'application/postscript',
-            'eps'  => 'application/postscript',
-            'ps'   => 'application/postscript',
+            'pdf' => 'application/pdf',
+            'psd' => 'image/vnd.adobe.photoshop',
+            'ai'  => 'application/postscript',
+            'eps' => 'application/postscript',
+            'ps'  => 'application/postscript',
 
             // ms office
-            'doc'  => 'application/msword',
-            'rtf'  => 'application/rtf',
-            'xls'  => 'application/vnd.ms-excel',
-            'ppt'  => 'application/vnd.ms-powerpoint',
+            'doc' => 'application/msword',
+            'rtf' => 'application/rtf',
+            'xls' => 'application/vnd.ms-excel',
+            'ppt' => 'application/vnd.ms-powerpoint',
 
             // open office
-            'odt'  => 'application/vnd.oasis.opendocument.text',
-            'ods'  => 'application/vnd.oasis.opendocument.spreadsheet',
+            'odt' => 'application/vnd.oasis.opendocument.text',
+            'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
         ];
 
         $arr = explode('.', $filename);
-        $ext = strtolower(array_pop($arr));
+        $ext = mb_strtolower(array_pop($arr));
         if (array_key_exists($ext, $mime_types)) {
             return $mime_types[$ext];
-        } elseif (function_exists('finfo_open')) {
+        }
+        if (function_exists('finfo_open')) {
             $finfo    = finfo_open(FILEINFO_MIME);
             $mimetype = finfo_file($finfo, $filename);
             finfo_close($finfo);
 
             return $mimetype;
-        } else {
-            return 'application/octet-stream';
         }
-    }
 
+        return 'application/octet-stream';
+
+    }
 
     /**
      * Check re-captcha success.
      *
-     * @param $request
      *
      * @return false|mixed
+     *
      * @throws GuzzleException
      */
     public static function checkReCaptcha($request): bool
     {
-        if (!isset($request->all()['g-recaptcha-response'])) {
+        if (! isset($request->all()['g-recaptcha-response'])) {
             return false;
         }
 
@@ -735,27 +655,18 @@ class Tool
 
     /**
      * Format a number with delimiter.
-     *
-     * @param $number
-     * @param  int  $precision
-     * @param  string  $separator
-     *
-     * @return string
      */
     public static function number_with_delimiter($number, int $precision = 0, string $separator = ','): string
     {
-        if (!is_numeric($number)) {
+        if (! is_numeric($number)) {
             return $number;
         }
 
         return number_format($number, $precision, '.', $separator);
     }
 
-
     /**
      * Reset max_execution_time so that command can run for a long time without being terminated.
-     *
-     * @return bool
      */
     public static function resetMaxExecutionTime(): bool
     {
@@ -772,19 +683,13 @@ class Tool
 
     /**
      * get difference two multidimensional array
-     *
-     * @param $array1
-     * @param $array2
-     *
-     * @return array
      */
-
     public static function check_diff_multi($array1, $array2): array
     {
 
         foreach (array_chunk($array1, 500) as $chunk) {
             foreach ($chunk as $key => $value) {
-                if (in_array($value, $array2)) {
+                if (in_array($value, $array2, true)) {
                     unset($array1[$key]);
                 }
             }
@@ -797,17 +702,13 @@ class Tool
     {
         $unit = ['b', 'kb', 'mb', 'gb', 'tb', 'pb'];
 
-        return @round($size / pow(1024, ($i = floor(log($size, 1024)))), 2) . ' ' . $unit[$i];
+        return @round($size / pow(1024, ($i = floor(log($size, 1024)))), 2).' '.$unit[$i];
     }
-
 
     /**
      * Upload and resize avatar.
      *
-     * @param $message
-     * @param $sending_server
      *
-     * @return string
      * @throws Exception
      */
     public static function createVoiceFile($message, $sending_server): string
@@ -815,44 +716,42 @@ class Tool
         $path        = 'voice/';
         $upload_path = public_path($path);
 
-        if (!file_exists($upload_path)) {
+        if (! file_exists($upload_path)) {
             mkdir($upload_path, 0777, true);
         }
         $get_file_path = null;
-        $filename      = date('Ymdhis') . '.xml';
-        $file_path     = $upload_path . $filename;
+        $filename      = date('Ymdhis').'.xml';
+        $file_path     = $upload_path.$filename;
 
-        if ($sending_server == 'Twilio') {
+        if ($sending_server === 'Twilio') {
 
             $string = '<Response>
-                         <Say voice="alice">' . $message . '</Say>
+                         <Say voice="alice">'.$message.'</Say>
                        </Response>';
 
             $get_voice_data = new SimpleXMLElement($string);
             file_put_contents($file_path, $get_voice_data->asXML());
 
-            $get_file_path = asset('/voice') . '/' . $filename;
+            $get_file_path = asset('/voice').'/'.$filename;
         }
-        if ($sending_server == 'Plivo') {
+        if ($sending_server === 'Plivo') {
 
             $string = '<Response>
-                         <Speak>' . $message . '</Speak>
+                         <Speak>'.$message.'</Speak>
                        </Response>';
 
             $get_voice_data = new SimpleXMLElement($string);
             file_put_contents($file_path, $get_voice_data->asXML());
 
-            $get_file_path = asset('/voice') . '/' . $filename;
+            $get_file_path = asset('/voice').'/'.$filename;
         }
 
         return $get_file_path;
     }
 
-
     /**
      * Upload and resize avatar.
      *
-     * @return string
      * @var void
      */
     public static function uploadImage($file): string
@@ -860,31 +759,27 @@ class Tool
         $path        = 'mms/';
         $upload_path = public_path($path);
 
-        if (!file_exists($upload_path)) {
+        if (! file_exists($upload_path)) {
             mkdir($upload_path, 0777, true);
         }
 
-        $filename = 'mms_' . time() . '.' . $file->getClientOriginalExtension();
+        $filename = 'mms_'.time().'.'.$file->getClientOriginalExtension();
 
         // save to server
         $file->move($upload_path, $filename);
 
-        return asset('/mms') . '/' . $filename;
+        return asset('/mms').'/'.$filename;
     }
 
     public static function strReplaceFirst($search, $replace, $subject)
     {
-        $search = '/' . preg_quote($search, '/') . '/';
+        $search = '/'.preg_quote($search, '/').'/';
 
         return preg_replace($search, $replace, $subject, 1);
     }
 
     /**
      * validate number length
-     *
-     * @param $phone
-     *
-     * @return bool
      */
     public static function validatePhone($phone): bool
     {
@@ -893,7 +788,7 @@ class Tool
         $phone_to_check = filter_var($phone, FILTER_SANITIZE_NUMBER_INT);
         // Check the length of number
         // This can be customized if you want phone number from a specific country
-        if (strlen($phone_to_check) < 7 || strlen($phone_to_check) > 15) {
+        if (mb_strlen($phone_to_check) < 7 || mb_strlen($phone_to_check) > 15) {
             return false;
         }
 
@@ -902,8 +797,6 @@ class Tool
 
     /**
      * generate GUID
-     *
-     * @return string
      */
     public static function GUID(): string
     {
@@ -915,12 +808,9 @@ class Tool
         return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
     }
 
-
     /**
      * render sms with tag
      *
-     * @param $msg
-     * @param $data
      *
      * @return string|string[]
      */
@@ -936,13 +826,10 @@ class Tool
             }
         }
 
-        return str_ireplace(["{", "}"], '', $msg);
+        return str_ireplace(['{', '}'], '', $msg);
     }
 
-
     /**
-     * @param $version
-     *
      * @return bool|void
      */
     public static function versionSeeder($version)
@@ -951,11 +838,10 @@ class Tool
             case '1.1.0':
                 return false;
 
-
             case '3.2.0':
 
                 $app_config = AppConfig::where('setting', 'login_notification_email')->first();
-                if (!$app_config) {
+                if (! $app_config) {
                     AppConfig::create([
                         'setting' => 'login_notification_email',
                         'value'   => false,
@@ -964,7 +850,7 @@ class Tool
 
                 $email_template = EmailTemplates::where('slug', 'sender_id_confirmation')->first();
 
-                if (!$email_template) {
+                if (! $email_template) {
                     EmailTemplates::create(
                         [
                             'name'    => 'Sender ID Confirmation',
@@ -973,13 +859,13 @@ class Tool
                             'content' => 'Hi,
                                       You sender id mark as: {status}. Login to your portal to show details.
                                       {sender_id_url}',
-                            'status'  => true,
+                            'status' => true,
                         ]
                     );
                 }
 
                 $payment_method = PaymentMethods::where('type', 'paygateglobal')->first();
-                if (!$payment_method) {
+                if (! $payment_method) {
                     PaymentMethods::create(
                         [
                             'name'    => 'PaygateGlobal',
@@ -987,7 +873,7 @@ class Tool
                             'options' => json_encode([
                                 'api_key' => 'api_key',
                             ]),
-                            'status'  => true,
+                            'status' => true,
                         ]
                     );
                 }

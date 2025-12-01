@@ -1,32 +1,36 @@
-<?php // Code within app\Helpers\Helper.php
+<?php
+
+declare(strict_types=1);
+// Code within app\Helpers\Helper.php
 
 namespace App\Helpers;
 
-class Message {
-
+class Message
+{
     /**
      * someting went wrong
-     * @return string
      */
-    public static function wentWrong(): string {
-        return __( 'locale.exceptions.something_went_wrong' );
+    public static function wentWrong(): string
+    {
+        return __('locale.exceptions.something_went_wrong');
     }
 
     /**
      *  todo status class
      */
-    public static function todoStatusclass( $name ): string {
+    public static function todoStatusclass($name): string
+    {
 
         $data = [
-            'available' => 'info',
+            'available'   => 'info',
             'in_progress' => 'primary',
-            'review' => 'warning',
-            'complete' => 'success',
-            'pending' => 'info',
-            'pause' => 'info',
-            'continue' => 'primary',
+            'review'      => 'warning',
+            'complete'    => 'success',
+            'pending'     => 'info',
+            'pause'       => 'info',
+            'continue'    => 'primary',
         ];
-        if ( isset( $data[$name] ) ) {
+        if (isset($data[$name])) {
             return $data[$name];
         }
 

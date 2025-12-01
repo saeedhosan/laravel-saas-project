@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -9,6 +11,7 @@ use Illuminate\Notifications\Notification;
 class MessageReceived extends Notification implements ShouldBroadcast
 {
     public $message;
+
     /**
      * Create a new notification instance.
      *
@@ -33,7 +36,7 @@ class MessageReceived extends Notification implements ShouldBroadcast
     public function toBroadcast($notifiable): BroadcastMessage
     {
         return new BroadcastMessage([
-                'message' => "$this->message (User $notifiable->id)"
+            'message' => "$this->message (User $notifiable->id)",
         ]);
     }
 }

@@ -1,17 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models\Traits;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 trait HasTranslatableSlug
 {
-    public function scopeWhereSlug(Builder $scope, string $slug)
-    {
-        return $scope->where("slug->{$this->getLocale()}", $slug);
-    }
-
     public static function bootHasTranslatableSlug()
     {
         static::saving(function (Model $model) {
@@ -22,6 +19,11 @@ trait HasTranslatableSlug
                     );
                 });
         });
+    }
+
+    public function scopeWhereSlug(Builder $scope, string $slug)
+    {
+        return $scope->where("slug->{$this->getLocale()}", $slug);
     }
 
     public function generateSlug($source, $locale = null)
@@ -42,5 +44,4 @@ trait HasTranslatableSlug
 
         return $slug;
     }
-
 }

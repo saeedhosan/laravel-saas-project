@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,7 +11,7 @@ class CRMDashboard extends Model
 {
     use HasFactory;
 
-    //use HasFactory;
+    // use HasFactory;
     public $timestamps = true;
 
     protected $table = 'crm_dashboard';
@@ -52,10 +54,6 @@ class CRMDashboard extends Model
 
     /**
      * Find item by uid.
-     *
-     * @param $uid
-     *
-     * @return object
      */
     public static function findByUid($uid): object
     {
@@ -67,7 +65,6 @@ class CRMDashboard extends Model
      *
      * @return mixed
      */
-
     public static function getAll()
     {
         return self::select('*');

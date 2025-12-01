@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories\Eloquent;
 
 use App\Exceptions\GeneralException;
@@ -14,8 +16,6 @@ class EloquentCurrencyRepository extends EloquentBaseRepository implements Curre
 {
     /**
      * EloquentCurrencyRepository constructor.
-     *
-     * @param  Currency  $currency
      */
     public function __construct(Currency $currency)
     {
@@ -23,8 +23,6 @@ class EloquentCurrencyRepository extends EloquentBaseRepository implements Curre
     }
 
     /**
-     * @param  array  $input
-     *
      * @return Currency|mixed
      *
      * @throws GeneralException
@@ -37,7 +35,7 @@ class EloquentCurrencyRepository extends EloquentBaseRepository implements Curre
         $currency->status  = true;
         $currency->user_id = auth()->user()->id;
 
-        if ( ! $this->save($currency)) {
+        if (! $this->save($currency)) {
             throw new GeneralException(__('locale.exceptions.something_went_wrong'));
         }
 
@@ -46,31 +44,12 @@ class EloquentCurrencyRepository extends EloquentBaseRepository implements Curre
     }
 
     /**
-     * @param  Currency  $currency
-     *
-     * @return bool
-     */
-    private function save(Currency $currency): bool
-    {
-        if ( ! $currency->save()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param  Currency  $currency
-     * @param  array  $input
-     *
-     * @return Currency
      * @throws Exception|Throwable
-     *
      * @throws Exception
      */
     public function update(Currency $currency, array $input): Currency
     {
-        if ( ! $currency->update($input)) {
+        if (! $currency->update($input)) {
             throw new GeneralException(__('locale.exceptions.something_went_wrong'));
         }
 
@@ -78,15 +57,13 @@ class EloquentCurrencyRepository extends EloquentBaseRepository implements Curre
     }
 
     /**
-     * @param  Currency  $currency
-     *
      * @return bool|null
-     * @throws Exception|Throwable
      *
+     * @throws Exception|Throwable
      */
     public function destroy(Currency $currency)
     {
-        if ( ! $currency->delete()) {
+        if (! $currency->delete()) {
             throw new GeneralException(__('locale.exceptions.something_went_wrong'));
         }
 
@@ -94,11 +71,9 @@ class EloquentCurrencyRepository extends EloquentBaseRepository implements Curre
     }
 
     /**
-     * @param  array  $ids
-     *
      * @return mixed
-     * @throws Exception|Throwable
      *
+     * @throws Exception|Throwable
      */
     public function batchDestroy(array $ids): bool
     {
@@ -115,17 +90,15 @@ class EloquentCurrencyRepository extends EloquentBaseRepository implements Curre
     }
 
     /**
-     * @param  array  $ids
-     *
      * @return mixed
-     * @throws Exception|Throwable
      *
+     * @throws Exception|Throwable
      */
     public function batchActive(array $ids): bool
     {
         DB::transaction(function () use ($ids) {
             if ($this->query()->whereIn('uid', $ids)
-                    ->update(['status' => true])
+                ->update(['status' => true])
             ) {
                 return true;
             }
@@ -137,17 +110,15 @@ class EloquentCurrencyRepository extends EloquentBaseRepository implements Curre
     }
 
     /**
-     * @param  array  $ids
-     *
      * @return mixed
-     * @throws Exception|Throwable
      *
+     * @throws Exception|Throwable
      */
     public function batchDisable(array $ids): bool
     {
         DB::transaction(function () use ($ids) {
             if ($this->query()->whereIn('uid', $ids)
-                    ->update(['status' => false])
+                ->update(['status' => false])
             ) {
                 return true;
             }
@@ -158,4 +129,12 @@ class EloquentCurrencyRepository extends EloquentBaseRepository implements Curre
         return true;
     }
 
+    private function save(Currency $currency): bool
+    {
+        if (! $currency->save()) {
+            return false;
+        }
+
+        return true;
+    }
 }

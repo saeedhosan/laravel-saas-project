@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Settings;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -8,8 +10,6 @@ class PostGeneralRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -18,22 +18,20 @@ class PostGeneralRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array
      */
     public function rules(): array
     {
         return [
-                'app_name'        => 'required',
-                'app_title'       => 'required',
-                'company_address' => 'required',
-                'footer_text'     => 'required',
-                'app_logo'        => 'sometimes|required|image',
-                'app_favicon'     => 'sometimes|required|mimes:jpeg,bmp,png,ico,jpg',
-                'country'         => 'required',
-                'timezone'        => 'required|timezone',
-                'date_format'     => 'required',
-                'language'        => 'required',
+            'app_name'        => 'required',
+            'app_title'       => 'required',
+            'company_address' => 'required',
+            'footer_text'     => 'required',
+            'app_logo'        => 'sometimes|required|image',
+            'app_favicon'     => 'sometimes|required|mimes:jpeg,bmp,png,ico,jpg',
+            'country'         => 'required',
+            'timezone'        => 'required|timezone',
+            'date_format'     => 'required',
+            'language'        => 'required',
         ];
     }
 }

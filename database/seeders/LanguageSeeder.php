@@ -1,59 +1,60 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
-
-use Illuminate\Database\Seeder;
 use App\Models\Language;
+use Illuminate\Database\Seeder;
 
 class LanguageSeeder extends Seeder
 {
-        /**
-         * Run the database seeders.
-         *
-         * @return void
-         */
-        public function run()
-        {
+    /**
+     * Run the database seeders.
+     *
+     * @return void
+     */
+    public function run()
+    {
 
-                Language::truncate();
+        Language::truncate();
 
-                $get_language = [
-                        [
-                                'name'     => 'English',
-                                'code'     => 'en',
-                                'iso_code' => 'us',
-                                'status'   => true,
-                        ],
-                        [
-                                'name'     => 'French',
-                                'code'     => 'fr',
-                                'iso_code' => 'fr',
-                                'status'   => true,
-                        ],
-                        [
-                                'name'     => 'Spanish',
-                                'code'     => 'es',
-                                'iso_code' => 'es',
-                                'status'   => true,
-                        ],
+        $get_language = [
+            [
+                'name'     => 'English',
+                'code'     => 'en',
+                'iso_code' => 'us',
+                'status'   => true,
+            ],
+            [
+                'name'     => 'French',
+                'code'     => 'fr',
+                'iso_code' => 'fr',
+                'status'   => true,
+            ],
+            [
+                'name'     => 'Spanish',
+                'code'     => 'es',
+                'iso_code' => 'es',
+                'status'   => true,
+            ],
 
-                        [
-                                'name'     => 'Portuguese',
-                                'code'     => 'pt',
-                                'iso_code' => 'br',
-                                'status'   => true,
-                        ],
-                        [
-                                'name'     => 'German',
-                                'code'     => 'de',
-                                'iso_code' => 'de',
-                                'status'   => true,
-                        ],
-                ];
+            [
+                'name'     => 'Portuguese',
+                'code'     => 'pt',
+                'iso_code' => 'br',
+                'status'   => true,
+            ],
+            [
+                'name'     => 'German',
+                'code'     => 'de',
+                'iso_code' => 'de',
+                'status'   => true,
+            ],
+        ];
 
-                foreach ($get_language as $lan) {
-                        Language::create($lan);
-                }
+        foreach ($get_language as $lan) {
+            Language::create($lan);
         }
+    }
 }

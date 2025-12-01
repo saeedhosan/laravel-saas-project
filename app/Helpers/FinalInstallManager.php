@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Helpers;
 
 use Exception;
@@ -26,7 +28,6 @@ class FinalInstallManager
     /**
      * Generate New Application Key.
      *
-     * @param  BufferedOutput  $outputLog
      *
      * @return BufferedOutput|array
      */
@@ -34,7 +35,7 @@ class FinalInstallManager
     {
         try {
             if (config('installer.final.key')) {
-                Artisan::call('key:generate', ['--force'=> true], $outputLog);
+                Artisan::call('key:generate', ['--force' => true], $outputLog);
             }
         } catch (Exception $e) {
             return static::response($e->getMessage(), $outputLog);
@@ -46,7 +47,6 @@ class FinalInstallManager
     /**
      * Publish vendor assets.
      *
-     * @param  BufferedOutput  $outputLog
      *
      * @return BufferedOutput|array
      */
@@ -66,16 +66,14 @@ class FinalInstallManager
     /**
      * Return a formatted error messages.
      *
-     * @param $message
-     * @param  BufferedOutput $outputLog
      *
      * @return array
      */
     private static function response($message, BufferedOutput $outputLog)
     {
         return [
-            'status' => 'error',
-            'message' => $message,
+            'status'      => 'error',
+            'message'     => $message,
             'dbOutputLog' => $outputLog->fetch(),
         ];
     }

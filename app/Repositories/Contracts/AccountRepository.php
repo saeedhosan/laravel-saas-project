@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories\Contracts;
 
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -10,32 +12,18 @@ use Illuminate\Contracts\Auth\Authenticatable;
 interface AccountRepository extends BaseRepository
 {
     /**
-     * @param  array  $input
-     *
      * @return mixed
      */
     public function register(array $input);
 
-
     /**
-     * @param $provider
-     * @param $data
-     *
      * @return mixed
      */
     public function findOrCreateSocial($provider, $data);
 
-    /**
-     * @param  Authenticatable  $user
-     * @param                                            $name
-     *
-     * @return bool
-     */
     public function hasPermission(Authenticatable $user, $name): bool;
 
     /**
-     * @param  array  $input
-     *
      * @return mixed
      */
     public function update(array $input);
@@ -45,10 +33,7 @@ interface AccountRepository extends BaseRepository
      */
     public function delete();
 
-
     /**
-     * @param  Authenticatable  $user
-     *
      * @return mixed
      */
     public function redirectAfterLogin(Authenticatable $user);

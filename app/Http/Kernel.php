@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http;
 
 use App\Http\Middleware\Authenticate;
@@ -79,15 +81,15 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => Authenticate::class,
-        'auth.basic' => AuthenticateWithBasicAuth::class,
-        'bindings' => SubstituteBindings::class,
+        'auth'          => Authenticate::class,
+        'auth.basic'    => AuthenticateWithBasicAuth::class,
+        'bindings'      => SubstituteBindings::class,
         'cache.headers' => SetCacheHeaders::class,
-        'can' => Authorize::class,
-        'guest' => RedirectIfAuthenticated::class,
-        'signed' => ValidateSignature::class,
-        'throttle' => ThrottleRequests::class,
-        'verified' => EnsureEmailIsVerified::class,
+        'can'           => Authorize::class,
+        'guest'         => RedirectIfAuthenticated::class,
+        'signed'        => ValidateSignature::class,
+        'throttle'      => ThrottleRequests::class,
+        'verified'      => EnsureEmailIsVerified::class,
 
         /*
         |--------------------------------------------------------------------------
@@ -95,11 +97,11 @@ class Kernel extends HttpKernel
         |--------------------------------------------------------------------------
          */
 
-        'ValidProduct' => RedirectIfNotValid::class,
-        'twofactor' => TwoFactor::class,
+        'ValidProduct'  => RedirectIfNotValid::class,
+        'twofactor'     => TwoFactor::class,
         'json.response' => ForceJsonResponse::class,
-        'install' => canInstall::class,
-        'update' => canUpdate::class,
+        'install'       => canInstall::class,
+        'update'        => canUpdate::class,
 
     ];
 

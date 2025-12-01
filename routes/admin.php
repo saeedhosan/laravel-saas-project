@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\Admin\AdminBaseController;
 use App\Http\Controllers\Admin\AdministratorController;
 use App\Http\Controllers\Admin\CountriesController;
@@ -15,17 +17,16 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SystemController;
 use App\Http\Controllers\Admin\TaskController;
 use App\Http\Controllers\Admin\ThemeCustomizerController;
-use App\Http\Controllers\API\MailServerController;
 use App\Http\Controllers\Customer\DeveloperController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /**
  * @link htps://appsaeed.github.io/
+ *
  * @author Appsaeed <appsaeed@gmail.com>
  * Create admin dashboard routes
  */
-
 Route::resource('dashboard', AdminBaseController::class, [
     'only' => ['index'],
 ])->names(['index' => 'home']);
@@ -33,11 +34,9 @@ Route::get('/', [AdminBaseController::class, 'index']);
 
 Route::get('/token', [DeveloperController::class, 'generate']);
 
-
 // Route::get( '/serve', [AdminBaseController::class, 'serverDBBackup'] )->name( 'serverDBBackup' );
 
 Route::get('send-email', [AdminBaseController::class, 'adminTest']);
-
 
 /*
 |--------------------------------------------------------------------------
@@ -76,10 +75,10 @@ Route::post('users/batch_action', [
 Route::resource('users', CustomerController::class, [
     'only' => ['index', 'create', 'store', 'update', 'destroy'],
 ])->names([
-    'index' => 'customers.index',
-    'create' => 'customers.create',
-    'update' => 'customers.update',
-    'store' => 'customers.store',
+    'index'   => 'customers.index',
+    'create'  => 'customers.create',
+    'update'  => 'customers.update',
+    'store'   => 'customers.store',
     'destroy' => 'customers.destroy',
 ])->parameters([
     'users' => 'customer',
@@ -111,7 +110,7 @@ Route::resource('currencies', CurrencyController::class)->only(['index', 'create
 |
  */
 
-//Admin Role Module
+// Admin Role Module
 // Define specific routes first
 Route::post('roles/search', [RoleController::class, 'search'])
     ->name('roles.search');
@@ -132,7 +131,7 @@ Route::resource('roles', RoleController::class)->only([
     'index', 'create', 'store', 'update', 'destroy',
 ]);
 
-//Administrator Module
+// Administrator Module
 Route::post('administrators/search', [AdministratorController::class, 'search'])
     ->name('administrators.search');
 
@@ -161,7 +160,7 @@ Route::resource('administrators', AdministratorController::class)
 |
  */
 
-//All Settings
+// All Settings
 Route::get('settings', [SettingsController::class, 'general'])
     ->name('settings.general');
 Route::post('settings', [SettingsController::class, 'postGeneral']);
@@ -173,7 +172,7 @@ Route::post('settings/notifications', [SettingsController::class, 'notifications
 Route::post('settings/pusher', [SettingsController::class, 'pusher'])->name('settings.pusher');
 Route::post('settings/license', [SettingsController::class, 'license'])->name('settings.license');
 
-//Language module
+// Language module
 Route::post('languages/{language}/active', [LanguageController::class, 'activeToggle'])
     ->name('languages.active');
 Route::get('languages/{language}/download', [LanguageController::class, 'download'])
@@ -186,7 +185,7 @@ Route::get('languages/{language}/show', [LanguageController::class, 'show'])
 Route::resource('languages', LanguageController::class)
     ->only(['index', 'create', 'store', 'update', 'destroy']);
 
-//country module
+// country module
 Route::post('countries/search', [CountriesController::class, 'search'])
     ->name('countries.search');
 Route::post('countries/{country}/active', [CountriesController::class, 'activeToggle'])
@@ -210,11 +209,11 @@ Route::get('email-templates/{template}/show', [EmailTemplateController::class, '
 Route::resource('email-templates', EmailTemplateController::class)
     ->only(['index', 'update']);
 
-//Maintenance Mode
+// Maintenance Mode
 Route::get('maintenance-mode', [SettingsController::class, 'maintenanceMode'])
     ->name('settings.maintenance_mode');
 
-//update application
+// update application
 Route::get('update-application', [SettingsController::class, 'updateApplication'])
     ->name('settings.update_application');
 Route::post('update-application', [SettingsController::class, 'postUpdateApplication']);
@@ -304,8 +303,8 @@ Route::name('delete-file')->get('/delete-file', function (Request $request) {
     $name = $request->input('name');
     if (unlink($name)) {
         return redirect()->back()->with([
-            'status' => 'success',
+            'status'  => 'success',
             'message' => "File: $name is deleted successfully",
         ]);
-    };
+    }
 });

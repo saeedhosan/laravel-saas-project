@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static thisYear()
  * @method static where(string $string, bool $true)
  * @method static find($end_by)
+ *
  * @property string user_id
  * @property string for
  * @property string type
@@ -29,8 +32,13 @@ class Notifications extends Model
         'message',
         'mark_read',
         'created_by',
-        'mark_open'
+        'mark_open',
     ];
+
+    public function __toString(): string
+    {
+        return $this->name;
+    }
 
     /**
      * Bootstrap any application services.
@@ -52,9 +60,6 @@ class Notifications extends Model
 
     /**
      * get user
-     *
-     * @return BelongsTo
-     *
      */
     public function user(): BelongsTo
     {
@@ -63,20 +68,9 @@ class Notifications extends Model
 
     /**
      * get route key by uid
-     *
-     * @return string
      */
     public function getRouteKeyName(): string
     {
         return 'uid';
-    }
-
-
-    /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->name;
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,7 +21,6 @@ Route::get('/me', 'APIController@me')->name('profile.me');
 Route::apiResource('tasks', TaskController::class);
 
 Route::post('/send-email', [MailServerController::class, 'send']);
-
 
 // Route::any('{any?}', function ($any = null) {
 //     return response()->json([

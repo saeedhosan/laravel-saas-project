@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\Exceptions\GeneralException;
@@ -25,7 +27,8 @@ use Illuminate\View\View;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-class RoleController extends AdminBaseController {
+class RoleController extends AdminBaseController
+{
     /**
      * @var RoleRepository
      */
@@ -33,40 +36,40 @@ class RoleController extends AdminBaseController {
 
     /**
      * Create a new controller instance.
-     *
-     * @param  RoleRepository  $roles
      */
-    public function __construct( RoleRepository $roles ) {
+    public function __construct(RoleRepository $roles)
+    {
         $this->roles = $roles;
     }
 
     /**
      * @return Application|Factory|View
+     *
      * @throws AuthorizationException
      */
+    public function index()
+    {
 
-    public function index() {
-
-        $this->authorize( 'view roles' );
+        $this->authorize('view roles');
 
         $breadcrumbs = [
-            ['link' => url( config( 'app.admin_path' ) . "/dashboard" ), 'name' => __( 'locale.menu.Dashboard' )],
-            ['link' => url( config( 'app.admin_path' ) . "/dashboard" ), 'name' => __( 'locale.menu.Administrator' )],
-            ['name' => __( 'locale.menu.Admin Roles' )],
+            ['link' => url(config('app.admin_path').'/dashboard'), 'name' => __('locale.menu.Dashboard')],
+            ['link' => url(config('app.admin_path').'/dashboard'), 'name' => __('locale.menu.Administrator')],
+            ['name' => __('locale.menu.Admin Roles')],
         ];
 
-        return view( 'admin.AdminRoles.index', compact( 'breadcrumbs' ) );
+        return view('admin.AdminRoles.index', compact('breadcrumbs'));
     }
 
     /**
-     * @param  Request  $request
-     *
      * @return void
+     *
      * @throws AuthorizationException
      */
-    public function search( Request $request ) {
+    public function search(Request $request)
+    {
 
-        $this->authorize( 'view roles' );
+        $this->authorize('view roles');
 
         $columns = [
             0 => 'responsive_id',
@@ -82,61 +85,61 @@ class RoleController extends AdminBaseController {
 
         $totalFiltered = $totalData;
 
-        $limit = $request->input( 'length' );
-        $start = $request->input( 'start' );
-        $order = $columns[$request->input( 'order.0.column' )];
-        $dir = $request->input( 'order.0.dir' );
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        $order = $columns[$request->input('order.0.column')];
+        $dir   = $request->input('order.0.dir');
 
-        if ( empty( $request->input( 'search.value' ) ) ) {
-            $admin_roles = Role::offset( $start )
-                ->limit( $limit )
-                ->orderBy( $order, $dir )
+        if (empty($request->input('search.value'))) {
+            $admin_roles = Role::offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir)
                 ->get();
         } else {
-            $search = $request->input( 'search.value' );
+            $search = $request->input('search.value');
 
-            $admin_roles = Role::whereLike( ['uid', 'name'], $search )
-                ->offset( $start )
-                ->limit( $limit )
-                ->orderBy( $order, $dir )
+            $admin_roles = Role::whereLike(['uid', 'name'], $search)
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir)
                 ->get();
 
-            $totalFiltered = Role::whereLike( ['uid', 'name'], $search )->count();
+            $totalFiltered = Role::whereLike(['uid', 'name'], $search)->count();
 
         }
 
         $data = [];
-        if ( !empty( $admin_roles ) ) {
-            foreach ( $admin_roles as $role ) {
-                $show = route( 'admin.roles.show', $role->uid );
+        if (! empty($admin_roles)) {
+            foreach ($admin_roles as $role) {
+                $show = route('admin.roles.show', $role->uid);
 
-                if ( $role->status == true ) {
+                if ($role->status === true) {
                     $status = 'checked';
                 } else {
                     $status = '';
                 }
 
-                $edit = null;
+                $edit   = null;
                 $delete = null;
 
-                if ( Auth::user()->can( 'edit roles' ) ) {
+                if (Auth::user()->can('edit roles')) {
                     $edit .= $show;
                 }
 
-                if ( Auth::user()->can( 'delete roles' ) ) {
+                if (Auth::user()->can('delete roles')) {
                     $delete .= $role->uid;
                 }
 
-                $nestedData['uid'] = $role->uid;
+                $nestedData['uid']           = $role->uid;
                 $nestedData['responsive_id'] = '';
-                $nestedData['name'] = "<div>
-                                        <h5 class='text-bold-600'><a href='$show' >" . ucfirst( $role->name ) . "</a>  </h5>
-                                        <span class='text-muted'>" . __( 'locale.labels.created_at' ) . ": " . Tool::formatDate( $role->created_at ) . "</span>
-                                        </div>";
+                $nestedData['name']          = "<div>
+                                        <h5 class='text-bold-600'><a href='$show' >".ucfirst($role->name)."</a>  </h5>
+                                        <span class='text-muted'>".__('locale.labels.created_at').': '.Tool::formatDate($role->created_at).'</span>
+                                        </div>';
                 $nestedData['admins'] = "<div>
-                                        <h5 class='text-bold-600'>" . $role->admins->count() . "</h5>
-                                        <span class='text-muted'>" . __( 'locale.labels.admins' ) . "</span>
-                                        </div>";
+                                        <h5 class='text-bold-600'>".$role->admins->count()."</h5>
+                                        <span class='text-muted'>".__('locale.labels.admins').'</span>
+                                        </div>';
 
                 $nestedData['status'] = "<div class='form-check form-switch form-check-primary'>
                 <input type='checkbox' class='form-check-input get_status' id='status_$role->uid' data-id='$role->uid' name='status' $status>
@@ -146,7 +149,7 @@ class RoleController extends AdminBaseController {
                 </label>
               </div>";
 
-                $nestedData['edit'] = $edit;
+                $nestedData['edit']   = $edit;
                 $nestedData['delete'] = $delete;
 
                 $data[] = $nestedData;
@@ -155,163 +158,152 @@ class RoleController extends AdminBaseController {
         }
 
         $json_data = [
-            "draw" => intval( $request->input( 'draw' ) ),
-            "recordsTotal" => $totalData,
-            "recordsFiltered" => intval( $totalFiltered ),
-            "data" => $data,
+            'draw'            => (int) ($request->input('draw')),
+            'recordsTotal'    => $totalData,
+            'recordsFiltered' => (int) $totalFiltered,
+            'data'            => $data,
         ];
 
-        echo json_encode( $json_data );
+        echo json_encode($json_data);
         exit();
 
     }
 
     /**
      * @return Application|Factory|View
+     *
      * @throws AuthorizationException
      */
-
-    public function create() {
-        $this->authorize( 'create roles' );
+    public function create()
+    {
+        $this->authorize('create roles');
 
         $breadcrumbs = [
-            ['link' => url( config( 'app.admin_path' ) . "/dashboard" ), 'name' => __( 'locale.menu.Dashboard' )],
-            ['link' => url( config( 'app.admin_path' ) . "/roles" ), 'name' => __( 'locale.menu.Admin Roles' )],
-            ['name' => __( 'locale.role.create_role' )],
+            ['link' => url(config('app.admin_path').'/dashboard'), 'name' => __('locale.menu.Dashboard')],
+            ['link' => url(config('app.admin_path').'/roles'), 'name' => __('locale.menu.Admin Roles')],
+            ['name' => __('locale.role.create_role')],
         ];
 
-        $categories = collect( config( 'permissions' ) )->map( function ( $value, $key ) {
+        $categories = collect(config('permissions'))->map(function ($value, $key) {
             $value['name'] = $key;
 
             return $value;
-        } )->groupBy( 'category' );
+        })->groupBy('category');
 
-        $permissions = $categories->keys()->map( function ( $key ) use ( $categories ) {
+        $permissions = $categories->keys()->map(function ($key) use ($categories) {
             return [
-                'title' => $key,
+                'title'       => $key,
                 'permissions' => $categories[$key],
             ];
-        } );
+        });
 
-        return view( 'admin.AdminRoles.create', compact( 'breadcrumbs', 'permissions' ) );
+        return view('admin.AdminRoles.create', compact('breadcrumbs', 'permissions'));
     }
 
     /**
      * store new plan
-     *
-     * @param  StoreAdminRole  $request
-     *
-     * @return RedirectResponse
      */
-    public function store( StoreAdminRole $request ): RedirectResponse {
-        if ( $this->checks() ) {
-            return redirect()->route( 'admin.roles.index' )->with( [
-                'status' => 'error',
+    public function store(StoreAdminRole $request): RedirectResponse
+    {
+        if ($this->checks()) {
+            return redirect()->route('admin.roles.index')->with([
+                'status'  => 'error',
                 'message' => 'Sorry! This option is not available in demo mode',
-            ] );
+            ]);
         }
 
-        $this->roles->store( $request->input() );
+        $this->roles->store($request->input());
 
-        return redirect()->route( 'admin.roles.index' )->with( [
-            'status' => 'success',
-            'message' => __( 'locale.role.role_successfully_added' ),
-        ] );
+        return redirect()->route('admin.roles.index')->with([
+            'status'  => 'success',
+            'message' => __('locale.role.role_successfully_added'),
+        ]);
     }
 
     /**
      * View role for edit
      *
-     * @param  Role  $role
      *
      * @return Application|Factory|View
      *
      * @throws AuthorizationException
      */
-
-    public function show( Role $role ) {
-        $this->authorize( 'edit roles' );
+    public function show(Role $role)
+    {
+        $this->authorize('edit roles');
 
         $breadcrumbs = [
-            ['link' => url( config( 'app.admin_path' ) . "/dashboard" ), 'name' => __( 'locale.menu.Dashboard' )],
-            ['link' => url( config( 'app.admin_path' ) . "/roles" ), 'name' => __( 'locale.menu.Admin Roles' )],
-            ['name' => __( 'locale.role.update_role' )],
+            ['link' => url(config('app.admin_path').'/dashboard'), 'name' => __('locale.menu.Dashboard')],
+            ['link' => url(config('app.admin_path').'/roles'), 'name' => __('locale.menu.Admin Roles')],
+            ['name' => __('locale.role.update_role')],
         ];
-        $categories = collect( config( 'permissions' ) )->map( function ( $value, $key ) {
+        $categories = collect(config('permissions'))->map(function ($value, $key) {
             $value['name'] = $key;
 
             return $value;
-        } )->groupBy( 'category' );
+        })->groupBy('category');
 
-        $permissions = $categories->keys()->map( function ( $key ) use ( $categories ) {
+        $permissions = $categories->keys()->map(function ($key) use ($categories) {
             return [
-                'title' => $key,
+                'title'       => $key,
                 'permissions' => $categories[$key],
             ];
-        } );
+        });
 
         $existing_permission = $role->permissions;
 
-        return view( 'admin.AdminRoles.create', compact( 'breadcrumbs', 'permissions', 'role', 'existing_permission' ) );
+        return view('admin.AdminRoles.create', compact('breadcrumbs', 'permissions', 'role', 'existing_permission'));
     }
 
-    /**
-     * @param  Role  $role
-     * @param  UpdateAdminRole  $request
-     *
-     * @return RedirectResponse
-     */
-
-    public function update( Role $role, UpdateAdminRole $request ): RedirectResponse {
-        if ( $this->checks() ) {
-            return redirect()->route( 'admin.roles.index' )->with( [
-                'status' => 'error',
+    public function update(Role $role, UpdateAdminRole $request): RedirectResponse
+    {
+        if ($this->checks()) {
+            return redirect()->route('admin.roles.index')->with([
+                'status'  => 'error',
                 'message' => 'Sorry! This option is not available in demo mode',
-            ] );
+            ]);
         }
 
-        $this->roles->update( $role, $request->input() );
+        $this->roles->update($role, $request->input());
 
-        return redirect()->route( 'admin.roles.index' )->with( [
-            'status' => 'success',
-            'message' => __( 'locale.role.role_successfully_updated' ),
-        ] );
+        return redirect()->route('admin.roles.index')->with([
+            'status'  => 'success',
+            'message' => __('locale.role.role_successfully_updated'),
+        ]);
     }
 
     /**
      * change role status
      *
-     * @param  Role  $role
      *
-     * @return JsonResponse
      * @throws AuthorizationException
      * @throws GeneralException
      */
-    public function activeToggle( Role $role ): JsonResponse {
-        if ( $this->checks() ) {
-            return response()->json( [
-                'status' => 'error',
+    public function activeToggle(Role $role): JsonResponse
+    {
+        if ($this->checks()) {
+            return response()->json([
+                'status'  => 'error',
                 'message' => 'Sorry! This option is not available in demo mode',
-            ] );
+            ]);
         }
 
         try {
-            $this->authorize( 'edit roles' );
+            $this->authorize('edit roles');
 
-            if ( $role->update( ['status' => !$role->status] ) ) {
-                return response()->json( [
-                    'status' => 'success',
-                    'message' => __( 'locale.role.role_successfully_change' ),
-                ] );
+            if ($role->update(['status' => ! $role->status])) {
+                return response()->json([
+                    'status'  => 'success',
+                    'message' => __('locale.role.role_successfully_change'),
+                ]);
             }
 
-            throw new GeneralException( __( 'locale.exceptions.something_went_wrong' ) );
-
-        } catch ( ModelNotFoundException $exception ) {
-            return response()->json( [
-                'status' => 'error',
+            throw new GeneralException(__('locale.exceptions.something_went_wrong'));
+        } catch (ModelNotFoundException $exception) {
+            return response()->json([
+                'status'  => 'error',
                 'message' => $exception->getMessage(),
-            ] );
+            ]);
         }
 
     }
@@ -319,124 +311,118 @@ class RoleController extends AdminBaseController {
     /**
      * delete admin role
      *
-     * @param  Role  $role
      *
-     * @return JsonResponse
      * @throws AuthorizationException
      */
+    public function destroy(Role $role): JsonResponse
+    {
 
-    public function destroy( Role $role ): JsonResponse {
-
-        if ( $this->checks() ) {
-            return response()->json( [
-                'status' => 'error',
+        if ($this->checks()) {
+            return response()->json([
+                'status'  => 'error',
                 'message' => 'Sorry! This option is not available in demo mode',
-            ] );
+            ]);
         }
 
-        $this->authorize( 'delete roles' );
+        $this->authorize('delete roles');
 
-        $this->roles->destroy( $role );
+        $this->roles->destroy($role);
 
-        return response()->json( [
-            'status' => 'success',
-            'message' => __( 'locale.role.role_successfully_deleted' ),
-        ] );
+        return response()->json([
+            'status'  => 'success',
+            'message' => __('locale.role.role_successfully_deleted'),
+        ]);
 
     }
 
     /**
      * Bulk Action with Enable, Disable and Delete
      *
-     * @param  Request  $request
      *
-     * @return JsonResponse
      * @throws AuthorizationException
      */
+    public function batchAction(Request $request): JsonResponse
+    {
 
-    public function batchAction( Request $request ): JsonResponse {
-
-        if ( $this->checks() ) {
-            return response()->json( [
-                'status' => 'error',
+        if ($this->checks()) {
+            return response()->json([
+                'status'  => 'error',
                 'message' => 'Sorry! This option is not available in demo mode',
-            ] );
+            ]);
         }
 
-        $action = $request->get( 'action' );
-        $ids = $request->get( 'ids' );
+        $action = $request->get('action');
+        $ids    = $request->get('ids');
 
-        switch ( $action ) {
-        case 'destroy':
-            $this->authorize( 'delete roles' );
+        switch ($action) {
+            case 'destroy':
+                $this->authorize('delete roles');
 
-            $this->roles->batchDestroy( $ids );
+                $this->roles->batchDestroy($ids);
 
-            return response()->json( [
-                'status' => 'success',
-                'message' => __( 'locale.role.roles_deleted' ),
-            ] );
+                return response()->json([
+                    'status'  => 'success',
+                    'message' => __('locale.role.roles_deleted'),
+                ]);
 
-        case 'enable':
-            $this->authorize( 'edit roles' );
+            case 'enable':
+                $this->authorize('edit roles');
 
-            $this->roles->batchActive( $ids );
+                $this->roles->batchActive($ids);
 
-            return response()->json( [
-                'status' => 'success',
-                'message' => __( 'locale.role.roles_enabled' ),
-            ] );
+                return response()->json([
+                    'status'  => 'success',
+                    'message' => __('locale.role.roles_enabled'),
+                ]);
 
-        case 'disable':
+            case 'disable':
 
-            $this->authorize( 'edit roles' );
+                $this->authorize('edit roles');
 
-            $this->roles->batchDisable( $ids );
+                $this->roles->batchDisable($ids);
 
-            return response()->json( [
-                'status' => 'success',
-                'message' => __( 'locale.role.roles_disabled' ),
-            ] );
+                return response()->json([
+                    'status'  => 'success',
+                    'message' => __('locale.role.roles_disabled'),
+                ]);
         }
 
-        return response()->json( [
-            'status' => 'error',
-            'message' => __( 'locale.exceptions.invalid_action' ),
-        ] );
+        return response()->json([
+            'status'  => 'error',
+            'message' => __('locale.exceptions.invalid_action'),
+        ]);
 
     }
 
-    /**
-     * @return Generator
-     */
-
-    public function adminRoleGenerator(): Generator {
-        foreach ( Role::cursor() as $role ) {
+    public function adminRoleGenerator(): Generator
+    {
+        foreach (Role::cursor() as $role) {
             yield $role;
         }
     }
 
     /**
      * @return RedirectResponse|BinaryFileResponse
+     *
      * @throws AuthorizationException
      * @throws IOException
      * @throws InvalidArgumentException
      * @throws UnsupportedTypeException
      * @throws WriterNotOpenedException
      */
-    public function export() {
-        if ( $this->checks() ) {
-            return redirect()->route( 'admin.roles.index' )->with( [
-                'status' => 'error',
+    public function export()
+    {
+        if ($this->checks()) {
+            return redirect()->route('admin.roles.index')->with([
+                'status'  => 'error',
                 'message' => 'Sorry! This option is not available in demo mode',
-            ] );
+            ]);
         }
 
-        $this->authorize( 'edit roles' );
+        $this->authorize('edit roles');
 
-        $file_name = ( new FastExcel( $this->adminRoleGenerator() ) )->export( storage_path( 'AdminRoles_' . time() . '.xlsx' ) );
+        $file_name = (new FastExcel($this->adminRoleGenerator()))->export(storage_path('AdminRoles_'.time().'.xlsx'));
 
-        return response()->download( $file_name );
+        return response()->download($file_name);
     }
-
 }

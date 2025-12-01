@@ -1,8 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateLanguagesTable extends Migration
 {
@@ -16,8 +18,8 @@ class CreateLanguagesTable extends Migration
         Schema::create('languages', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('code',3);
-            $table->string('iso_code',3);
+            $table->string('code', 3);
+            $table->string('iso_code', 3);
             $table->boolean('status')->default(true);
             $table->timestamps();
         });

@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Models\Todos;
 use App\Repositories\TodosRepository;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class TaskDeadlineReminder extends Command
 {
@@ -26,8 +28,6 @@ class TaskDeadlineReminder extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -42,7 +42,6 @@ class TaskDeadlineReminder extends Command
                 1440, // 24 hours
             ];
 
-
             foreach ($minutes as $minute) {
                 $tasks = Todos::where('status', '!=', 'complete')
                     ->where('deadline', '>', now())
@@ -51,15 +50,15 @@ class TaskDeadlineReminder extends Command
                     ->get();
 
                 foreach ($tasks as $task) {
-                    Log::info("task deadline remainder for 24 hours");
+                    Log::info('task deadline remainder for 24 hours');
                     TodosRepository::cronNotiffy($task);
                     $task->last_cron = now();
                     $task->save();
                 }
             }
-            //completed tasks
-        } catch (\Throwable $th) {
-            Log::error('command error: ' . $th->getMessage());
+            // completed tasks
+        } catch (Throwable $th) {
+            Log::error('command error: '.$th->getMessage());
         }
 
         return Command::SUCCESS;

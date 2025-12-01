@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use App\Helpers\Helper;
@@ -14,9 +16,13 @@ class WelcomeEmailNotification extends Notification
     use Queueable;
 
     protected string $first_name;
+
     protected string $last_name;
+
     protected string $email;
+
     protected string $login_url;
+
     protected string $password;
 
     /**
@@ -37,7 +43,6 @@ class WelcomeEmailNotification extends Notification
      * Get the notification's delivery channels.
      *
      * @param  mixed  $notifiable
-     *
      * @return array
      */
     public function via($notifiable)
@@ -49,7 +54,6 @@ class WelcomeEmailNotification extends Notification
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     *
      * @return MailMessage
      */
     public function toMail($notifiable)
@@ -67,7 +71,7 @@ class WelcomeEmailNotification extends Notification
             'last_name'     => $this->last_name,
             'email_address' => $this->email,
             'password'      => $this->password,
-            'login_url'     => "<a href='$this->login_url' target='_blank'>" . __('locale.auth.login') . "</a>",
+            'login_url'     => "<a href='$this->login_url' target='_blank'>".__('locale.auth.login').'</a>',
         ]);
 
         return (new MailMessage)

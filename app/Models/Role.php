@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * App\Models\Role.
@@ -32,19 +34,19 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder|Role whereOrder($value)
  * @method static Builder|Role whereUpdatedAt($value)
  * @method static whereLike(string[] $array, mixed $search)
+ *
  * @mixin Eloquent
  */
 class Role extends Model
 {
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-            'name',
-            'status',
+        'name',
+        'status',
     ];
 
     /**
@@ -53,10 +55,20 @@ class Role extends Model
      * @var array
      */
     protected $with = [
-            'permissions',
+        'permissions',
     ];
 
     protected $appends = ['can_edit', 'can_delete'];
+
+    /**
+     * display route
+     *
+     * @return array|string
+     */
+    public function __toString()
+    {
+        return $this->display_name ?: $this->name;
+    }
 
     /**
      * Bootstrap any application services.
@@ -76,20 +88,14 @@ class Role extends Model
         });
     }
 
-
     /**
      * show role name
-     *
-     * @return string
      */
     public function display_name(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return bool
-     */
     public function getCanEditAttribute(): bool
     {
         return true;
@@ -102,8 +108,6 @@ class Role extends Model
 
     /**
      * Many-to-Many relations with Role.
-     *
-     * @return HasMany
      */
     public function permissions(): HasMany
     {
@@ -112,8 +116,6 @@ class Role extends Model
 
     /**
      * get roles admin
-     *
-     * @return HasMany
      */
     public function admins(): HasMany
     {
@@ -132,24 +134,9 @@ class Role extends Model
 
     /**
      * get route key by uid
-     *
-     * @return string
      */
     public function getRouteKeyName(): string
     {
         return 'uid';
     }
-
-
-    /**
-     * display route
-     *
-     * @return array|string
-     */
-
-    public function __toString()
-    {
-        return $this->display_name ?: $this->name;
-    }
-
 }

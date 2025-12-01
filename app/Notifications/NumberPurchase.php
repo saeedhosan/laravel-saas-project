@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use App\Helpers\Helper;
@@ -11,7 +13,6 @@ use Illuminate\Notifications\Notification;
 
 class NumberPurchase extends Notification
 {
-
     use Queueable;
 
     protected string $number_url;
@@ -30,7 +31,6 @@ class NumberPurchase extends Notification
      * Get the notification's delivery channels.
      *
      * @param  mixed  $notifiable
-     *
      * @return array
      */
     public function via($notifiable)
@@ -42,7 +42,6 @@ class NumberPurchase extends Notification
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     *
      * @return MailMessage
      */
     public function toMail($notifiable)
@@ -51,17 +50,17 @@ class NumberPurchase extends Notification
         $template = EmailTemplates::where('slug', 'keyword_purchase_notification')->first();
 
         $subject = Tool::renderTemplate($template->subject, [
-                'app_name' => config('app.name'),
+            'app_name' => config('app.name'),
         ]);
 
         $content = Tool::renderTemplate($template->content, [
-                'app_name'    => config('app.name'),
-                'number_url' => "<a href='$this->number_url' target='_blank'>".__('locale.labels.number')."</a>",
+            'app_name'   => config('app.name'),
+            'number_url' => "<a href='$this->number_url' target='_blank'>".__('locale.labels.number').'</a>',
         ]);
 
         return (new MailMessage)
-                ->from(Helper::app_config('notification_email'), Helper::app_config('notification_from_name'))
-                ->subject($subject)
-                ->markdown('emails.number.purchase', ['content' => $content, 'url' => $this->number_url]);
+            ->from(Helper::app_config('notification_email'), Helper::app_config('notification_from_name'))
+            ->subject($subject)
+            ->markdown('emails.number.purchase', ['content' => $content, 'url' => $this->number_url]);
     }
 }

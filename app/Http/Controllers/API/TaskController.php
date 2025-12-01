@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
@@ -7,14 +9,17 @@ use App\Models\Todos;
 use App\Models\Traits\ApiResponser;
 use Illuminate\Http\Request;
 
-class TaskController extends Controller {
+class TaskController extends Controller
+{
     use ApiResponser;
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index()
+    {
         // if ( $this->checks() ) {
         //     return response()->json( [
         //         'status' => 'error',
@@ -22,9 +27,9 @@ class TaskController extends Controller {
         //     ] );
         // }
 
-        $data = Todos::where( 'user_id', auth()->id() )->get();
+        $data = Todos::where('user_id', auth()->id())->get();
 
-        return $this->success( $data );
+        return $this->success($data);
     }
 
     /**
@@ -32,17 +37,18 @@ class TaskController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
         //
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store( Request $request ) {
+    public function store(Request $request)
+    {
         //
     }
 
@@ -52,7 +58,8 @@ class TaskController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show( $id ) {
+    public function show($id)
+    {
         //
     }
 
@@ -62,18 +69,19 @@ class TaskController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit( $id ) {
+    public function edit($id)
+    {
         //
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update( Request $request, $id ) {
+    public function update(Request $request, $id)
+    {
         //
     }
 
@@ -83,7 +91,8 @@ class TaskController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy( $id ) {
+    public function destroy($id)
+    {
         //
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -20,11 +22,9 @@ class Permission extends Model
      *
      * @var array
      */
-
     protected $fillable = [
-            'name',
+        'name',
     ];
-
 
     /**
      * Bootstrap any application services.
@@ -43,5 +43,4 @@ class Permission extends Model
             $item->uid = $uid;
         });
     }
-
 }

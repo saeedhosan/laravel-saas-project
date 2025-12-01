@@ -1,10 +1,13 @@
-<?php // Code within app\Helpers\Helper.php
+<?php
+
+declare(strict_types=1);
+// Code within app\Helpers\Helper.php
 
 namespace App\Helpers;
 
 use App\Models\AppConfig;
 use App\Models\Language;
-use DateTime;
+use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
 use Illuminate\Http\Request;
@@ -12,77 +15,74 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
 
-class Helper {
-
-    /**
-     * @return array
-     */
-
-    public static function applClasses(): array {
-        if ( config( 'app.theme_layout_type' ) == 'vertical' ) {
-            $data = config( 'custom.vertical' );
+class Helper
+{
+    public static function applClasses(): array
+    {
+        if (config('app.theme_layout_type') === 'vertical') {
+            $data = config('custom.vertical');
         } else {
-            $data = config( 'custom.horizontal' );
+            $data = config('custom.horizontal');
         }
 
         // default data array
         $DefaultData = [
-            'mainLayoutType' => 'vertical',
-            'theme' => 'light',
-            'sidebarCollapsed' => false,
-            'navbarColor' => '',
-            'horizontalMenuType' => 'floating',
+            'mainLayoutType'         => 'vertical',
+            'theme'                  => 'light',
+            'sidebarCollapsed'       => false,
+            'navbarColor'            => '',
+            'horizontalMenuType'     => 'floating',
             'verticalMenuNavbarType' => 'floating',
-            'footerType' => 'static', //footer
-            'layoutWidth' => 'boxed',
-            'showMenu' => true,
-            'bodyClass' => '',
-            'pageClass' => '',
-            'pageHeader' => true,
-            'contentLayout' => 'default',
-            'blankPage' => false,
-            'defaultLanguage' => env( 'APP_LOCALE', 'en' ),
-            'direction' => env( 'MIX_CONTENT_DIRECTION', '' ),
+            'footerType'             => 'static', // footer
+            'layoutWidth'            => 'boxed',
+            'showMenu'               => true,
+            'bodyClass'              => '',
+            'pageClass'              => '',
+            'pageHeader'             => true,
+            'contentLayout'          => 'default',
+            'blankPage'              => false,
+            'defaultLanguage'        => env('APP_LOCALE', 'en'),
+            'direction'              => env('MIX_CONTENT_DIRECTION', ''),
         ];
 
         // if any key missing of array from custom.php file it will be merged and set a default value from dataDefault array and store in data variable
-        $data = array_merge( $DefaultData, $data );
+        $data = array_merge($DefaultData, $data);
 
         // All options available in the template
         $allOptions = [
-            'mainLayoutType' => ['vertical', 'horizontal'],
-            'theme' => ['light' => 'light', 'dark' => 'dark-layout', 'bordered' => 'bordered-layout', 'semi-dark' => 'semi-dark-layout'],
-            'sidebarCollapsed' => [true, false],
-            'showMenu' => [true, false],
-            'layoutWidth' => ['full', 'boxed'],
-            'navbarColor' => ['bg-primary', 'bg-info', 'bg-warning', 'bg-success', 'bg-danger', 'bg-dark'],
-            'horizontalMenuType' => ['floating' => 'navbar-floating', 'static' => 'navbar-static', 'sticky' => 'navbar-sticky'],
-            'horizontalMenuClass' => ['static' => '', 'sticky' => 'fixed-top', 'floating' => 'floating-nav'],
+            'mainLayoutType'         => ['vertical', 'horizontal'],
+            'theme'                  => ['light' => 'light', 'dark' => 'dark-layout', 'bordered' => 'bordered-layout', 'semi-dark' => 'semi-dark-layout'],
+            'sidebarCollapsed'       => [true, false],
+            'showMenu'               => [true, false],
+            'layoutWidth'            => ['full', 'boxed'],
+            'navbarColor'            => ['bg-primary', 'bg-info', 'bg-warning', 'bg-success', 'bg-danger', 'bg-dark'],
+            'horizontalMenuType'     => ['floating' => 'navbar-floating', 'static' => 'navbar-static', 'sticky' => 'navbar-sticky'],
+            'horizontalMenuClass'    => ['static' => '', 'sticky' => 'fixed-top', 'floating' => 'floating-nav'],
             'verticalMenuNavbarType' => ['floating' => 'navbar-floating', 'static' => 'navbar-static', 'sticky' => 'navbar-sticky', 'hidden' => 'navbar-hidden'],
-            'navbarClass' => ['floating' => 'floating-nav', 'static' => 'navbar-static-top', 'sticky' => 'fixed-top', 'hidden' => 'd-none'],
-            'footerType' => ['static' => 'footer-static', 'sticky' => 'footer-fixed', 'hidden' => 'footer-hidden'],
-            'pageHeader' => [true, false],
-            'contentLayout' => ['default', 'content-left-sidebar', 'content-right-sidebar', 'content-detached-left-sidebar', 'content-detached-right-sidebar'],
-            'blankPage' => [false, true],
-            'sidebarPositionClass' => ['content-left-sidebar' => 'sidebar-left', 'content-right-sidebar' => 'sidebar-right', 'content-detached-left-sidebar' => 'sidebar-detached sidebar-left', 'content-detached-right-sidebar' => 'sidebar-detached sidebar-right', 'default' => 'default-sidebar-position'],
-            'contentsidebarClass' => ['content-left-sidebar' => 'content-right', 'content-right-sidebar' => 'content-left', 'content-detached-left-sidebar' => 'content-detached content-right', 'content-detached-right-sidebar' => 'content-detached content-left', 'default' => 'default-sidebar'],
-            'defaultLanguage' => ['en' => 'en', 'fr' => 'fr', 'pt' => 'pt', 'af' => 'af', 'ar' => 'ar', 'es' => 'es', 'it' => 'it', 'ko' => 'ko', 'sl' => 'sl', 'zh' => 'zh'],
-            'direction' => ['ltr', 'rtl'],
+            'navbarClass'            => ['floating' => 'floating-nav', 'static' => 'navbar-static-top', 'sticky' => 'fixed-top', 'hidden' => 'd-none'],
+            'footerType'             => ['static' => 'footer-static', 'sticky' => 'footer-fixed', 'hidden' => 'footer-hidden'],
+            'pageHeader'             => [true, false],
+            'contentLayout'          => ['default', 'content-left-sidebar', 'content-right-sidebar', 'content-detached-left-sidebar', 'content-detached-right-sidebar'],
+            'blankPage'              => [false, true],
+            'sidebarPositionClass'   => ['content-left-sidebar' => 'sidebar-left', 'content-right-sidebar' => 'sidebar-right', 'content-detached-left-sidebar' => 'sidebar-detached sidebar-left', 'content-detached-right-sidebar' => 'sidebar-detached sidebar-right', 'default' => 'default-sidebar-position'],
+            'contentsidebarClass'    => ['content-left-sidebar' => 'content-right', 'content-right-sidebar' => 'content-left', 'content-detached-left-sidebar' => 'content-detached content-right', 'content-detached-right-sidebar' => 'content-detached content-left', 'default' => 'default-sidebar'],
+            'defaultLanguage'        => ['en' => 'en', 'fr' => 'fr', 'pt' => 'pt', 'af' => 'af', 'ar' => 'ar', 'es' => 'es', 'it' => 'it', 'ko' => 'ko', 'sl' => 'sl', 'zh' => 'zh'],
+            'direction'              => ['ltr', 'rtl'],
         ];
 
-        //if mainLayoutType value empty or not match with default options in custom.php config file then set a default value
-        foreach ( $allOptions as $key => $value ) {
-            if ( array_key_exists( $key, $DefaultData ) ) {
-                if ( gettype( $DefaultData[$key] ) === gettype( $data[$key] ) ) {
+        // if mainLayoutType value empty or not match with default options in custom.php config file then set a default value
+        foreach ($allOptions as $key => $value) {
+            if (array_key_exists($key, $DefaultData)) {
+                if (gettype($DefaultData[$key]) === gettype($data[$key])) {
                     // data key should be string
-                    if ( is_string( $data[$key] ) ) {
+                    if (is_string($data[$key])) {
                         // data key should not be empty
-                        if ( true ) {
+                        if (true) {
                             // data key should not be existed inside allOptions array's sub array
-                            if ( !array_key_exists( $data[$key], $value ) ) {
+                            if (! array_key_exists($data[$key], $value)) {
                                 // ensure that passed value should be match with any of allOptions array value
-                                $result = array_search( $data[$key], $value, 'strict' );
-                                if ( empty( $result ) && $result !== 0 ) {
+                                $result = array_search($data[$key], $value, 'strict');
+                                if (empty($result) && $result !== 0) {
                                     $data[$key] = $DefaultData[$key];
                                 }
                             }
@@ -94,61 +94,57 @@ class Helper {
             }
         }
 
-        //layout classes
+        // layout classes
         $layoutClasses = [
-            'theme' => $data['theme'],
-            'layoutTheme' => $allOptions['theme'][$data['theme']],
-            'sidebarCollapsed' => $data['sidebarCollapsed'],
-            'showMenu' => $data['showMenu'],
-            'layoutWidth' => $data['layoutWidth'],
+            'theme'                  => $data['theme'],
+            'layoutTheme'            => $allOptions['theme'][$data['theme']],
+            'sidebarCollapsed'       => $data['sidebarCollapsed'],
+            'showMenu'               => $data['showMenu'],
+            'layoutWidth'            => $data['layoutWidth'],
             'verticalMenuNavbarType' => $allOptions['verticalMenuNavbarType'][$data['verticalMenuNavbarType']],
-            'navbarClass' => $allOptions['navbarClass'][$data['verticalMenuNavbarType']],
-            'navbarColor' => $data['navbarColor'],
-            'horizontalMenuType' => $allOptions['horizontalMenuType'][$data['horizontalMenuType']],
-            'horizontalMenuClass' => $allOptions['horizontalMenuClass'][$data['horizontalMenuType']],
-            'footerType' => $allOptions['footerType'][$data['footerType']],
-            'sidebarClass' => '',
-            'bodyClass' => $data['bodyClass'],
-            'pageClass' => $data['pageClass'],
-            'pageHeader' => $data['pageHeader'],
-            'blankPage' => $data['blankPage'],
-            'blankPageClass' => '',
-            'contentLayout' => $data['contentLayout'],
-            'sidebarPositionClass' => $allOptions['sidebarPositionClass'][$data['contentLayout']],
-            'contentsidebarClass' => $allOptions['contentsidebarClass'][$data['contentLayout']],
-            'mainLayoutType' => $data['mainLayoutType'],
-            'defaultLanguage' => $allOptions['defaultLanguage'][$data['defaultLanguage']],
-            'direction' => $data['direction'],
+            'navbarClass'            => $allOptions['navbarClass'][$data['verticalMenuNavbarType']],
+            'navbarColor'            => $data['navbarColor'],
+            'horizontalMenuType'     => $allOptions['horizontalMenuType'][$data['horizontalMenuType']],
+            'horizontalMenuClass'    => $allOptions['horizontalMenuClass'][$data['horizontalMenuType']],
+            'footerType'             => $allOptions['footerType'][$data['footerType']],
+            'sidebarClass'           => '',
+            'bodyClass'              => $data['bodyClass'],
+            'pageClass'              => $data['pageClass'],
+            'pageHeader'             => $data['pageHeader'],
+            'blankPage'              => $data['blankPage'],
+            'blankPageClass'         => '',
+            'contentLayout'          => $data['contentLayout'],
+            'sidebarPositionClass'   => $allOptions['sidebarPositionClass'][$data['contentLayout']],
+            'contentsidebarClass'    => $allOptions['contentsidebarClass'][$data['contentLayout']],
+            'mainLayoutType'         => $data['mainLayoutType'],
+            'defaultLanguage'        => $allOptions['defaultLanguage'][$data['defaultLanguage']],
+            'direction'              => $data['direction'],
         ];
         // set default language if session hasn't locale value the set default language
-        if ( !Session::has( 'locale' ) ) {
-            app()->setLocale( env( 'APP_LOCALE' ) );
+        if (! Session::has('locale')) {
+            app()->setLocale(env('APP_LOCALE'));
         }
 
         // sidebar Collapsed
-        if ( $layoutClasses['sidebarCollapsed'] == 'true' ) {
-            $layoutClasses['sidebarClass'] = "menu-collapsed";
+        if ($layoutClasses['sidebarCollapsed'] === 'true') {
+            $layoutClasses['sidebarClass'] = 'menu-collapsed';
         }
 
         // blank page class
-        if ( $layoutClasses['blankPage'] == 'true' ) {
-            $layoutClasses['blankPageClass'] = "blank-page";
+        if ($layoutClasses['blankPage'] === 'true') {
+            $layoutClasses['blankPageClass'] = 'blank-page';
         }
 
         return $layoutClasses;
     }
 
-    /**
-     * @param $pageConfigs
-     *
-     * @return bool
-     */
-    public static function updatePageConfig( $pageConfigs ): bool {
+    public static function updatePageConfig($pageConfigs): bool
+    {
         $demo = 'vertical';
-        if ( isset( $pageConfigs ) ) {
-            if ( count( $pageConfigs ) > 0 ) {
-                foreach ( $pageConfigs as $config => $val ) {
-                    Config::set( 'custom.' . $demo . '.' . $config, $val );
+        if (isset($pageConfigs)) {
+            if (count($pageConfigs) > 0) {
+                foreach ($pageConfigs as $config => $val) {
+                    Config::set('custom.'.$demo.'.'.$config, $val);
                 }
             }
         }
@@ -156,47 +152,39 @@ class Helper {
         return false;
     }
 
-    /**
-     * @return string
-     */
-    public static function home_route(): string {
-        if ( Gate::allows( 'access backend' ) ) {
-            return route( 'admin.home' );
+    public static function home_route(): string
+    {
+        if (Gate::allows('access backend')) {
+            return route('admin.home');
         }
 
-        return route( 'user.home' );
+        return route('user.home');
     }
 
-    /**
-     * @param  Request  $request
-     *
-     * @return bool
-     */
-    public static function is_admin_route( Request $request ): bool {
+    public static function is_admin_route(Request $request): bool
+    {
         $action = $request->route()->getAction();
 
-        return 'App\Http\Controllers\Admin' === $action['namespace'];
+        return $action['namespace'] === 'App\Http\Controllers\Admin';
     }
 
     /**
      * @param  string  $value
-     *
      * @return mixed
      */
-
-    public static function app_config( $value = '' ) {
-        $conf = AppConfig::where( 'setting', $value )->first();
+    public static function app_config($value = '')
+    {
+        $conf = AppConfig::where('setting', $value)->first();
 
         return $conf ? $conf->value : '';
     }
 
     /**
      * Get all countries.
-     *
-     * @return array
      */
-    public static function countries(): array {
-        $countries = [];
+    public static function countries(): array
+    {
+        $countries   = [];
         $countries[] = ['code' => 'AF', 'name' => 'Afghanistan', 'd_code' => '+93'];
         $countries[] = ['code' => 'AL', 'name' => 'Albania', 'd_code' => '+355'];
         $countries[] = ['code' => 'DZ', 'name' => 'Algeria', 'd_code' => '+213'];
@@ -436,33 +424,33 @@ class Helper {
     /**
      * get timezone list
      *
-     * @return array
      * @throws Exception
      */
-    public static function timezoneList(): array {
+    public static function timezoneList(): array
+    {
         $timezoneIdentifiers = DateTimeZone::listIdentifiers();
-        $utcTime = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+        $utcTime             = new DateTimeImmutable('now', new DateTimeZone('UTC'));
 
         $tempTimezones = [];
-        foreach ( $timezoneIdentifiers as $timezoneIdentifier ) {
-            $currentTimezone = new DateTimeZone( $timezoneIdentifier );
+        foreach ($timezoneIdentifiers as $timezoneIdentifier) {
+            $currentTimezone = new DateTimeZone($timezoneIdentifier);
 
             $tempTimezones[] = [
-                'offset' => $currentTimezone->getOffset( $utcTime ),
+                'offset'     => $currentTimezone->getOffset($utcTime),
                 'identifier' => $timezoneIdentifier,
             ];
         }
-        usort( $tempTimezones, function ( $a, $b ) {
-            return ( $a['offset'] == $b['offset'] )
-            ? strcmp( $a['identifier'], $b['identifier'] )
+        usort($tempTimezones, function ($a, $b) {
+            return ($a['offset'] === $b['offset'])
+            ? strcmp($a['identifier'], $b['identifier'])
             : $a['offset'] - $b['offset'];
-        } );
+        });
 
         $timezoneList = [];
-        foreach ( $tempTimezones as $tz ) {
-            $sign = ( $tz['offset'] > 0 ) ? '+' : '-';
-            $offset = gmdate( 'H:i', abs( $tz['offset'] ) );
-            $timezoneList[$tz['identifier']] = '(UTC ' . $sign . $offset . ') ' .
+        foreach ($tempTimezones as $tz) {
+            $sign                            = ($tz['offset'] > 0) ? '+' : '-';
+            $offset                          = gmdate('H:i', abs($tz['offset']));
+            $timezoneList[$tz['identifier']] = '(UTC '.$sign.$offset.') '.
                 $tz['identifier'];
         }
 
@@ -471,48 +459,49 @@ class Helper {
 
     /**
      * Check if exec() function is available.
-     *
-     * @return bool
      */
-
-    public static function exec_enabled(): bool {
+    public static function exec_enabled(): bool
+    {
         try {
             // make a small test
-            exec( 'ls' );
+            exec('ls');
 
-            return function_exists( 'exec' ) && !in_array( 'exec', array_map( 'trim', explode( ', ', ini_get( 'disable_functions' ) ) ) );
-        } catch ( Exception $ex ) {
+            return function_exists('exec') && ! in_array('exec', array_map('trim', explode(', ', ini_get('disable_functions'))), true);
+        } catch (Exception $ex) {
             return false;
         }
     }
 
-    public static function languages() {
-        $lang_count = Language::where( 'status', 1 )->count();
-        $availLocale = Session::get( 'available_languages' );
+    public static function languages()
+    {
+        $lang_count  = Language::where('status', 1)->count();
+        $availLocale = Session::get('available_languages');
 
-        if ( !isset( $availLocale ) || count( $availLocale ) !== $lang_count ) {
-            $availLocale = Language::where( 'status', 1 )->cursor()->map( function ( $lang ) {
+        if (! isset($availLocale) || count($availLocale) !== $lang_count) {
+            $availLocale = Language::where('status', 1)->cursor()->map(function ($lang) {
                 return [
-                    'name' => $lang->name,
-                    'code' => $lang->code,
+                    'name'     => $lang->name,
+                    'code'     => $lang->code,
                     'iso_code' => $lang->iso_code,
                 ];
-            } )->toArray();
+            })->toArray();
 
-            Session::put( 'available_languages', $availLocale );
+            Session::put('available_languages', $availLocale);
         }
 
         return $availLocale;
     }
 
-    public static function bladeTitle( $data = [], $default = null ) {
-        if ( gettype( $data ) === 'array' || gettype( $data ) === 'object' ) {
-            foreach ( array_reverse( $data, true ) as $value ) {
-                if ( isset( $value['name'] ) ) {
+    public static function bladeTitle($data = [], $default = null)
+    {
+        if (gettype($data) === 'array' || gettype($data) === 'object') {
+            foreach (array_reverse($data, true) as $value) {
+                if (isset($value['name'])) {
                     return $value['name'];
                 }
             }
         }
+
         return $default;
     }
 }

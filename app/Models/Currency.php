@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -13,55 +15,44 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static whereLike(string[] $array, mixed $search)
  * @method static cursor()
  * @method static create(array $data)
+ *
  * @property false|mixed status
  * @property mixed       name
  * @property mixed       code
  */
 class Currency extends Model
 {
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-            'name',
-            'user_id',
-            'code',
-            'format',
-            'status',
+        'name',
+        'user_id',
+        'code',
+        'format',
+        'status',
     ];
 
     /**
      * @var array
      */
     protected $casts = [
-            'status' => 'boolean',
+        'status' => 'boolean',
     ];
+
+    public function __toString(): string
+    {
+        return $this->name;
+    }
 
     /**
      * Find item by uid.
-     *
-     * @param $uid
-     *
-     * @return object
      */
     public static function findByUid($uid): object
     {
         return self::where('uid', $uid)->first();
-    }
-
-
-    /**
-     * Associations.
-     *
-     * @return BelongsTo
-     *
-     */
-    public function admin(): BelongsTo
-    {
-        return $this->belongsTo('App\Models\Admin');
     }
 
     /**
@@ -81,12 +72,12 @@ class Currency extends Model
             $item->uid = $uid;
 
             // uppercase for currency code
-            $item->code = strtoupper($item->code);
+            $item->code = mb_strtoupper($item->code);
         });
 
         static::updating(function ($item) {
             // uppercase for currency code
-            $item->code = strtoupper($item->code);
+            $item->code = mb_strtoupper($item->code);
         });
     }
 
@@ -97,14 +88,19 @@ class Currency extends Model
      */
     public static function getAll()
     {
-        return Currency::select('*');
+        return self::select('*');
     }
 
+    /**
+     * Associations.
+     */
+    public function admin(): BelongsTo
+    {
+        return $this->belongsTo('App\Models\Admin');
+    }
 
     /**
      * Disable customer.
-     *
-     * @return boolean
      */
     public function disable(): bool
     {
@@ -115,8 +111,6 @@ class Currency extends Model
 
     /**
      * Enable customer.
-     *
-     * @return boolean
      */
     public function enable(): bool
     {
@@ -127,30 +121,17 @@ class Currency extends Model
 
     /**
      * Display currency name.
-     *
-     * @return string
      */
     public function displayName(): string
     {
-        return $this->name." (".$this->code.")";
+        return $this->name.' ('.$this->code.')';
     }
 
     /**
      * get route key by uid
-     *
-     * @return string
      */
     public function getRouteKeyName(): string
     {
         return 'uid';
     }
-
-    /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->name;
-    }
-
 }

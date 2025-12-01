@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-
+use Throwable;
 
 /**
  * @method truncate()
@@ -24,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method hasRevew()
  * @method isCreator()
  * @method getReviewers()
+ *
  * @property string id
  * @property string uid
  * @property string user_id
@@ -38,11 +41,53 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string deadline
  * @property mixed employees
  * @property mixed reviewers
- * @property \App\Models\User user
+ * @property User user
  */
 class Todos extends Model
 {
     use HasFactory;
+
+    /**
+     * @var array
+     */
+    public static $roles = [
+        'assign_to' => 'required',
+        'status'    => 'required',
+        'name'      => 'required',
+    ];
+
+    /**
+     * Todo status list
+     *
+     * @var array
+     */
+    public static $status_all = [
+        'available',
+        'in_progress',
+        'review',
+        'complete',
+        'pause',
+        'continue',
+    ];
+
+    /**
+     * Todo status list
+     *
+     * @var array
+     */
+    public static $status = [
+        // 'available',
+        'in_progress',
+        'review',
+        // 'complete',
+        'pause',
+        'continue',
+    ];
+
+    /**
+     * @var array
+     */
+    public static $updatefillable = ['status', 'note'];
 
     /**
      * The attributes that are mass assignable.
@@ -50,7 +95,7 @@ class Todos extends Model
      * @var array
      */
     protected $fillable = [
-        "user_id",
+        'user_id',
         'assign_to',
         'employees',
         'update_message',
@@ -64,73 +109,15 @@ class Todos extends Model
         'title',
         'description',
         'deadline',
-        'note'
+        'note',
     ];
-
-    /**
-     * @var array
-     */
-    public static $roles = [
-        'assign_to' => 'required',
-        'status'  => 'required',
-        'name' => 'required',
-    ];
-
-    /**
-     * Todo status list
-     * @var array
-     */
-    public static $status_all = [
-        'available',
-        'in_progress',
-        'review',
-        'complete',
-        'pause',
-        'continue'
-    ];
-    /**
-     * Todo status list
-     * @var array
-     */
-    public static $status = [
-        // 'available',
-        'in_progress',
-        'review',
-        // 'complete',
-        'pause',
-        'continue'
-    ];
-
-    /**
-     * @var array
-     */
-    public static $updatefillable = ['status', 'note'];
 
     /**
      * Find item by uid.
-     *
-     * @param $uid
-     *
-     * @return object
      */
     public static function findByUid($uid): object
     {
         return self::where('uid', $uid)->first();
-    }
-
-    public function systemJobs(): HasMany
-    {
-        return $this->hasMany(SystemJob::class)->orderBy('created_at', 'desc');
-    }
-
-    /**
-     * get route key by uid
-     *
-     * @return string
-     */
-    public function getRouteKeyName(): string
-    {
-        return 'uid';
     }
 
     /**
@@ -151,39 +138,51 @@ class Todos extends Model
         });
     }
 
+    public function systemJobs(): HasMany
+    {
+        return $this->hasMany(SystemJob::class)->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * get route key by uid
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'uid';
+    }
+
     /**
      * get user
      *
-     * @return \App\Models\User
+     * @return User
      */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
+
     /**
      * completed_by
-     * @return \App\Models\User
+     *
+     * @return User
      */
     public function completed_by(): BelongsTo
     {
         return $this->belongsTo(User::class, 'completed_by');
     }
 
-
-    /**
-     * @return mixed
-     */
     public function assigned(): mixed
     {
         try {
             return json_decode($this->assign_to);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return [];
         }
     }
 
     /**
      * isCreator
+     *
      * @return bool
      */
     public function isCreator()
@@ -191,11 +190,10 @@ class Todos extends Model
         return auth()->user()->id === $this->user_id;
     }
 
-
     /**
      * add employee
-     * @param string|int $employee
-     * @return bool
+     *
+     * @param  string|int  $employee
      */
     public function addEmployee(): bool
     {
@@ -207,7 +205,7 @@ class Todos extends Model
                 $employees = [];
             }
 
-            if (!in_array(auth()->user()->id, $employees)) {
+            if (! in_array(auth()->user()->id, $employees, true)) {
 
                 if ($this->status === 'available') {
                     $this->update([
@@ -219,30 +217,34 @@ class Todos extends Model
 
                 return $this->update(['employees' => json_encode($employees)]);
             }
+
             return false;
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return false;
         }
     }
+
     /**
      * add hasEmployee
-     * @param string|int $employee
-     * @return bool
+     *
+     * @param  string|int  $employee
      */
     public function hasEmployee(): bool
     {
         try {
             $employees = $this->employees ? json_decode($this->employees) : [];
             $employees = empty($employees) ? [] : $employees;
-            return in_array(auth()->user()->id, $employees);
-        } catch (\Throwable $th) {
+
+            return in_array(auth()->user()->id, $employees, true);
+        } catch (Throwable $th) {
             return false;
         }
     }
+
     /**
      * add hasEmployee
-     * @param string|int $employee
-     * @return bool
+     *
+     * @param  string|int  $employee
      */
     public function addReview(): bool
     {
@@ -253,7 +255,6 @@ class Todos extends Model
                 $reviews = [];
             }
 
-
             $reviews[] = auth()->user()->id;
 
             if ($this->status === 'in_progress') {
@@ -262,16 +263,16 @@ class Todos extends Model
                 ]);
             }
 
-
             return $this->update(['reviewers' => json_encode($reviews)]);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return false;
         }
     }
+
     /**
      * add hasEmployee
-     * @param string|int $employee
-     * @return bool
+     *
+     * @param  string|int  $employee
      */
     public function hasReview(): bool
     {
@@ -279,35 +280,40 @@ class Todos extends Model
             $user_id = auth()->user()->id;
             $reviews = $this->reviewers ? json_decode($this->reviewers) : [];
             $reviews = empty($reviews) ? [] : $reviews;
-            return in_array($user_id, $reviews);
-        } catch (\Throwable $th) {
+
+            return in_array($user_id, $reviews, true);
+        } catch (Throwable $th) {
             return false;
         }
     }
+
     /**
      * @method getReviewers
-     * @param string|int $employee
+     *
+     * @param  string|int  $employee
      * @return mixed
      */
     public function getReviewers()
     {
         try {
-            $users = [];
-            $reviews =  $this->reviewers ? json_decode($this->reviewers) : [];
+            $users   = [];
+            $reviews = $this->reviewers ? json_decode($this->reviewers) : [];
             foreach ($reviews as $user_id) {
                 if (User::find($user_id)) {
                     $users[] = User::find($user_id);
                 }
             }
+
             return $users;
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return [];
         }
     }
 
     /**
      * @method lastUpdateBy()
-     * @return \App\Models\User
+     *
+     * @return User
      */
     public function lastUpdateBy(): BelongsTo
     {
@@ -316,23 +322,21 @@ class Todos extends Model
 
     /**
      * get options
+     *
      * @return mixed
      */
     public function getOptions()
     {
         try {
             return json_decode($this->options, true);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return [];
         }
     }
 
-    /**
-     * @param string $name
-     */
     public function getOption(string $name)
     {
-        if (gettype($this->getOptions()) == 'array' && isset($this->getOptions()[$name])) {
+        if (gettype($this->getOptions()) === 'array' && isset($this->getOptions()[$name])) {
             return $this->getOptions()[$name];
         }
 
@@ -341,8 +345,8 @@ class Todos extends Model
 
     /**
      * @method setOption
-     * @param string $key
-     * @param string $value
+     *
+     * @param  string  $value
      */
     public function setOption(string $key, $value)
     {
@@ -351,26 +355,26 @@ class Todos extends Model
             if (gettype($this->getOptions()) === 'array') {
                 $data = [
                     ...$this->getOptions(),
-                    $key => $value
+                    $key => $value,
                 ];
                 $this->options = $data;
                 $this->save();
             } else {
                 $data = [
-                    $key => $value
+                    $key => $value,
                 ];
                 $this->options = $data;
                 $this->save();
             }
 
             return $data;
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return $th->getMessage();
         }
     }
+
     /**
      * @method removeOption
-     * @param string $name
      */
     public function removeOption(string $name)
     {
@@ -384,15 +388,13 @@ class Todos extends Model
             }
 
             return $data;
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return $th->getMessage();
         }
     }
 
-
     /**
      * set last cron
-     * @param string $value
      */
     public function setLastCron(string $value)
     {

@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SimpleMail;
 use App\Models\Customer;
 use App\Models\Invoices;
 use App\Models\Todos;
@@ -11,9 +14,8 @@ use ArielMejiaDev\LarapexCharts\LarapexChart;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
-use App\Mail\SimpleMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\View\View;
 
 class AdminBaseController extends Controller
 {
@@ -26,7 +28,7 @@ class AdminBaseController extends Controller
     {
 
         $breadcrumbs = [
-            ['link' => "/dashboard", 'name' => __('locale.menu.Dashboard')],
+            ['link' => '/dashboard', 'name' => __('locale.menu.Dashboard')],
             ['name' => User::fullname()],
         ];
 
@@ -51,9 +53,9 @@ class AdminBaseController extends Controller
 
         $task = (object) [
             'in_progress' => Todos::where('status', 'in_progress')->count(),
-            'complete' => Todos::where('status', 'complete')->count(),
-            'reviews' => Todos::where('status', 'review')->count(),
-            'all' => Todos::count(),
+            'complete'    => Todos::where('status', 'complete')->count(),
+            'reviews'     => Todos::where('status', 'review')->count(),
+            'all'         => Todos::count(),
         ];
 
         return view('admin.dashboard', compact('breadcrumbs', 'revenue_chart', 'customer_growth', 'task'));
@@ -69,8 +71,8 @@ class AdminBaseController extends Controller
         ]));
 
         return response()->json([
-            'status' => 'success',
-            'message' => 'Mail sent successfully'
+            'status'  => 'success',
+            'message' => 'Mail sent successfully',
         ]);
     }
 
@@ -78,7 +80,7 @@ class AdminBaseController extends Controller
     {
         if ($request->wantsJson()) {
             return response()->json([
-                'status' => $type,
+                'status'  => $type,
                 'message' => $message,
             ]);
         }

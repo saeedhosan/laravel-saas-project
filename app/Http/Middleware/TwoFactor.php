@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -10,8 +12,6 @@ class TwoFactor
     /**
      * Handle an incoming request.
      *
-     * @param  Request  $request
-     * @param  Closure  $next
      *
      * @return mixed
      */
@@ -34,7 +34,7 @@ class TwoFactor
                     ]);
                 }
 
-                if (!$request->is('verify*')) {
+                if (! $request->is('verify*')) {
                     return redirect()->route('verify.index');
                 }
             }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
@@ -98,7 +100,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v3')
             ->name('api.')
             ->middleware(['api', 'auth:sanctum', 'json.response'])
-            ->namespace($this->namespace . '\API')
+            ->namespace($this->namespace.'\API')
             ->group(base_path('routes/api.php'));
     }
 

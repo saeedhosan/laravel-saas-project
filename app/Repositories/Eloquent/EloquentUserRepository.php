@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories\Eloquent;
 
 use App\Exceptions\GeneralException;
@@ -19,7 +21,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Throwable;
 
-
 class EloquentUserRepository extends EloquentBaseRepository implements UserRepository
 {
     /**
@@ -34,15 +35,11 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
 
     /**
      * EloquentUserRepository constructor.
-     *
-     * @param  User  $user
-     * @param  RoleRepository  $roles
-     * @param  Repository  $config
      */
     public function __construct(
-            User $user,
-            RoleRepository $roles,
-            Repository $config
+        User $user,
+        RoleRepository $roles,
+        Repository $config
     ) {
         parent::__construct($user);
         $this->roles  = $roles;
@@ -50,13 +47,10 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
     }
 
     /**
-     * @param  array  $input
      * @param  bool  $confirmed
      *
-     * @return User
      * @throws GeneralException
      * @throws Exception
-     *
      */
     public function store(array $input, $confirmed = false): User
     {
@@ -83,29 +77,28 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
         } else {
             $user->is_admin = false;
 
-            if ( ! config('account.verify_account')) {
+            if (! config('account.verify_account')) {
                 $user->email_verified_at = Carbon::now();
             }
         }
 
-
-        if ( ! $this->save($user, $input)) {
+        if (! $this->save($user, $input)) {
             throw new GeneralException(__('locale.exceptions.something_went_wrong'));
         }
 
         if (isset($input['is_customer'])) {
             $customer = Customer::create([
-                    'user_id'       => $user->id,
-                    'phone'         => $input['phone'],
-                    'notifications' => json_encode([
-                            'login'        => 'no',
-                            'tickets'      => 'yes',
-                            'sender_id'    => 'yes',
-                            'keyword'      => 'yes',
-                            'subscription' => 'yes',
-                            'promotion'    => 'yes',
-                            'profile'      => 'yes',
-                    ]),
+                'user_id'       => $user->id,
+                'phone'         => $input['phone'],
+                'notifications' => json_encode([
+                    'login'        => 'no',
+                    'tickets'      => 'yes',
+                    'sender_id'    => 'yes',
+                    'keyword'      => 'yes',
+                    'subscription' => 'yes',
+                    'promotion'    => 'yes',
+                    'profile'      => 'yes',
+                ]),
             ]);
 
             if ($customer) {
@@ -117,7 +110,6 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
             }
             $user->delete();
             throw new GeneralException(__('locale.exceptions.something_went_wrong'));
-
         }
 
         //  event(new UserCreated($user));
@@ -126,17 +118,12 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
     }
 
     /**
-     * @param  User  $user
-     * @param  array  $input
-     *
-     * @return User
      * @throws Exception|Throwable
-     *
      * @throws Exception
      */
     public function update(User $user, array $input): User
     {
-        if ( ! $user->can_edit) {
+        if (! $user->can_edit) {
             throw new GeneralException(__('locale.exceptions.something_went_wrong'));
         }
 
@@ -146,7 +133,7 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
             throw new GeneralException(__('locale.exceptions.something_went_wrong'));
         }
 
-        if ( ! $this->save($user, $input)) {
+        if (! $this->save($user, $input)) {
             throw new GeneralException(__('locale.exceptions.something_went_wrong'));
         }
 
@@ -156,68 +143,27 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
     }
 
     /**
-     * @param  User  $user
-     * @param  array  $input
-     *
-     * @return bool
-     * @throws GeneralException
-     *
-     */
-    private function save(User $user, array $input): bool
-    {
-        if (isset($input['password']) && ! empty($input['password'])) {
-            $user->password = Hash::make($input['password']);
-        }
-
-        if ( ! $user->save()) {
-            return false;
-        }
-
-        $roles = $input['roles'] ?? [];
-
-        if ( ! empty($roles)) {
-            $allowedRoles = $this->roles->getAllowedRoles()->keyBy('id');
-
-            foreach ($roles as $id) {
-                if ( ! $allowedRoles->has($id)) {
-                    throw new GeneralException(__('locale.exceptions.something_went_wrong'));
-                }
-            }
-        }
-
-        $user->roles()->sync($roles);
-
-        return true;
-    }
-
-    /**
-     * @param  User  $user
-     *
      * @return bool|null
-     * @throws Exception|Throwable
      *
+     * @throws Exception|Throwable
      */
     public function destroy(User $user)
     {
-        if ( ! $user->can_delete) {
+        if (! $user->can_delete) {
             throw new GeneralException(__('locale.exceptions.unauthorized'));
         }
 
-        if ( ! $user->delete()) {
+        if (! $user->delete()) {
             throw new GeneralException(__('locale.exceptions.something_went_wrong'));
         }
 
-//        event(new UserDeleted($user));
+        //        event(new UserDeleted($user));
 
         return true;
     }
 
     /**
-     * @param  User  $user
-     *
-     * @return RedirectResponse
      * @throws Exception
-     *
      */
     public function impersonate(User $user): RedirectResponse
     {
@@ -227,30 +173,28 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
 
         $authenticatedUser = auth()->user();
 
-        if ($authenticatedUser->id === $user->id
+        if ($authenticatedUser->id               === $user->id
                 || Session::get('admin_user_id') === $user->id
         ) {
             return redirect()->route('admin.home');
         }
 
-        if ( ! Session::get('admin_user_id')) {
+        if (! Session::get('admin_user_id')) {
             session(['admin_user_id' => $authenticatedUser->id]);
             session(['admin_user_name' => $authenticatedUser->name]);
             session(['temp_user_id' => $user->id]);
         }
 
-        //Login user
+        // Login user
         auth()->loginUsingId($user->id);
 
         return redirect(Helper::home_route());
     }
 
     /**
-     * @param  array  $ids
-     *
      * @return mixed
-     * @throws Exception|Throwable
      *
+     * @throws Exception|Throwable
      */
     public function batchDestroy(array $ids): bool
     {
@@ -267,17 +211,15 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
     }
 
     /**
-     * @param  array  $ids
-     *
      * @return mixed
-     * @throws Exception|Throwable
      *
+     * @throws Exception|Throwable
      */
     public function batchEnable(array $ids): bool
     {
         DB::transaction(function () use ($ids) {
             if ($this->query()->whereIn('uid', $ids)
-                    ->update(['status' => true])
+                ->update(['status' => true])
             ) {
                 return true;
             }
@@ -289,17 +231,15 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
     }
 
     /**
-     * @param  array  $ids
-     *
      * @return mixed
-     * @throws Exception|Throwable
      *
+     * @throws Exception|Throwable
      */
     public function batchDisable(array $ids): bool
     {
         DB::transaction(function () use ($ids) {
             if ($this->query()->whereIn('uid', $ids)
-                    ->update(['status' => false])
+                ->update(['status' => false])
             ) {
                 return true;
             }
@@ -310,4 +250,33 @@ class EloquentUserRepository extends EloquentBaseRepository implements UserRepos
         return true;
     }
 
+    /**
+     * @throws GeneralException
+     */
+    private function save(User $user, array $input): bool
+    {
+        if (isset($input['password']) && ! empty($input['password'])) {
+            $user->password = Hash::make($input['password']);
+        }
+
+        if (! $user->save()) {
+            return false;
+        }
+
+        $roles = $input['roles'] ?? [];
+
+        if (! empty($roles)) {
+            $allowedRoles = $this->roles->getAllowedRoles()->keyBy('id');
+
+            foreach ($roles as $id) {
+                if (! $allowedRoles->has($id)) {
+                    throw new GeneralException(__('locale.exceptions.something_went_wrong'));
+                }
+            }
+        }
+
+        $user->roles()->sync($roles);
+
+        return true;
+    }
 }

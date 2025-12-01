@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /* -----------------------------------------------------------------
@@ -7,9 +9,9 @@ return [
      | -----------------------------------------------------------------
      */
 
-    'secret' => env('NOCAPTCHA_SECRET', 'no-captcha-secret'),
-    'sitekey' => env('NOCAPTCHA_SITEKEY', 'no-captcha-sitekey'),
-    'login' => env('NOCAPTCHA_IN_LOGIN', 'no-captcha-login'),
+    'secret'       => env('NOCAPTCHA_SECRET', 'no-captcha-secret'),
+    'sitekey'      => env('NOCAPTCHA_SITEKEY', 'no-captcha-sitekey'),
+    'login'        => env('NOCAPTCHA_IN_LOGIN', 'no-captcha-login'),
     'registration' => env('NOCAPTCHA_IN_REGISTRATION', 'no-captcha-registration'),
 
     /* -----------------------------------------------------------------

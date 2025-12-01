@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -11,27 +13,29 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Templates extends Model
 {
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-            'name',
-            'user_id',
-            'message',
-            'status',
+        'name',
+        'user_id',
+        'message',
+        'status',
     ];
 
-
     /**
-     *
      * @var string[]
      */
     protected $casts = [
-            'status' => 'boolean',
+        'status' => 'boolean',
     ];
+
+    public function __toString(): string
+    {
+        return $this->name;
+    }
 
     /**
      * Bootstrap any application services.
@@ -52,22 +56,11 @@ class Templates extends Model
         });
     }
 
-
     /**
      * get route key by uid
-     *
-     * @return string
      */
     public function getRouteKeyName(): string
     {
         return 'uid';
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->name;
     }
 }

@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use App\Helpers\MigrationsHelper;
 use Closure;
 use Illuminate\Http\Request;
-
 
 class canUpdate
 {
@@ -15,8 +16,6 @@ class canUpdate
      * Handle an incoming request.
      *
      * @param  Request  $request
-     * @param  Closure  $next
-     *
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -28,7 +27,7 @@ class canUpdate
 
                 // if the application has not been installed,
                 // redirect to the installer
-                if ( ! $canInstall->alreadyInstalled()) {
+                if (! $canInstall->alreadyInstalled()) {
                     return redirect()->route('Installer::welcome');
                 }
 
@@ -54,17 +53,16 @@ class canUpdate
     public function alreadyUpdated()
     {
 
-//        $migrations   = $this->getMigrations();
-//        $dbMigrations = $this->getExecutedMigrations();
-//
-//        // If the count of migrations and dbMigrations is equal,
-//        // then the update as already been updated.
-//        if (count($migrations) == count($dbMigrations) || config('app.version') == '3.2.0') {
-//            return true;
-//        }
+        //        $migrations   = $this->getMigrations();
+        //        $dbMigrations = $this->getExecutedMigrations();
+        //
+        //        // If the count of migrations and dbMigrations is equal,
+        //        // then the update as already been updated.
+        //        if (count($migrations) == count($dbMigrations) || config('app.version') == '3.2.0') {
+        //            return true;
+        //        }
 
         // Continue, the app needs an update
         return false;
     }
 }
-

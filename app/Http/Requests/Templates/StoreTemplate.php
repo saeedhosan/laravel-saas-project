@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Templates;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -10,8 +12,6 @@ class StoreTemplate extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -20,8 +20,6 @@ class StoreTemplate extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -29,11 +27,11 @@ class StoreTemplate extends FormRequest
         $name    = $this->name;
 
         return [
-                'name'    => ['required',
-                        Rule::unique('templates')->where(function ($query) use ($user_id, $name) {
-                            return $query->where('user_id', $user_id)->where('name', $name);
-                        })],
-                'message' => 'required',
+            'name' => ['required',
+                Rule::unique('templates')->where(function ($query) use ($user_id, $name) {
+                    return $query->where('user_id', $user_id)->where('name', $name);
+                })],
+            'message' => 'required',
         ];
     }
 
@@ -45,7 +43,7 @@ class StoreTemplate extends FormRequest
     public function messages(): array
     {
         return [
-                'name.unique' => __('locale.templates.template_available', ['template' => $this->name]),
+            'name.unique' => __('locale.templates.template_available', ['template' => $this->name]),
         ];
     }
 }

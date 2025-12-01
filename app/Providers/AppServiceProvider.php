@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Models\Admin;
@@ -67,9 +69,9 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         Relation::morphMap([
-            'user' => User::class,
+            'user'     => User::class,
             'customer' => Customer::class,
-            'admin' => Admin::class,
+            'admin'    => Admin::class,
         ]);
 
         Cache::extend('none', function () {

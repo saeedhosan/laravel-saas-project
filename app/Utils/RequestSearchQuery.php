@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Utils;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+
 use function in_array;
 
 class RequestSearchQuery
@@ -24,24 +27,13 @@ class RequestSearchQuery
     public function __construct(Request $request, Builder $query, $searchables = [])
     {
         $this->request = $request;
-        $this->query = $query;
+        $this->query   = $query;
 
         $this->initializeQuery($searchables);
     }
 
-    private function getLocalizedColumn(Model $model, $column)
-    {
-        if (property_exists($model, 'translatable') && in_array($column, $model->translatable, true)) {
-            $locale = app()->getLocale();
-
-            return "$column->$locale";
-        }
-
-        return $column;
-    }
-
     /**
-     * @param array $searchables
+     * @param  array  $searchables
      */
     public function initializeQuery($searchables = [])
     {
@@ -65,8 +57,6 @@ class RequestSearchQuery
     }
 
     /**
-     * @param $columns
-     *
      * @return LengthAwarePaginator
      */
     public function result($columns)
@@ -75,10 +65,6 @@ class RequestSearchQuery
     }
 
     /**
-     * @param       $columns
-     * @param  array  $headings
-     * @param       $fileName
-     *
      * @return BinaryFileResponse
      */
     public function export($columns, array $headings, $fileName)
@@ -89,5 +75,16 @@ class RequestSearchQuery
             new DataTableExport($headings, $this->query, $columns),
             "$fileName-export-$currentDate.xlsx"
         );
+    }
+
+    private function getLocalizedColumn(Model $model, $column)
+    {
+        if (property_exists($model, 'translatable') && in_array($column, $model->translatable, true)) {
+            $locale = app()->getLocale();
+
+            return "$column->$locale";
+        }
+
+        return $column;
     }
 }

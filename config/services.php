@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\User;
 
 return [
@@ -17,8 +19,8 @@ return [
     */
 
     'mailgun' => [
-        'domain' => env('MAILGUN_DOMAIN'),
-        'secret' => env('MAILGUN_SECRET'),
+        'domain'   => env('MAILGUN_DOMAIN'),
+        'secret'   => env('MAILGUN_SECRET'),
         'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
     ],
 
@@ -27,7 +29,7 @@ return [
     ],
 
     'ses' => [
-        'key' => env('AWS_ACCESS_KEY_ID'),
+        'key'    => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
@@ -37,11 +39,11 @@ return [
     ],
 
     'stripe' => [
-        'model' => User::class,
-        'key' => env('STRIPE_KEY'),
-        'secret' => env('STRIPE_SECRET'),
+        'model'   => User::class,
+        'key'     => env('STRIPE_KEY'),
+        'secret'  => env('STRIPE_SECRET'),
         'webhook' => [
-            'secret' => env('STRIPE_WEBHOOK_SECRET'),
+            'secret'    => env('STRIPE_WEBHOOK_SECRET'),
             'tolerance' => env('STRIPE_WEBHOOK_TOLERANCE', 300),
         ],
     ],
@@ -50,31 +52,31 @@ return [
      * Laravel socialite services
      */
     'facebook' => [
-        'active' => env('SOCIALITE_FACEBOOK'),
-        'client_id' => env('FACEBOOK_CLIENT_ID'),
+        'active'        => env('SOCIALITE_FACEBOOK'),
+        'client_id'     => env('FACEBOOK_CLIENT_ID'),
         'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
-        'redirect' => env('FACEBOOK_REDIRECT'),
+        'redirect'      => env('FACEBOOK_REDIRECT'),
     ],
 
     'twitter' => [
-        'active' => env('SOCIALITE_TWITTER'),
-        'client_id' => env('TWITTER_CLIENT_ID'),
+        'active'        => env('SOCIALITE_TWITTER'),
+        'client_id'     => env('TWITTER_CLIENT_ID'),
         'client_secret' => env('TWITTER_CLIENT_SECRET'),
-        'redirect' => env('TWITTER_REDIRECT'),
+        'redirect'      => env('TWITTER_REDIRECT'),
     ],
 
     'google' => [
-        'active' => env('SOCIALITE_GOOGLE'),
-        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'active'        => env('SOCIALITE_GOOGLE'),
+        'client_id'     => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect' => env('GOOGLE_REDIRECT'),
+        'redirect'      => env('GOOGLE_REDIRECT'),
     ],
 
     'github' => [
-        'active' => env('SOCIALITE_GITHUB'),
-        'client_id' => env('GITHUB_CLIENT_ID'),
+        'active'        => env('SOCIALITE_GITHUB'),
+        'client_id'     => env('GITHUB_CLIENT_ID'),
         'client_secret' => env('GITHUB_CLIENT_SECRET'),
-        'redirect' => env('GITHUB_REDIRECT'),
+        'redirect'      => env('GITHUB_REDIRECT'),
     ],
 
 ];

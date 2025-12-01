@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // --------------------------------------------------------------------------------------------------
 // This script outputs a JSON array of all timezones (like "America/Chicago") that PHP supports.
 //

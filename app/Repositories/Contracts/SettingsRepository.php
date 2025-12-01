@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories\Contracts;
 
 /* *
@@ -8,31 +10,25 @@ namespace App\Repositories\Contracts;
 
 interface SettingsRepository extends BaseRepository
 {
-
     /**
      * general setting
      *
-     * @param  array  $input
      *
      * @return mixed
      */
     public function general(array $input);
 
-
     /**
      * system email setting
      *
-     * @param  array  $input
      *
      * @return mixed
      */
     public function systemEmail(array $input);
 
-
     /**
      * authentication settings
      *
-     * @param  array  $input
      *
      * @return mixed
      */
@@ -41,27 +37,22 @@ interface SettingsRepository extends BaseRepository
     /**
      * notifications settings
      *
-     * @param  array  $input
      *
      * @return mixed
      */
     public function notifications(array $input);
 
-
     /**
      * localization settings
      *
-     * @param  array  $input
      *
      * @return mixed
      */
     public function localization(array $input);
 
-
     /**
      * pusher settings
      *
-     * @param  array  $input
      *
      * @return mixed
      */
@@ -70,27 +61,22 @@ interface SettingsRepository extends BaseRepository
     /**
      * background job settings
      *
-     * @param  array  $input
      *
      * @return mixed
      */
     public function backgroundJob(array $input);
 
-
     /**
      * license manager settings
      *
-     * @param  array  $input
      *
      * @return mixed
      */
     public function license(array $input);
 
-
     /**
      * upgrade CRM from old one.
      *
-     * @param  array  $input
      *
      * @return mixed
      */

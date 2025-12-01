@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -9,7 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 
-class ForgotPasswordController extends Controller {
+class ForgotPasswordController extends Controller
+{
     /*
     |--------------------------------------------------------------------------
     | Password Reset Controller
@@ -28,28 +31,31 @@ class ForgotPasswordController extends Controller {
      *
      * @return void
      */
-    public function __construct() {
-        $this->middleware( 'guest' );
+    public function __construct()
+    {
+        $this->middleware('guest');
     }
 
-    public function showLinkRequestForm() {
+    public function showLinkRequestForm()
+    {
         $pageConfigs = [
-            'bodyClass' => "bg-full-screen-image",
+            'bodyClass' => 'bg-full-screen-image',
             'blankPage' => true,
         ];
 
-        return view( '/auth/passwords/email', [
+        return view('/auth/passwords/email', [
             'pageConfigs' => $pageConfigs,
-        ] );
+        ]);
     }
 
-    public function sendResetLinkEmail( Request $request ): RedirectResponse {
+    public function sendResetLinkEmail(Request $request): RedirectResponse
+    {
 
-        if ( $this->checks() ) {
-            return redirect()->route( 'password.request' )->withInput( $request->only( 'email' ) )->with( [
-                'status' => 'error',
+        if ($this->checks()) {
+            return redirect()->route('password.request')->withInput($request->only('email'))->with([
+                'status'  => 'error',
                 'message' => 'Sorry! This option is not available in demo mode',
-            ] );
+            ]);
         }
 
         $rules = [
@@ -57,31 +63,30 @@ class ForgotPasswordController extends Controller {
         ];
 
         $messages = [
-            'email.exists' => __( 'locale.auth.user_not_exist' ),
+            'email.exists' => __('locale.auth.user_not_exist'),
         ];
 
-        $validator = Validator::make( $request->all(), $rules, $messages );
+        $validator = Validator::make($request->all(), $rules, $messages);
 
-        if ( $validator->fails() ) {
-            return redirect()->route( 'password.request' )->withInput( $request->only( 'email' ) )->with( [
-                'status' => 'warning',
+        if ($validator->fails()) {
+            return redirect()->route('password.request')->withInput($request->only('email'))->with([
+                'status'  => 'warning',
                 'message' => $validator->errors()->first(),
-            ] );
+            ]);
         }
 
         $status = Password::sendResetLink(
-            $request->only( 'email' )
+            $request->only('email')
         );
 
         return $status === Password::RESET_LINK_SENT
-        ? back()->with( [
-            'status' => 'success',
-            'message' => __( 'locale.auth.reset_link_sent' ),
-        ] )
-        : back()->with( [
-            'status' => 'error',
-            'message' => __( $status ),
-        ] );
+        ? back()->with([
+            'status'  => 'success',
+            'message' => __('locale.auth.reset_link_sent'),
+        ])
+        : back()->with([
+            'status'  => 'error',
+            'message' => __($status),
+        ]);
     }
-
 }

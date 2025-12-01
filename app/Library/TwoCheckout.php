@@ -2,27 +2,27 @@
 
 namespace App\Library;
 
-
-class TwoCheckout {
-
-protected $params = [];
-protected $_url;
-
-
-function __construct()
+class TwoCheckout
 {
-    $this->_url = 'https://www.2checkout.com/checkout/purchase';
-    $this->param('paypal_direct', 'Y');
-    $this->param('mode', '2CO');
-}
+    protected $params = [];
 
-public function param($param, $value)
-{
-    $this->params["$param"] = $value;
-}
+    protected $_url;
 
-public function gw_submit() {
-?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+    public function __construct()
+    {
+        $this->_url = 'https://www.2checkout.com/checkout/purchase';
+        $this->param('paypal_direct', 'Y');
+        $this->param('mode', '2CO');
+    }
+
+    public function param($param, $value)
+    {
+        $this->params["$param"] = $value;
+    }
+
+    public function gw_submit()
+    {
+        ?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -93,12 +93,12 @@ public function gw_submit() {
 </div>
 <form name="gw" action="<?php echo $this->_url; ?>" method="POST">
     <?php
-    foreach ($this->params as $name => $value) {
-        echo "<input type=\"hidden\" name=\"$name\" value=\"$value\"/>\n";
-    }
-    ?>
+            foreach ($this->params as $name => $value) {
+                echo "<input type=\"hidden\" name=\"$name\" value=\"$value\"/>\n";
+            }
+        ?>
 </form>
 </body>
 </html>
 <?php }
-}
+    }

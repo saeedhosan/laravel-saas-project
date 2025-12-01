@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
@@ -11,7 +13,6 @@ class SimpleMail extends Mailable
     use Queueable, SerializesModels;
 
     /**
-     * @var $data
      * @property string $subject
      * @property string $subject
      */
@@ -43,7 +44,7 @@ class SimpleMail extends Mailable
             ->subject($subject)
             ->markdown('emails.simple', [
                 'message' => $message,
-                'subject' => $bodySub
+                'subject' => $bodySub,
             ]);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // --------------------------------------------------------------------------------------------------
 // Utilities for our event-fetching scripts.
 //
@@ -12,7 +14,7 @@ date_default_timezone_set('UTC');
 class Event
 {
     // Tests whether the given ISO8601 string has a time-of-day or not
-    const ALL_DAY_REGEX = '/^\d{4}-\d\d-\d\d$/'; // matches strings like "2013-12-29"
+    public const ALL_DAY_REGEX = '/^\d{4}-\d\d-\d\d$/'; // matches strings like "2013-12-29"
 
     public $title;
 
@@ -36,8 +38,7 @@ class Event
             $this->allDay = (bool) $array['allDay'];
         } else {
             // Guess allDay based off of ISO8601 date strings
-            $this->allDay = preg_match(self::ALL_DAY_REGEX, $array['start']) &&
-                (! isset($array['end']) || preg_match(self::ALL_DAY_REGEX, $array['end']));
+            $this->allDay = preg_match(self::ALL_DAY_REGEX, $array['start']) && (! isset($array['end']) || preg_match(self::ALL_DAY_REGEX, $array['end']));
         }
 
         if ($this->allDay) {
@@ -47,11 +48,11 @@ class Event
 
         // Parse dates
         $this->start = parseDateTime($array['start'], $timezone);
-        $this->end = isset($array['end']) ? parseDateTime($array['end'], $timezone) : null;
+        $this->end   = isset($array['end']) ? parseDateTime($array['end'], $timezone) : null;
 
         // Record misc properties
         foreach ($array as $name => $value) {
-            if (! in_array($name, ['title', 'allDay', 'start', 'end'])) {
+            if (! in_array($name, ['title', 'allDay', 'start', 'end'], true)) {
                 $this->properties[$name] = $value;
             }
         }
@@ -64,15 +65,16 @@ class Event
 
         // Normalize our event's dates for comparison with the all-day range.
         $eventStart = stripTime($this->start);
-        $eventEnd = isset($this->end) ? stripTime($this->end) : null;
+        $eventEnd   = isset($this->end) ? stripTime($this->end) : null;
 
         if (! $eventEnd) {
             // No end time? Only check if the start is within range.
             return $eventStart < $rangeEnd && $eventStart >= $rangeStart;
-        } else {
-            // Check if the two ranges intersect.
-            return $eventStart < $rangeEnd && $eventEnd > $rangeStart;
         }
+
+        // Check if the two ranges intersect.
+        return $eventStart < $rangeEnd && $eventEnd > $rangeStart;
+
     }
 
     // Converts this Event object back to a plain data array, to be used for generating JSON
@@ -107,7 +109,7 @@ class Event
 // Parses a string into a DateTime object, optionally forced into the given timezone.
 function parseDateTime($string, $timezone = null)
 {
-    $date = new DateTime(
+    $date = new DateTimeImmutable(
         $string,
         $timezone ? $timezone : new DateTimeZone('UTC')
         // Used only when the string is ambiguous.
@@ -125,5 +127,5 @@ function parseDateTime($string, $timezone = null)
 // but in UTC.
 function stripTime($datetime)
 {
-    return new DateTime($datetime->format('Y-m-d'));
+    return new DateTimeImmutable($datetime->format('Y-m-d'));
 }

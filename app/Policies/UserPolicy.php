@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
 use App\Models\User;
@@ -10,9 +12,6 @@ class UserPolicy
     use HandlesAuthorization;
 
     /**
-     * @param  User  $user
-     * @param $ability
-     *
      * @return bool
      */
     public function before(User $user, $ability)
@@ -20,14 +19,13 @@ class UserPolicy
         if ($user->is_admin) {
             return true;
         }
+
         return false;
     }
 
     /**
      * Determine whether the user can update the user.
      *
-     * @param User $authenticatedUser
-     * @param User $user
      *
      * @return mixed
      */

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -12,7 +14,6 @@ class canInstall
      * Handle an incoming request.
      *
      * @param  Request  $request
-     * @param  Closure  $next
      * @return RedirectResponse|mixed
      */
     public function handle($request, Closure $next)
@@ -24,7 +25,7 @@ class canInstall
 
                 case 'route':
                     $routeName = config('installer.installed.redirectOptions.route.name');
-                    $data = config('installer.installed.redirectOptions.route.message');
+                    $data      = config('installer.installed.redirectOptions.route.message');
 
                     return redirect()->route($routeName)->with(['data' => $data]);
                     break;

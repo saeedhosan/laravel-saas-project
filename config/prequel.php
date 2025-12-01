@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -76,11 +78,11 @@ return [
     */
 
     'suffixes' => [
-        'model' => 'Models\\',
-        'seeder' => 'Seeder',
-        'factory' => 'Factory',
+        'model'      => 'Models\\',
+        'seeder'     => 'Seeder',
+        'factory'    => 'Factory',
         'controller' => 'Controller',
-        'resource' => 'Resource',
+        'resource'   => 'Resource',
     ],
 
     /*
@@ -94,12 +96,12 @@ return [
 
     'database' => [
         'connection' => env('DB_CONNECTION', 'mysql'),
-        'host' => env('DB_HOST', '127.0.0.1'),
-        'port' => env('DB_PORT', '3306'),
-        'database' => env('DB_DATABASE', 'homestead'),
-        'username' => env('DB_USERNAME', 'homestead'),
-        'password' => env('DB_PASSWORD', 'secret'),
-        'socket' => env('DB_SOCKET', ''),
+        'host'       => env('DB_HOST', '127.0.0.1'),
+        'port'       => env('DB_PORT', '3306'),
+        'database'   => env('DB_DATABASE', 'homestead'),
+        'username'   => env('DB_USERNAME', 'homestead'),
+        'password'   => env('DB_PASSWORD', 'secret'),
+        'socket'     => env('DB_SOCKET', ''),
     ],
 
     /*

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +19,6 @@ class ChatBox extends Model
         'notification',
     ];
 
-
     public static function boot()
     {
         parent::boot();
@@ -33,17 +34,13 @@ class ChatBox extends Model
         });
     }
 
-
     public function boxMessages()
     {
         $this->belongsTo(ChatBoxMessage::class, 'box_id', 'id');
     }
 
-
     /**
      * get route key by uid
-     *
-     * @return string
      */
     public function getRouteKeyName(): string
     {

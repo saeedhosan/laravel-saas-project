@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\TemplateTags;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -9,8 +11,6 @@ class StoreTag extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -19,20 +19,18 @@ class StoreTag extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array
      */
     public function rules(): array
     {
         $name = $this->name;
 
         return [
-                'name'     => ['required',
-                        Rule::unique('template_tags')->where(function ($query) use ($name) {
-                            return $query->where('name', $name);
-                        })],
-                'type'     => 'required|string|min:3|max:6',
-                'required' => 'required|string',
+            'name' => ['required',
+                Rule::unique('template_tags')->where(function ($query) use ($name) {
+                    return $query->where('name', $name);
+                })],
+            'type'     => 'required|string|min:3|max:6',
+            'required' => 'required|string',
         ];
     }
 
@@ -44,7 +42,7 @@ class StoreTag extends FormRequest
     public function messages(): array
     {
         return [
-                'name.unique' => __('locale.template_tags.template_tag_available', ['template_tag' => $this->name]),
+            'name.unique' => __('locale.template_tags.template_tag_available', ['template_tag' => $this->name]),
         ];
     }
 }

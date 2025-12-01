@@ -1,18 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Helpers\Helper;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
-class MenuServiceProvider extends ServiceProvider {
+class MenuServiceProvider extends ServiceProvider
+{
     /**
      * Register services.
      *
      * @return void
      */
-    public function register() {
+    public function register()
+    {
         //
     }
 
@@ -21,7 +25,8 @@ class MenuServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    public function boot() {
+    public function boot()
+    {
         // $verticalMenuData = json_decode( json_encode( Helper::menuData() ) );
 
         // Share all menuData to all the views

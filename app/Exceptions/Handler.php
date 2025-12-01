@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exceptions;
 
 use Exception;
@@ -44,7 +46,6 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param  Throwable  $exception
      *
      * @return void
      *
@@ -60,8 +61,6 @@ class Handler extends ExceptionHandler
      * Render an exception into an HTTP response.
      *
      * @param  Request  $request
-     * @param  Throwable  $exception
-     *
      * @return Response
      *
      * @throws Throwable
@@ -72,11 +71,11 @@ class Handler extends ExceptionHandler
         if ($request->wantsJson()) {
             return \response()->json([
                 'status'  => 'error',
-                'message' => $exception->getMessage()
+                'message' => $exception->getMessage(),
             ], 500);
         }
 
-        if (config('app.env') != 'local') {
+        if (config('app.env') !== 'local') {
             if ($exception instanceof ViewException || $exception instanceof ModelNotFoundException) {
                 return response()->view('errors.500', compact('exception'), 500);
             }

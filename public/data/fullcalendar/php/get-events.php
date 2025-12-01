@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // --------------------------------------------------------------------------------------------------
 // This script reads event data from a JSON file and outputs those events which are within the range
 // supplied by the "start" and "end" GET parameters.
@@ -21,7 +23,7 @@ if (! isset($_GET['start']) || ! isset($_GET['end'])) {
 // These are assumed to be ISO8601 strings with no time nor timezone, like "2013-12-29".
 // Since no timezone will be present, they will parsed as UTC.
 $range_start = parseDateTime($_GET['start']);
-$range_end = parseDateTime($_GET['end']);
+$range_end   = parseDateTime($_GET['end']);
 
 // Parse the timezone parameter if it is present.
 $timezone = null;
@@ -30,7 +32,7 @@ if (isset($_GET['timezone'])) {
 }
 
 // Read and parse our events JSON file into an array of event data arrays.
-$json = file_get_contents(dirname(__FILE__).'/../json/events.json');
+$json         = file_get_contents(dirname(__FILE__).'/../json/events.json');
 $input_arrays = json_decode($json, true);
 
 // Accumulate an output array of event data arrays.

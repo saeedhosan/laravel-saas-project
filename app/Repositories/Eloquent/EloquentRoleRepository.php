@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories\Eloquent;
 
-use Exception;
-use App\Models\Role;
 use App\Exceptions\GeneralException;
+use App\Models\Role;
 use App\Repositories\Contracts\RoleRepository;
+use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -17,8 +19,6 @@ class EloquentRoleRepository extends EloquentBaseRepository implements RoleRepos
 {
     /**
      * EloquentRoleRepository constructor.
-     *
-     * @param  Role  $role
      */
     public function __construct(Role $role)
     {
@@ -26,18 +26,14 @@ class EloquentRoleRepository extends EloquentBaseRepository implements RoleRepos
     }
 
     /**
-     * @param  array  $input
-     *
-     * @return Role
      * @throws Exception|Throwable
-     *
      */
     public function store(array $input): Role
     {
         /** @var Role $role */
         $role = $this->make($input);
 
-        if ( ! $this->save($role, $input)) {
+        if (! $this->save($role, $input)) {
             throw new GeneralException(__('locale.exceptions.something_went_wrong'));
         }
 
@@ -45,19 +41,14 @@ class EloquentRoleRepository extends EloquentBaseRepository implements RoleRepos
     }
 
     /**
-     * @param  Role  $role
-     * @param  array  $input
-     *
-     * @return Role
      * @throws Exception|Throwable
-     *
      * @throws Exception
      */
     public function update(Role $role, array $input): Role
     {
         $role->fill($input);
 
-        if ( ! $this->save($role, $input)) {
+        if (! $this->save($role, $input)) {
             throw new GeneralException(__('locale.exceptions.something_went_wrong'));
         }
 
@@ -65,41 +56,15 @@ class EloquentRoleRepository extends EloquentBaseRepository implements RoleRepos
     }
 
     /**
-     * @param  Role  $role
-     * @param  array  $input
-     *
-     * @return bool
-     *
-     */
-    private function save(Role $role, array $input): bool
-    {
-        if ( ! $role->save($input)) {
-            return false;
-        }
-
-        $role->permissions()->delete();
-
-        $permissions = $input['permissions'] ?? [];
-
-        foreach ($permissions as $name) {
-            $role->permissions()->create(['name' => $name]);
-        }
-
-        return true;
-    }
-
-    /**
-     * @param  Role  $role
-     *
      * @return bool|null
-     * @throws Exception|Throwable
      *
+     * @throws Exception|Throwable
      */
     public function destroy(Role $role)
     {
         $role->permissions()->delete();
 
-        if ( ! $role->delete()) {
+        if (! $role->delete()) {
             throw new GeneralException(__('locale.exceptions.something_went_wrong'));
         }
 
@@ -113,7 +78,7 @@ class EloquentRoleRepository extends EloquentBaseRepository implements RoleRepos
     {
         $authenticatedUser = auth()->user();
 
-        if ( ! $authenticatedUser) {
+        if (! $authenticatedUser) {
             return [];
         }
 
@@ -128,7 +93,7 @@ class EloquentRoleRepository extends EloquentBaseRepository implements RoleRepos
 
         $roles = $roles->filter(function (Role $role) use ($permissions) {
             foreach ($role->permissions as $permission) {
-                if (false === $permissions->search($permission, true)) {
+                if ($permissions->search($permission, true) === false) {
                     return false;
                 }
             }
@@ -139,13 +104,10 @@ class EloquentRoleRepository extends EloquentBaseRepository implements RoleRepos
         return $roles;
     }
 
-
     /**
-     * @param  array  $ids
-     *
      * @return mixed
-     * @throws Exception|Throwable
      *
+     * @throws Exception|Throwable
      */
     public function batchDestroy(array $ids): bool
     {
@@ -162,17 +124,15 @@ class EloquentRoleRepository extends EloquentBaseRepository implements RoleRepos
     }
 
     /**
-     * @param  array  $ids
-     *
      * @return mixed
-     * @throws Exception|Throwable
      *
+     * @throws Exception|Throwable
      */
     public function batchActive(array $ids): bool
     {
         DB::transaction(function () use ($ids) {
             if ($this->query()->whereIn('uid', $ids)
-                    ->update(['status' => true])
+                ->update(['status' => true])
             ) {
                 return true;
             }
@@ -184,17 +144,15 @@ class EloquentRoleRepository extends EloquentBaseRepository implements RoleRepos
     }
 
     /**
-     * @param  array  $ids
-     *
      * @return mixed
-     * @throws Exception|Throwable
      *
+     * @throws Exception|Throwable
      */
     public function batchDisable(array $ids): bool
     {
         DB::transaction(function () use ($ids) {
             if ($this->query()->whereIn('uid', $ids)
-                    ->update(['status' => false])
+                ->update(['status' => false])
             ) {
                 return true;
             }
@@ -205,4 +163,20 @@ class EloquentRoleRepository extends EloquentBaseRepository implements RoleRepos
         return true;
     }
 
+    private function save(Role $role, array $input): bool
+    {
+        if (! $role->save($input)) {
+            return false;
+        }
+
+        $role->permissions()->delete();
+
+        $permissions = $input['permissions'] ?? [];
+
+        foreach ($permissions as $name) {
+            $role->permissions()->create(['name' => $name]);
+        }
+
+        return true;
+    }
 }

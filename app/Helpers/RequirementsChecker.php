@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Helpers;
 
 class RequirementsChecker
@@ -21,7 +23,6 @@ class RequirementsChecker
     /**
      * Check for the server requirements.
      *
-     * @param array $requirements
      * @return array
      */
     public function check(array $requirements)
@@ -30,12 +31,12 @@ class RequirementsChecker
 
         foreach ($requirements as $type => $requirement) {
             switch ($type) {
-                    // check php requirements
+                // check php requirements
                 case 'php':
                     foreach ($requirements[$type] as $requirement) {
                         $results['requirements'][$type][$requirement] = true;
 
-                        if (!extension_loaded($requirement)) {
+                        if (! extension_loaded($requirement)) {
                             $results['requirements'][$type][$requirement] = false;
 
                             $results['errors'] = true;
@@ -49,7 +50,7 @@ class RequirementsChecker
                         if (function_exists('apache_get_modules')) {
                             $results['requirements'][$type][$requirement] = true;
 
-                            if (!in_array($requirement, apache_get_modules())) {
+                            if (! in_array($requirement, apache_get_modules(), true)) {
                                 $results['requirements'][$type][$requirement] = false;
 
                                 $results['errors'] = true;
@@ -68,13 +69,13 @@ class RequirementsChecker
      *
      * @return array
      */
-    public function checkPHPversion(string $minPhpVersion = null)
+    public function checkPHPversion(?string $minPhpVersion = null)
     {
-        $minVersionPhp = $minPhpVersion;
+        $minVersionPhp     = $minPhpVersion;
         $currentPhpVersion = $this->getPhpVersionInfo();
-        $supported = false;
+        $supported         = false;
 
-        if ($minPhpVersion == null) {
+        if ($minPhpVersion === null) {
             $minVersionPhp = $this->getMinPhpVersion();
         }
 
@@ -83,13 +84,23 @@ class RequirementsChecker
         }
 
         $phpStatus = [
-            'full' => $currentPhpVersion['full'],
-            'current' => $currentPhpVersion['version'],
-            'minimum' => $minVersionPhp,
+            'full'      => $currentPhpVersion['full'],
+            'current'   => $currentPhpVersion['version'],
+            'minimum'   => $minVersionPhp,
             'supported' => $supported,
         ];
 
         return $phpStatus;
+    }
+
+    /**
+     * Get minimum PHP version ID.
+     *
+     * @return string _minPhpVersion
+     */
+    protected function getMinPhpVersion()
+    {
+        return $this->_minPhpVersion;
     }
 
     /**
@@ -104,18 +115,8 @@ class RequirementsChecker
         $currentVersion = $filtered[0];
 
         return [
-            'full' => $currentVersionFull,
+            'full'    => $currentVersionFull,
             'version' => $currentVersion,
         ];
-    }
-
-    /**
-     * Get minimum PHP version ID.
-     *
-     * @return string _minPhpVersion
-     */
-    protected function getMinPhpVersion()
-    {
-        return $this->_minPhpVersion;
     }
 }

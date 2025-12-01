@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Extensions;
 use App\Models\Language;
-use App\Models\PaymentMethods;
 use App\Repositories\Contracts\AccountRepository;
 use App\Rules\Phone;
 use Arcanedev\NoCaptcha\Rules\CaptchaRule;
@@ -51,38 +51,11 @@ class RegisterController extends Controller
 
     /**
      * RegisterController constructor.
-     *
-     * @param  AccountRepository  $account
      */
     public function __construct(AccountRepository $account)
     {
         $this->middleware('guest');
         $this->account = $account;
-    }
-
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     *
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data): \Illuminate\Contracts\Validation\Validator
-    {
-        $rules = [
-            'first_name' => ['required', 'string', 'max:255'],
-            'email'      => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password'   => ['required', 'string', 'min:8', 'confirmed'],
-            'phone'      => ['nullable', new Phone($data['phone'])],
-            'country'    => ['required', 'string'],
-            'locale'     => ['required', 'string', 'min:2', 'max:2'],
-        ];
-
-        if (config('no-captcha.registration')) {
-            $rules['g-recaptcha-response'] = ['required', new CaptchaRule()];
-        }
-
-        return Validator::make($data, $rules);
     }
 
     /**
@@ -114,10 +87,8 @@ class RegisterController extends Controller
 
         $user = $this->account->register($data);
 
-
         $user->email_verified_at = Carbon::now();
         $user->save();
-
 
         return redirect()->route('register')->with([
             'status'  => 'success',
@@ -135,8 +106,29 @@ class RegisterController extends Controller
         $languages = Language::where('status', 1)->get();
 
         return view('/auth/register', [
-            'pageConfigs'     => $pageConfigs,
-            'languages'       => $languages
+            'pageConfigs' => $pageConfigs,
+            'languages'   => $languages,
         ]);
+    }
+
+    /**
+     * Get a validator for an incoming registration request.
+     */
+    protected function validator(array $data): \Illuminate\Contracts\Validation\Validator
+    {
+        $rules = [
+            'first_name' => ['required', 'string', 'max:255'],
+            'email'      => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password'   => ['required', 'string', 'min:8', 'confirmed'],
+            'phone'      => ['nullable', new Phone($data['phone'])],
+            'country'    => ['required', 'string'],
+            'locale'     => ['required', 'string', 'min:2', 'max:2'],
+        ];
+
+        if (config('no-captcha.registration')) {
+            $rules['g-recaptcha-response'] = ['required', new CaptchaRule()];
+        }
+
+        return Validator::make($data, $rules);
     }
 }

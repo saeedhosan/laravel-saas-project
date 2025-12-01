@@ -1,26 +1,25 @@
 <?php
 
-namespace App\Library;
+declare(strict_types=1);
 
+namespace App\Library;
 
 class RouletteWheel
 {
-
     /**
      * Pick a random element from an array based on its probability.
      *
-     * @param $a
      *
      * @return int|string
      */
     public static function generate($a)
     {
-        $sum = 0.0;
+        $sum   = 0.0;
         $total = array_sum(array_values($a));
-        $r = self::frandom();
+        $r     = self::frandom();
 
         // just in case
-        if ($r == $sum) { // in other words, r == 0
+        if ($r === $sum) { // in other words, r == 0
             return array_keys($a)[0];
         }
 
@@ -33,7 +32,7 @@ class RouletteWheel
         }
 
         // just in case
-        return array_keys($a)[sizeof($a) - 1];
+        return array_keys($a)[count($a) - 1];
     }
 
     /**

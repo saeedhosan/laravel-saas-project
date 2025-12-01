@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Middleware;
 
 use App\Http\Middleware\Authenticate;
 use Illuminate\Http\Request;
+use ReflectionClass;
 use Tests\TestCase;
 
 class AuthenticateTest extends TestCase
@@ -12,7 +15,7 @@ class AuthenticateTest extends TestCase
     public function it_redirects_to_login_when_request_is_not_json()
     {
         $middleware = new Authenticate(app('auth'));
-        $request = Request::create('/any', 'GET');
+        $request    = Request::create('/any', 'GET');
 
         $result = $this->invokeMethod($middleware, 'redirectTo', [$request]);
 
@@ -23,7 +26,7 @@ class AuthenticateTest extends TestCase
     public function it_returns_null_when_request_expects_json()
     {
         $middleware = new Authenticate(app('auth'));
-        
+
         $request = Request::create('/any', 'GET', [], [], [], [
             'HTTP_ACCEPT' => 'application/json',
         ]);
@@ -38,8 +41,8 @@ class AuthenticateTest extends TestCase
      */
     protected function invokeMethod($object, $methodName, array $parameters = [])
     {
-        $reflection = new \ReflectionClass(get_class($object));
-        $method = $reflection->getMethod($methodName);
+        $reflection = new ReflectionClass(get_class($object));
+        $method     = $reflection->getMethod($methodName);
         $method->setAccessible(true);
 
         return $method->invokeArgs($object, $parameters);
