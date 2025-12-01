@@ -43,7 +43,6 @@
     "fakerphp/faker": "^1.9.1",
     "laravel/horizon": "^5.9.7",
     "laravel/sail": "^1.0.1",
-    "laravel/telescope": "^5.0",
     "phpunit/phpunit": "^9.5.20",
     "spatie/laravel-ignition": "^1.2.3",
     "tanmuhittin/laravel-google-translate": "^2.2"
@@ -57,8 +56,7 @@
   "extra": {
     "laravel": {
       "dont-discover": [
-        "barryvdh/laravel-ide-helper",
-        "laravel/telescope"
+        "barryvdh/laravel-ide-helper"
       ]
     }
   },
@@ -90,6 +88,7 @@
       "@php artisan key:generate --ansi"
     ],
     "setup": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
       "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\""
     ]
   }

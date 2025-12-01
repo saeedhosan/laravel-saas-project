@@ -35,7 +35,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
-use Laravel\Telescope\TelescopeServiceProvider;
 
 
 /**
@@ -100,12 +99,6 @@ class AppServiceProvider extends ServiceProvider
                         CountriesRepository::class,
                         EloquentCountriesRepository::class
                 );
-
-
-                if ($this->app->environment('local')) {
-                        $this->app->register(TelescopeServiceProvider::class);
-                        $this->app->register(TelescopeServiceProvider::class);
-                }
         }
 
         /**
