@@ -81,7 +81,7 @@ class Helper
                             // data key should not be existed inside allOptions array's sub array
                             if (! array_key_exists($data[$key], $value)) {
                                 // ensure that passed value should be match with any of allOptions array value
-                                $result = array_search($data[$key], $value, 'strict');
+                                $result = array_search($data[$key], $value, true);
                                 if (empty($result) && $result !== 0) {
                                     $data[$key] = $DefaultData[$key];
                                 }
