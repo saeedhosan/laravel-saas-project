@@ -1,6 +1,9 @@
 vendor
 composer.lock
 
+/public/vendors/
+
+
 node_modules
 npm-debug.log
 yarn-error.log
