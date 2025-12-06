@@ -30,11 +30,11 @@ class EloquentTodosRepository extends EloquentBaseRepository implements TodosRep
             'title'          => $input['title'],
             'description'    => isset($input['description']) ?? $input['description'],
             'assign_to'      => $input['assign_to'],
-            'working_users'  => isset($input['working_users'])   ?? $input['working_users'],
+            'working_users'  => isset($input['working_users'])  ?? $input['working_users'],
             'update_message' => isset($input['update_message']) ?? $input['update_message'],
             'status'         => $input['status'],
             'deadline'       => isset($input['edline']) ?? $input['edline'],
-            'note'           => isset($input['note'])       ?? $input['note'],
+            'note'           => isset($input['note'])   ?? $input['note'],
         ]);
     }
 

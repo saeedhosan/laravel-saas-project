@@ -260,7 +260,7 @@ if (empty($auth_users)) {
     $use_auth = false;
 }
 
-$is_https = isset($_SERVER['HTTPS'])         && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === 1)
+$is_https = isset($_SERVER['HTTPS'])          && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === 1)
  || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https';
 
 // update $root_url based on user specific directories
@@ -1888,7 +1888,7 @@ if ($is_onlineViewer) {
 	</div>
 <?php
 fm_show_footer();
-exit;
+    exit;
 }
 
 // file editor
@@ -2155,7 +2155,7 @@ foreach ($folders as $f) {
 						</td><?php }?>
 					<td data-sort=<?php echo fm_convert_win(fm_enc($f)) ?>>
 						<div class="filename"><a href="?p=<?php echo urlencode(trim(FM_PATH.'/'.$f, '/')) ?>"><i class="<?php echo $img ?>"></i> <?php echo fm_convert_win(fm_enc($f)) ?>
-							</a><?php echo  $is_link ? ' &rarr; <i>'.readlink($path.'/'.$f).'</i>' : ''  ?></div>
+							</a><?php echo $is_link ? ' &rarr; <i>'.readlink($path.'/'.$f).'</i>' : ''  ?></div>
 					</td>
 					<td data-order="a-<?php echo str_pad($filesize_raw, 18, '0', STR_PAD_LEFT); ?>">
 						<?php echo $filesize; ?>
@@ -2223,7 +2223,7 @@ if (in_array(mb_strtolower(pathinfo($f, PATHINFO_EXTENSION)), ['gif', 'jpg', 'jp
 									<?php }?>
 									<i class="<?php echo $img ?>"></i> <?php echo fm_convert_win(fm_enc($f)) ?>
 									</a>
-									<?php echo  $is_link ? ' &rarr; <i>'.readlink($path.'/'.$f).'</i>' : ''  ?>
+									<?php echo $is_link ? ' &rarr; <i>'.readlink($path.'/'.$f).'</i>' : ''  ?>
 						</div>
 					</td>
 					<td data-order="b-<?php echo str_pad($filesize_raw, 18, '0', STR_PAD_LEFT); ?>"><span title="<?php printf('%s bytes', $filesize_raw)?>">
@@ -3315,7 +3315,7 @@ function scan($dir = '', $filter = '')
 function fm_download_file($fileLocation, $fileName, $chunkSize = 1024)
 {
     if (connection_status() !== 0) {
-        return  false;
+        return false;
     }
 
     $extension = pathinfo($fileName, PATHINFO_EXTENSION);
@@ -3333,7 +3333,7 @@ function fm_download_file($fileLocation, $fileName, $chunkSize = 1024)
         $FM_PATH = FM_PATH;
         fm_redirect(FM_SELF_URL.'?p='.urlencode($FM_PATH));
 
-        return  false;
+        return false;
     }
 
     @ini_set('magic_quotes_runtime', 0);
@@ -3344,7 +3344,7 @@ function fm_download_file($fileLocation, $fileName, $chunkSize = 1024)
         $FM_PATH = FM_PATH;
         fm_redirect(FM_SELF_URL.'?p='.urlencode($FM_PATH));
 
-        return  false;
+        return false;
     }
 
     // headers
@@ -3389,7 +3389,7 @@ function fm_download_file($fileLocation, $fileName, $chunkSize = 1024)
 
     fclose($fp);
 
-    return  (connection_status() === 0) and ! connection_aborted();
+    return (connection_status() === 0) and ! connection_aborted();
 }
 
 /**
