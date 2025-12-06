@@ -1,13 +1,14 @@
 @extends('layouts/contentLayoutMaster')
 
-@section('title', __('messages.Add new task'))
+@section('title', __('Add new task'))
 
 @section('vendor-style')
     <!-- vendor css files -->
     <link rel="stylesheet" href="{{ asset(mix('vendors/css/forms/select/select2.min.css')) }}">
 
     @if (config('custom.theme_skin') === 'dark')
-        <link rel="stylesheet" href="{{ asset(mix('vendors/css/pickers/flatpickr/flatpickr.dark.css')) }}">
+        <link rel="stylesheet"
+            href="{{ asset(mix('vendors/css/pickers/flatpickr/flatpickr.dark.css')) }}">
     @else
         <link rel="stylesheet" href="{{ asset(mix('vendors/css/pickers/flatpickr/flatpickr.min.css')) }}">
     @endif
@@ -22,12 +23,16 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title"> {{ __('messages.Add new task') }} </h4>
+                        <h4 class="card-title"> {{ __('Add new task') }} </h4>
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <form class="form form-vertical" action="{{ route('customer.tasks.store') }}" method="post"
-                                enctype="multipart/form-data">
+                            <form
+                                class="form form-vertical"
+                                action="{{ route('customer.tasks.store') }}"
+                                method="post"
+                                enctype="multipart/form-data"
+                            >
                                 @csrf
                                 <div class="row">
 
@@ -35,9 +40,15 @@
                                         <div class="mb-1">
                                             <label for="name"
                                                 class="required form-label">{{ __('locale.labels.name') }}</label>
-                                            <input type="text" id="name"
+                                            <input
+                                                type="text"
+                                                id="name"
                                                 class="form-control @error('name') is-invalid @enderror"
-                                                value="{{ old('name') }}" name="name" placeholder="task name" required>
+                                                value="{{ old('name') }}"
+                                                name="name"
+                                                placeholder="task name"
+                                                required
+                                            >
                                             @error('name')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -49,10 +60,16 @@
 
                                     <div class="col-md-6">
                                         <div class="mb-1">
-                                            <label for="title" class="form-label">{{ __('locale.labels.title') }}</label>
-                                            <input type="text" id="title"
+                                            <label for="title"
+                                                class="form-label">{{ __('locale.labels.title') }}</label>
+                                            <input
+                                                type="text"
+                                                id="title"
                                                 class="form-control @error('title') is-invalid @enderror"
-                                                value="{{ old('title') }}" name="title" placeholder="task title">
+                                                value="{{ old('title') }}"
+                                                name="title"
+                                                placeholder="task title"
+                                            >
                                             @error('title')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -67,9 +84,14 @@
                                             <label for="assign_to" class="form-label required">
                                                 {{ __('messages.Assign to') }}
                                             </label>
-                                            <select class="select2 select2-icons form-select select2-hidden-accessible"
-                                                id="assign_to" name="assign_to[]" multiple="" data-select2-id="assign_to"
-                                                required>
+                                            <select
+                                                class="select2 select2-icons form-select select2-hidden-accessible"
+                                                id="assign_to"
+                                                name="assign_to[]"
+                                                multiple=""
+                                                data-select2-id="assign_to"
+                                                required
+                                            >
                                                 <option value="all">
                                                     Available for all
                                                 </option>
@@ -98,7 +120,8 @@
                                             <select class="select2 w-100" id="timezone" name="status">
                                                 @foreach (\App\Models\Todos::$status as $status)
                                                     <option value="{{ $status }}"
-                                                        {{ $status == 'available' ? 'selected' : null }}>
+                                                        {{ $status == 'available' ? 'selected' : null }}
+                                                    >
                                                         {{ $status }}</option>
                                                 @endforeach
                                             </select>
@@ -116,7 +139,12 @@
                                         <div class="mb-1">
                                             <label for="deadline" class=" form-label">
                                                 {{ __('messages.deadline') }}</label>
-                                            <input type="datetime" name="deadline" id="deadline" class="form-control ">
+                                            <input
+                                                type="datetime"
+                                                name="deadline"
+                                                id="deadline"
+                                                class="form-control "
+                                            >
                                         </div>
                                         @error('status')
                                             <div class="text-danger">
@@ -132,8 +160,12 @@
                                             <label for="description" class="form-label">
                                                 {{ __('locale.labels.description') }}
                                             </label>
-                                            <textarea type="text" id="description"
-                                                class="form-control @error('description') is-invalid @enderror"name="description" placeholder="task description">{{ old('description') }}</textarea>
+                                            <textarea
+                                                type="text"
+                                                id="description"
+                                                class="form-control @error('description') is-invalid @enderror"name="description"
+                                                placeholder="task description"
+                                            >{{ old('description') }}</textarea>
                                             @error('description')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -147,8 +179,13 @@
                                     <div class="col-12">
                                         <div class="mb-1">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="send_email"
-                                                    value="checked" name="send_email">
+                                                <input
+                                                    class="form-check-input"
+                                                    type="checkbox"
+                                                    id="send_email"
+                                                    value="checked"
+                                                    name="send_email"
+                                                >
                                                 <label class="form-check-label"
                                                     for="send_email">{{ __('Send email') }}</label>
                                             </div>

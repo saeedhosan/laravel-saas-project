@@ -136,7 +136,7 @@ class TaskController extends AdminBaseController
 
         $breadcrumbs = [
             ['link' => url('dashboard'), 'name' => __('locale.menu.Dashboard')],
-            ['name' => __('messages.Add new todo')],
+            ['name' => __('Add new todo')],
         ];
 
         $customers = User::whereNot('active_portal', 'admin')
