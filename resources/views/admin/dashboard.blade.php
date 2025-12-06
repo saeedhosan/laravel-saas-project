@@ -25,7 +25,7 @@
 
             <div class="mb-1">
                 <h2 class="fw-bolder">
-                    {{ __('Task status') }}
+                    {{ __('Dashboard') }}
                 </h2>
             </div>
 
@@ -36,7 +36,8 @@
                             <h2 class="fw-bolder mb-0">{{ $task->in_progress }}</h2>
                             <p class="card-text">{{ __('locale.menu.In progress') }}</p>
                         </div>
-                        <a href="{{ route('admin.tasks.index') }}" class="avatar bg-light-info p-50 m-0">
+                        <a href="{{ route('admin.tasks.index') }}"
+                            class="avatar bg-light-info p-50 m-0">
                             <div class="avatar-content">
                                 <i data-feather="disc" class="text-info font-medium-5"></i>
                             </div>
@@ -53,7 +54,9 @@
                             <h2 class="fw-bolder mb-0">{{ $task->reviews }}</h2>
                             <p class="card-text">{{ __('locale.menu.Reviews') }}</p>
                         </div>
-                        <a href="{{ route('admin.tasks.index') }}" class="avatar bg-light-warning p-50 m-0">
+                        <a href="{{ route('admin.tasks.index') }}"
+                            class="avatar bg-light-warning p-50 m-0"
+                        >
                             <div class="avatar-content">
                                 <i data-feather="star" class="text-warning font-medium-5"></i>
                             </div>
@@ -70,7 +73,9 @@
                             <h2 class="fw-bolder mb-0">{{ $task->complete }}</h2>
                             <p class="card-text">{{ __('locale.menu.Completed') }}</p>
                         </div>
-                        <a href="{{ route('admin.tasks.index') }}" class="avatar bg-light-success p-50 m-0">
+                        <a href="{{ route('admin.tasks.index') }}"
+                            class="avatar bg-light-success p-50 m-0"
+                        >
                             <div class="avatar-content">
                                 <i data-feather="check-square" class="text-success font-medium-5"></i>
                             </div>
@@ -86,7 +91,9 @@
                             <h2 class="fw-bolder mb-0">{{ $task->all }}</h2>
                             <p class="card-text">{{ __('locale.menu.All ads') }}</p>
                         </div>
-                        <a href="{{ route('customer.tasks.index') }}" class="avatar bg-light-primary p-50 m-0">
+                        <a href="{{ route('customer.tasks.index') }}"
+                            class="avatar bg-light-primary p-50 m-0"
+                        >
                             <div class="avatar-content">
                                 <i data-feather="credit-card" class="text-primary font-medium-5"></i>
                             </div>
@@ -102,7 +109,8 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-end">
-                        <h4 class="card-title text-uppercase">{{ __('locale.labels.customers_growth') }}</h4>
+                        <h4 class="card-title text-uppercase">
+                            {{ __('locale.labels.customers_growth') }}</h4>
                     </div>
                     <div class="card-content">
                         <div class="card-body pb-0">

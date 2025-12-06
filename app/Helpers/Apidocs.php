@@ -37,7 +37,7 @@ class Apidocs
         return [
             'title'       => 'View Task',
             'method'      => 'GET',
-            'endpoint'    => route('api.task.index'),
+            'endpoint'    => route('api.tasks.index'),
             'description' => 'Show all task',
         ];
     }

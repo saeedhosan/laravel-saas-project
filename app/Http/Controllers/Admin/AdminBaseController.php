@@ -14,6 +14,7 @@ use ArielMejiaDev\LarapexCharts\LarapexChart;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
@@ -32,8 +33,33 @@ class AdminBaseController extends Controller
             ['name' => User::fullname()],
         ];
 
+        $driver = DB::getDriverName();
+
+        // DAY extraction - cross DB
+        $daySql = match ($driver) {
+            'mysql', 'mariadb' => 'DAY(created_at)',
+            'pgsql'  => 'EXTRACT(DAY FROM created_at)',
+            'sqlite' => "CAST(strftime('%d', created_at) AS INTEGER)",
+            'sqlsrv' => 'DATEPART(day, created_at)',
+            default  => 'DAY(created_at)',
+        };
+
+        // MONTH extraction - cross DB
+        $monthSql = match ($driver) {
+            'mysql', 'mariadb' => 'MONTH(created_at)',
+            'pgsql'  => 'EXTRACT(MONTH FROM created_at)',
+            'sqlite' => "CAST(strftime('%m', created_at) AS INTEGER)",
+            'sqlsrv' => 'DATEPART(month, created_at)',
+            default  => 'MONTH(created_at)',
+        };
+
+        /**
+         * ---- REVENUE (current month) ----
+         * FORMAT MUST REMAIN:
+         * pluck('revenue', 'day') => [day => revenue]
+         */
         $revenue = Invoices::CurrentMonth()
-            ->selectRaw('EXTRACT(DAY FROM created_at) as day, count(uid) as revenue')
+            ->selectRaw("$daySql as day, COUNT(uid) as revenue")
             ->groupBy('day')
             ->pluck('revenue', 'day');
 
@@ -41,8 +67,13 @@ class AdminBaseController extends Controller
             ->addData(__('locale.labels.revenue'), $revenue->values()->toArray())
             ->setXAxis($revenue->keys()->toArray());
 
+        /**
+         * ---- CUSTOMERS (this year) ----
+         * FORMAT MUST REMAIN:
+         * pluck('customer', 'month') => [month => customer]
+         */
         $customers = Customer::thisYear()
-            ->selectRaw('EXTRACT(MONTH FROM created_at) as month, count(uid) as customer')
+            ->selectRaw("$monthSql as month, COUNT(uid) as customer")
             ->groupBy('month')
             ->orderBy('month')
             ->pluck('customer', 'month');
@@ -51,6 +82,10 @@ class AdminBaseController extends Controller
             ->addData(__('locale.labels.customers_growth'), $customers->values()->toArray())
             ->setXAxis($customers->keys()->toArray());
 
+        /**
+         * ---- TASK COUNTS ----
+         * Returned exactly the same as before
+         */
         $task = (object) [
             'in_progress' => Todos::where('status', 'in_progress')->count(),
             'complete'    => Todos::where('status', 'complete')->count(),
@@ -58,7 +93,12 @@ class AdminBaseController extends Controller
             'all'         => Todos::count(),
         ];
 
-        return view('admin.dashboard', compact('breadcrumbs', 'revenue_chart', 'customer_growth', 'task'));
+        return view('admin.dashboard', compact(
+            'breadcrumbs',
+            'revenue_chart',
+            'customer_growth',
+            'task'
+        ));
     }
 
     public function adminTest(Request $request)
