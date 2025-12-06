@@ -6,7 +6,7 @@
 
 ## 📝 Project Description
 
-**Laravel SaaS Project** is a **Software-as-a-Service (SaaS)** web application built on the **Laravel PHP framework** designed for **campaign marketing management** and **team collaboration**. It provides a comprehensive, centralized platform to efficiently create, assign, and track work within projects, featuring distinct and secure dashboards for both **Administrators** and regular **Users**.
+**Laravel SaaS Project** is a **Software-as-a-Service (SaaS)** web application built on the **Laravel PHP framework** designed for **project management** and **team collaboration**. It provides a comprehensive, centralized platform to efficiently create, assign, and track work within projects, featuring distinct and secure dashboards for both **Administrators** and regular **Users**.
 
 It was developed to solve the challenges of **fragmented communication, inefficient work allocation, and missed deadlines** common in team environments. The application's core purpose is to streamline workflow, enhance team productivity through a **Real-Time Chat System**, and ensure project visibility with automated reminders and reporting tools.
 
@@ -14,10 +14,11 @@ It was developed to solve the challenges of **fragmented communication, ineffici
 
 ## 🎯 The Challenge / Problem Solved
 
-The core problem addressed by the project is the **lack of a single, integrated platform for managing campaign-related work and team collaboration**. This commonly leads to:
-* **Poor Accountability:** Difficulty in tracking who is responsible for what and monitoring individual progress.
-* **Communication Bottlenecks:** Delays caused by relying on separate chat or email systems instead of integrated, real-time discussions.
-* **Deadline Overruns:** Inadequate reminder systems resulting in missed submission dates and project delays.
+The core problem addressed by the project is the **lack of a single, integrated platform for managing project, task-related work and team collaboration**. This commonly leads to:
+
+-   **Poor Accountability:** Difficulty in tracking who is responsible for what and monitoring individual progress.
+-   **Communication Bottlenecks:** Delays caused by relying on separate chat or email systems instead of integrated, real-time discussions.
+-   **Deadline Overruns:** Inadequate reminder systems resulting in missed submission dates and project delays.
 
 ---
 
@@ -26,11 +27,12 @@ The core problem addressed by the project is the **lack of a single, integrated 
 The **Laravel SaaS Project** provides a **modular and scalable solution** leveraging the power of **Laravel's architecture**.
 
 ### Architectural Decisions:
-* **Dual-Dashboard System:** Implementation of separate secure views for the **Admin** and **Client/User** to maintain clear separation of concerns and access control.
-* **Real-Time Communication:** Integration of **Pusher** (`pusher/pusher-php-server`) and **Laravel WebSockets** (`beyondcode/laravel-websockets`) to power the live, message-based chat feature.
-* **Role-Based Access Control (RBAC):** Admin manages user permissions and roles for granular access control.
-* **Analytics & Visualization:** Utilizing **`arielmejiadev/larapex-charts`** for generating reports and data visualizations.
-* **Automated Services:** Using Laravel's **Cron Jobs** for triggering automated deadline reminders and notifications.
+
+-   **Dual-Dashboard System:** Implementation of separate secure views for the **Admin** and **Client/User** to maintain clear separation of concerns and access control.
+-   **Real-Time Communication:** Integration of **Pusher** (`pusher/pusher-php-server`) and **Laravel WebSockets** (`beyondcode/laravel-websockets`) to power the live, message-based chat feature.
+-   **Role-Based Access Control (RBAC):** Admin manages user permissions and roles for granular access control.
+-   **Analytics & Visualization:** Utilizing **`arielmejiadev/larapex-charts`** for generating reports and data visualizations.
+-   **Automated Services:** Using Laravel's **Cron Jobs** for triggering automated deadline reminders and notifications.
 
 ---
 
@@ -38,13 +40,13 @@ The **Laravel SaaS Project** provides a **modular and scalable solution** levera
 
 The application is equipped with a rich set of functionalities:
 
-* **Real-Time Chat System:** Integrated chat for immediate, work-based communication.
-* **Project & Work Management:** Full **CRUD** operations for tasks, supporting priorities and four distinct status updates (**Created, In progress, Review, Complete**).
-* **Admin Control Panel:** Comprehensive management of user accounts, access levels, and settings (mail, database, language).
-* **Automated Notifications:** **Deadline reminders** and alerts for task assignments and project updates.
-* **Role-Based Access Control (RBAC):** Admin controls user permissions for granular access to features.
-* **Multi-Language Support:** Ability to add and manage different languages.
-* **Reporting and Analytics:** Tools to gain insights into team productivity and project progress.
+-   **Real-Time Chat System:** Integrated chat for immediate, work-based communication.
+-   **Project & Work Management:** Full **CRUD** operations for tasks, supporting priorities and four distinct status updates (**Created, In progress, Review, Complete**).
+-   **Admin Control Panel:** Comprehensive management of user accounts, access levels, and settings (mail, database, language).
+-   **Automated Notifications:** **Deadline reminders** and alerts for task assignments and project updates.
+-   **Role-Based Access Control (RBAC):** Admin controls user permissions for granular access to features.
+-   **Multi-Language Support:** Ability to add and manage different languages.
+-   **Reporting and Analytics:** Tools to gain insights into team productivity and project progress.
 
 ---
 
@@ -52,15 +54,15 @@ The application is equipped with a rich set of functionalities:
 
 The project is built primarily on the Laravel framework and its key integrations:
 
-| Category | Component | Key Packages |
-| :--- | :--- | :--- |
-| **Server** | PHP Framework (Backend Logic) | **Laravel** (`^9.12.2`), PHP (`8.0.2+`) |
-| **Real-time** | WebSockets & Chat | **Pusher** (`^7.2`), **BeyondCode Laravel WebSockets** (`^1.14`) |
-| **Client** | UI/Assets | **Laravel UI** (`^3.4.5`), HTML, CSS, JavaScript (NPM/Bun assets) |
-| **Database** | Database Abstraction | **Doctrine DBAL** (`^4.0`) (For multi-database support) |
-| **Security** | Authentication/Protection | **Laravel Sanctum** (`^2.15`), **Arcanedev No-Captcha** (`^13.0`) |
-| **Analytics** | Charting/Reporting | **Larapex Charts** (`^2.1`) |
-| **Utility** | Image Processing | **Intervention Image** (`^2.7`) |
+| Category      | Component                     | Key Packages                                                      |
+| :------------ | :---------------------------- | :---------------------------------------------------------------- |
+| **Server**    | PHP Framework (Backend Logic) | **Laravel** (`^9.12.2`), PHP (`8.0.2+`)                           |
+| **Real-time** | WebSockets & Chat             | **Pusher** (`^7.2`), **BeyondCode Laravel WebSockets** (`^1.14`)  |
+| **Client**    | UI/Assets                     | **Laravel UI** (`^3.4.5`), HTML, CSS, JavaScript (NPM/Bun assets) |
+| **Database**  | Database Abstraction          | **Doctrine DBAL** (`^4.0`) (For multi-database support)           |
+| **Security**  | Authentication/Protection     | **Laravel Sanctum** (`^2.15`), **Arcanedev No-Captcha** (`^13.0`) |
+| **Analytics** | Charting/Reporting            | **Larapex Charts** (`^2.1`)                                       |
+| **Utility**   | Image Processing              | **Intervention Image** (`^2.7`)                                   |
 
 ---
 
@@ -68,10 +70,10 @@ The project is built primarily on the Laravel framework and its key integrations
 
 The **Laravel SaaS Project** is ideal for Freelancers, Small Businesses, Marketing Agencies, and Project Management Teams. It delivers measurable impact by:
 
-* **Streamlining Workflow:** Provides a single, unified source of truth for all project and campaign work.
-* **Boosting Collaboration:** The Real-Time Chat System reduces communication delays.
-* **Ensuring Timeliness:** Automated notifications help prevent missed deadlines, leading to greater success.
-* **Greater Accountability:** Clear assignment and status updates improve team member accountability.
+-   **Streamlining Workflow:** Provides a single, unified source of truth for all project and tasks work.
+-   **Boosting Collaboration:** The Real-Time Chat System reduces communication delays.
+-   **Ensuring Timeliness:** Automated notifications help prevent missed deadlines, leading to greater success.
+-   **Greater Accountability:** Clear assignment and status updates improve team member accountability.
 
 ---
 
@@ -96,13 +98,11 @@ Instructions for how a developer can set up and run the project locally for deve
     ```
 4.  View the application at the server [http://127.0.0.1:8000].
 
-
 ## 👤 Author/Contact
 
-* **Saeed Hosan**
-* appsaeed7@gmail.com
-* https://www.linkedin.com/in/saeedhosan
-
+-   **Saeed Hosan**
+-   appsaeed7@gmail.com
+-   https://www.linkedin.com/in/saeedhosan
 
 ## 🤝 Contributing
 
