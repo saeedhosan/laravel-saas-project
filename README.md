@@ -1,4 +1,4 @@
-# Laravel SaaS Project: Project Management Platform
+# Laravel SaaS Project Management Platform
 
 ![](/docs/images/admin-dashboard.png)
 
