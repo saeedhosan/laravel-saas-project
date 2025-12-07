@@ -81,22 +81,13 @@ The **Laravel SaaS Project** is ideal for Freelancers, Small Businesses, Marketi
 
 Instructions for how a developer can set up and run the project locally for development or testing.
 
-1.  Clone the repository: `git clone https://github.com/saeedhosan/laravel-saas-project`
-2.  Initialize: `composer setup` or Initialize manually
-    ```sh
-    composer install # composer package install
-    touch database/database.sqlite # database connection or create the sqlite for default
-    cp .env.example .env
-    php artisan key:generate # application key generate
-    php artisan migrate:fresh --seed --force # refresh database and create demo data
-    npm install
-    npm run build
-    ```
-3.  Run the application:
-    ```sh
-    php artisan serve
-    ```
-4.  View the application at the server [http://127.0.0.1:8000].
+*  Clone the repository: `https://github.com/saeedhosan/laravel-secondvintage-crm.git`
+*  Initialize: `composer setup` or Initialize manually run all commands from composer setup scripts.
+*  Run the application:  `php artisan serve` or run dev server `composer run dev`
+*  View the application at the server [http://127.0.0.1:8000].
+
+*  Run tests `php artisan test`.
+*  Run types `composer types` for type-safe.
 
 ## 👤 Author/Contact
 
@@ -108,8 +99,7 @@ Instructions for how a developer can set up and run the project locally for deve
 
 We welcome contributions from the community! If you’d like to contribute, please follow these steps:
 
-1. **Fork the repository** and create your branch:  
-   `git checkout -b feature/your-feature-name`
+1. **Fork the repository** and create your branch: `git checkout -b feature/your-feature-name`
 2. **Make your changes** with clear, descriptive commits.
 3. **Submit a Pull Request** explaining your changes.
 
