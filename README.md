@@ -81,7 +81,7 @@ The **Laravel SaaS Project** is ideal for Freelancers, Small Businesses, Marketi
 
 Instructions for how a developer can set up and run the project locally for development or testing.
 
-*  Clone the repository: `https://github.com/saeedhosan/laravel-secondvintage-crm.git`
+*  Clone the repository: `https://github.com/saeedhosan/laravel-saas-project.git`
 *  Initialize: `composer setup` or Initialize manually run all commands from composer setup scripts.
 *  Run the application:  `php artisan serve` or run dev server `composer run dev`
 *  View the application at the server [http://127.0.0.1:8000].
