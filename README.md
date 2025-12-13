@@ -59,7 +59,7 @@ The project is built primarily on the Laravel framework and its key integrations
 | **Server**    | PHP Framework (Backend Logic) | **Laravel** (`^9.12.2`), PHP (`8.0.2+`)                           |
 | **Real-time** | WebSockets & Chat             | **Pusher** (`^7.2`), **BeyondCode Laravel WebSockets** (`^1.14`)  |
 | **Client**    | UI/Assets                     | **Laravel UI** (`^3.4.5`), HTML, CSS, JavaScript (NPM/Bun assets) |
-| **Database**  | Database Abstraction          | **Doctrine DBAL** (`^4.0`) (For multi-database support)           |
+| **Database**  | Database Abstraction          | **laravel database** (`^4.0`) (For multi-database support)           |
 | **Security**  | Authentication/Protection     | **Laravel Sanctum** (`^2.15`), **Arcanedev No-Captcha** (`^13.0`) |
 | **Analytics** | Charting/Reporting            | **Larapex Charts** (`^2.1`)                                       |
 | **Utility**   | Image Processing              | **Intervention Image** (`^2.7`)                                   |
