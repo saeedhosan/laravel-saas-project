@@ -81,7 +81,7 @@ The **Laravel SaaS Project** is ideal for Freelancers, Small Businesses, Marketi
 
 We focus on delivering reliable software quickly through strong testing and fast feedback loops.
 
-- Feature and unit tests are written using PHPUnit and Pest.
+- Feature and unit tests are written using PHPUnit.
 - Laravel Pint keeps the codebase clean, consistent, and easy to maintain.
 
 ## ⚙️ Installation and Usage
