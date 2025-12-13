@@ -6,7 +6,7 @@
 
 ## 📝 Project Description
 
-**Laravel SaaS Project** is a **Software-as-a-Service (SaaS)** web application built with **Laravel PHP framework** designed for **project/task management** and **team collaboration**. It provides a comprehensive, centralized platform to efficiently create, assign, and track work within projects, featuring distinct and secure dashboards for both **Administrators** and regular **Users**.
+**Laravel SaaS Project** is a **Software-as-a-Service (SaaS)** web application built with **Laravel PHP framework** designed for **project, task management** and **team collaboration**. It provides a comprehensive, centralized platform to efficiently create, assign, and track work within projects, featuring distinct and secure dashboards for both **Administrators** and regular **Users**.
 
 It was developed to solve the challenges of **fragmented communication, inefficient work allocation, and missed deadlines** common in team environments. The application's core purpose is to streamline workflow, enhance team productivity through a **Real-Time Chat System**, and ensure project visibility with automated reminders and reporting tools.
 
