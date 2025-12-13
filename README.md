@@ -6,7 +6,7 @@
 
 ## 📝 Project Description
 
-**Laravel SaaS Project** is a **Software-as-a-Service (SaaS)** web application built on the **Laravel PHP framework** designed for **project management** and **team collaboration**. It provides a comprehensive, centralized platform to efficiently create, assign, and track work within projects, featuring distinct and secure dashboards for both **Administrators** and regular **Users**.
+**Laravel SaaS Project** is a **Software-as-a-Service (SaaS)** web application built with **Laravel PHP framework** designed for **project/task management** and **team collaboration**. It provides a comprehensive, centralized platform to efficiently create, assign, and track work within projects, featuring distinct and secure dashboards for both **Administrators** and regular **Users**.
 
 It was developed to solve the challenges of **fragmented communication, inefficient work allocation, and missed deadlines** common in team environments. The application's core purpose is to streamline workflow, enhance team productivity through a **Real-Time Chat System**, and ensure project visibility with automated reminders and reporting tools.
 
@@ -77,12 +77,19 @@ The **Laravel SaaS Project** is ideal for Freelancers, Small Businesses, Marketi
 
 ---
 
-## ⚙️ Installation and Usage (For Developers)
+## 🧪 Testing & Quality
+
+We focus on delivering reliable software quickly through strong testing and fast feedback loops.
+
+- Feature and unit tests are written using PHPUnit and Pest.
+- Laravel Pint keeps the codebase clean, consistent, and easy to maintain.
+
+## ⚙️ Installation and Usage
 
 Instructions for how a developer can set up and run the project locally for development or testing.
 
 *  Clone the repository: `https://github.com/saeedhosan/laravel-saas-project.git`
-*  Initialize: `composer setup` or Initialize manually run all commands from composer setup scripts.
+*  Initialize: `composer setup` or Initialize manually from composer setup scripts.
 *  Run the application:  `php artisan serve` or run dev server `composer run dev`
 *  View the application at the server [http://127.0.0.1:8000].
 
